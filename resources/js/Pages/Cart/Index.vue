@@ -199,25 +199,6 @@ const selectedTotal = computed(() => {
   }, 0)
 })
 
-// const buyNow = () => {
-//   const items = selectedItems.value
-
-//   if (items.length === 1) {
-//     const productId = items[0].product?.id
-//     const quantity = items[0].quantity
-//     showToast('Redirecting to checkout...')
-//     router.visit(`/checkout/${productId}?quantity=${quantity}`)
-//   } else {
-//     router.post('/checkout-bulk', {
-//       items: items.map(i => ({
-//         product: i.product,
-//         quantity: i.quantity
-//       }))
-//     }, {
-//       onSuccess: () => showToast('Proceeding to bulk checkout...')
-//     })
-//   }
-// }
 const buyNow = () => {
   const items = selectedItems.value
 

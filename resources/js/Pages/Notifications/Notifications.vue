@@ -24,8 +24,8 @@
         :key="notification.id"
         class="list-group-item list-group-item-action"
         :class="{
-          'bg-white text-success fw-bold': !notification.read_at,
-          'bg-white text-muted fw-bold': notification.read_at
+          'bg-white text-dark fw-bold': !notification.read_at,
+          'bg-white text-muted': notification.read_at
         }"
         @click="markAsRead(notification.id, notification.data.order_id)"
         style="cursor: pointer"

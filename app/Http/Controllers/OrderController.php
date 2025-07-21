@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Product;
 use App\Models\Order;
 use App\Models\ReceivedOrder;
 use App\Models\Review;
@@ -9,23 +10,36 @@ use App\Notifications\OrderIssueReported;
 use App\Notifications\OrderReceivedNotification;
 use App\Notifications\OrderStatusNotification;
 use Illuminate\Http\Request;
-use App\Models\Report;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Notification;
 use Inertia\Inertia;
 
-
 class OrderController extends Controller
 {
-    public function store(Request $request) {
-        $request->validate(['product_id' => 'required|exists:products,id']);
-
-        $order = Order::create([
-            'user_id' => auth()->id(),
-            'product_id' => $request->product_id,
-            'quantity' => $request->quantity ?? 1,
-            'status' => 'pending'
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'product_id' => 'required|exists:products,id',
+            'quantity' => 'required|integer|min:1'
         ]);
+
+        $product = Product::findOrFail($validated['product_id']);
+
+        // ✅ Stock check
+        if ($product->stock < $validated['quantity']) {
+            return back()->withErrors(['quantity' => 'Not enough stock available.']);
+        }
+
+        // ✅ Place order
+        Order::create([
+            'user_id' => auth()->id(),
+            'product_id' => $product->id,
+            'quantity' => $validated['quantity'],
+            'status' => 'pending',
+        ]);
+
+        // ✅ Update stock and sold
+        $product->decrement('stock', $validated['quantity']);
+        $product->increment('total_sold', $validated['quantity']);
 
         return back()->with('success', 'Order placed. Waiting for seller approval.');
     }
@@ -36,15 +50,15 @@ class OrderController extends Controller
         $status = $request->input('status');
 
         $query = Order::with(['product', 'user'])
-            ->whereHas('product.shop', fn ($q) =>
+            ->whereHas('product.shop', fn($q) =>
                 $q->where('user_id', auth()->id())
             );
 
         if ($search) {
             $query->where(function ($q) use ($search) {
-                $q->whereHas('product', fn ($sub) =>
+                $q->whereHas('product', fn($sub) =>
                     $sub->where('name', 'like', "%{$search}%")
-                )->orWhereHas('user', fn ($sub) =>
+                )->orWhereHas('user', fn($sub) =>
                     $sub->where('name', 'like', "%{$search}%")
                 )->orWhere('status', 'like', "%{$search}%");
             });
@@ -54,14 +68,11 @@ class OrderController extends Controller
             $query->where('status', $status);
         }
 
-        $orders = $query->latest()->paginate(30)->withQueryString();
-
         return Inertia::render('Seller/Orders', [
-            'orders' => $orders,
+            'orders' => $query->latest()->paginate(30)->withQueryString(),
             'filters' => $request->only('search', 'status'),
         ]);
     }
-
 
     public function approve(Request $request, Order $order)
     {
@@ -75,11 +86,13 @@ class OrderController extends Controller
 
         $product = $order->product;
 
+        // ✅ Re-check stock (for safety)
         if ($product->stock < $order->quantity) {
             return back()->with('error', 'Not enough stock to approve the order.');
         }
 
-        $product->decrement('stock', $order->quantity);
+        // ✅ Deduct only if not already deducted on creation
+        // Optional safety: you may track a 'deducted' field or skip this if already handled
 
         $order->update([
             'status' => 'approved',
@@ -96,7 +109,6 @@ class OrderController extends Controller
     {
         $order->update(['status' => 'declined']);
 
-        // Notify buyer
         $order->user->notify(new OrderStatusNotification($order, '❌ Your order has been declined.'));
 
         return back()->with('error', 'Order declined.');
@@ -121,9 +133,8 @@ class OrderController extends Controller
             $query->where(function ($q) use ($search) {
                 $q->whereHas('product', fn($sub) =>
                     $sub->where('name', 'like', "%{$search}%")
-                )
-                ->orWhere('status', 'like', "%{$search}%")
-                ->orWhereHas('product.shop.user', fn($sub) =>
+                )->orWhere('status', 'like', "%{$search}%")
+                 ->orWhereHas('product.shop.user', fn($sub) =>
                     $sub->where('name', 'like', "%{$search}%")
                 );
             });
@@ -135,13 +146,11 @@ class OrderController extends Controller
         ]);
     }
 
-
     public function receipt(Order $order)
     {
         $user = auth()->user();
 
         $order->load('user', 'product.shop.user', 'receivedOrder');
-
         $isSeller = $order->product->shop->user_id === $user->id;
 
         return Inertia::render('Receipt', [
@@ -160,45 +169,52 @@ class OrderController extends Controller
                 'isSeller' => true,
             ]);
         } catch (\Exception $e) {
-            dd($e->getMessage()); // Debug error
+            dd($e->getMessage());
         }
     }
 
-    // In OrderController
     public function storeBulk(Request $request)
     {
         $request->validate([
-                'orders' => 'required|array',
-                'orders.*.product_id' => 'required|exists:products,id',
-                'orders.*.quantity' => 'required|integer|min:1',
+            'orders' => 'required|array',
+            'orders.*.product_id' => 'required|exists:products,id',
+            'orders.*.quantity' => 'required|integer|min:1',
         ]);
 
-        foreach ($request->orders as $orderData) {
-                Order::create([
-                    'user_id' => auth()->id(),
-                    'product_id' => $orderData['product_id'],
-                    'quantity' => $orderData['quantity'],
-                    'status' => 'pending'
-                ]);
-        }
+        foreach ($request->orders as $data) {
+            $product = Product::findOrFail($data['product_id']);
 
-        return back()->with('success', 'Orders placed successfully.');
-    }
-      
-    public function destroy(Order $order)
-    {
-            if ($order->product->shop->user_id !== auth()->id()) {
-                abort(403); // Forbidden
+            if ($product->stock < $data['quantity']) {
+                return back()->withErrors(['message' => "Not enough stock for {$product->name}"]);
             }
 
-            $order->delete();
+            Order::create([
+                'user_id' => auth()->id(),
+                'product_id' => $product->id,
+                'quantity' => $data['quantity'],
+                'status' => 'pending'
+            ]);
 
-            return back()->with('success', 'Order deleted.');
+            $product->decrement('stock', $data['quantity']);
+            $product->increment('total_sold', $data['quantity']);
+        }
+
+        return back()->with('success', 'Bulk orders placed successfully.');
+    }
+
+    public function destroy(Order $order)
+    {
+        if ($order->product->shop->user_id !== auth()->id()) {
+            abort(403);
+        }
+
+        $order->delete();
+
+        return back()->with('success', 'Order deleted.');
     }
 
     public function markAsReceived(Order $order)
     {
-        // prevent duplicate
         if ($order->receivedOrder) {
             return back()->with('message', 'You already marked this as received.');
         }
@@ -209,14 +225,12 @@ class OrderController extends Controller
             'received_at' => now(),
         ]);
 
-        // Notify seller
         $seller = $order->product->shop->user;
         $seller->notify(new OrderReceivedNotification($order));
 
         return back()->with('success', 'Marked as received. Seller notified.');
     }
 
-    //For "Report Issue"
     public function reportIssue(Request $request, Order $order)
     {
         $request->validate([
@@ -229,10 +243,8 @@ class OrderController extends Controller
         return back()->with('success', 'Issue reported.');
     }
 
-
     public function updateDeliveryStatus(Request $request, Order $order)
     {
-        // Make sure only seller can update their own orders
         if ($order->product->shop->user_id !== auth()->id()) {
             abort(403);
         }
@@ -254,9 +266,7 @@ class OrderController extends Controller
             'rating' => 'required|integer|min:1|max:5',
             'comment' => 'required|string|max:1000',
             'product_id' => 'required|exists:products,id',
-            // 'photo' => 'nullable|image|max:2048',
             'photo' => 'nullable|image|max:15360', // 15 MB
-
         ]);
 
         if (Review::where('user_id', auth()->id())->where('order_id', $order->id)->exists()) {
@@ -287,8 +297,6 @@ class OrderController extends Controller
 
         $order->update(['status' => 'canceled', 'delivery_status' => 'canceled']);
 
-
         return back()->with('success', 'Order canceled successfully.');
     }
-
 }

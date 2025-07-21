@@ -68,7 +68,7 @@
               <span class="text-muted"> Ratings</span>
             </div>
             <div>
-              <span class="fw-bold text-success">{{ totalSold }}</span>
+              <span class="fw-bold text-success">{{ product.total_sold }}</span>
               <span class="text-muted"> Sold</span>
             </div>
           </div>

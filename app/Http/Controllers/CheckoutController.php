@@ -11,7 +11,7 @@ class CheckoutController extends Controller
 {
     public function show(Request $request, Product $product)
     {
-        $quantity = (int) $request->input('quantity', 1); //it's a number
+        $quantity = (int) $request->input('quantity', 1);
 
         return Inertia::render('Checkout/Form', [
             'product' => $product,
@@ -31,9 +31,17 @@ class CheckoutController extends Controller
             'quantity' => 'required|integer|min:1'
         ]);
 
+        $product = Product::findOrFail($request->product_id);
+
+        // Check if stock is enough
+        if ($product->stock < $request->quantity) {
+            return back()->withErrors(['quantity' => 'Not enough stock available.']);
+        }
+
+        // Create the order
         Order::create([
             'user_id' => auth()->id(),
-            'product_id' => $request->product_id,
+            'product_id' => $product->id,
             'full_name' => $request->full_name,
             'phone_number' => $request->phone_number,
             'email' => $request->email,
@@ -42,6 +50,10 @@ class CheckoutController extends Controller
             'quantity' => $request->quantity,
             'status' => 'pending'
         ]);
+
+        // Update product stock and sold count
+        $product->decrement('stock', $request->quantity);
+        $product->increment('total_sold', $request->quantity);
 
         return redirect()->route('my-orders')->with('success', 'Order placed. Waiting for approval.');
     }
@@ -69,9 +81,19 @@ class CheckoutController extends Controller
         ]);
 
         foreach ($request->orders as $order) {
+            $product = Product::findOrFail($order['product_id']);
+
+            // Check stock per item
+            if ($product->stock < $order['quantity']) {
+                return back()->withErrors([
+                    'orders' => "Not enough stock for product: {$product->name}"
+                ]);
+            }
+
+            // Create order
             Order::create([
                 'user_id' => auth()->id(),
-                'product_id' => $order['product_id'],
+                'product_id' => $product->id,
                 'quantity' => $order['quantity'],
                 'status' => 'pending',
                 'full_name' => $request->full_name,
@@ -80,6 +102,10 @@ class CheckoutController extends Controller
                 'delivery_address' => $request->delivery_address,
                 'notes' => $request->notes,
             ]);
+
+            // Update stock and sold
+            $product->decrement('stock', $order['quantity']);
+            $product->increment('total_sold', $order['quantity']);
         }
 
         return redirect()->route('my-orders')->with('success', 'Bulk order placed successfully!');
