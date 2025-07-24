@@ -52,9 +52,12 @@ const props = defineProps({
 })
 
 function markAllAsRead() {
-  router.post('/notifications/mark-all-as-read', {}, {
+  router.post('/user/notifications/mark-all-as-read', {}, {
     preserveScroll: true,
-    preserveState: true,
+    onSuccess: () => {
+      store.markAllAsRead()
+      router.visit('/user/notifications')
+    }
   })
 }
 

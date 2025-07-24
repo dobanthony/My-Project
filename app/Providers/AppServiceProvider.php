@@ -24,14 +24,14 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Inertia::share([
-            // 🧑 Authenticated user
+            //Authenticated user
             'auth' => function () {
                 return [
                     'user' => Auth::user(),
                 ];
             },
 
-            // 🔔 Laravel notifications
+            // Laravel notifications
             'notifications' => function () {
                 if (Auth::check()) {
                     return Auth::user()->notifications->map(function ($n) {
@@ -46,7 +46,7 @@ class AppServiceProvider extends ServiceProvider
                 return [];
             },
 
-            // 📩 Unread message badge count (custom)
+            // Unread message badge count (custom)
             'unreadMessagesCount' => function () {
                 if (Auth::check()) {
                     return Message::where('receiver_id', Auth::id())
@@ -55,7 +55,7 @@ class AppServiceProvider extends ServiceProvider
                 }
                 return 0;
             },
-             // 🔴 Pending orders count (new)
+             // Pending orders count (new)
             'pendingOrdersCount' => function () {
                 if (Auth::check()) {
                     return \App\Models\Order::where('status', 'pending')

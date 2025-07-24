@@ -1,38 +1,3 @@
-<!-- <template>
-  <Line :data="chartData" :options="chartOptions" />
-</template>
-
-<script setup>
-import { Line } from 'vue-chartjs'
-import {
-  Chart as ChartJS,
-  Title,
-  Tooltip,
-  Legend,
-  LineElement,
-  PointElement,
-  CategoryScale,
-  LinearScale,
-  Filler, // ✅ Add this
-} from 'chart.js'
-
-ChartJS.register(
-  Title,
-  Tooltip,
-  Legend,
-  LineElement,
-  PointElement,
-  CategoryScale,
-  LinearScale,
-  Filler // ✅ Register it here
-)
-
-const props = defineProps({
-  chartData: Object,
-  chartOptions: Object
-})
-</script> -->
-
 <template>
   <div class="chart-container">
     <Line :data="chartData" :options="chartOptions" />

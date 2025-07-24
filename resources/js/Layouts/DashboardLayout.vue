@@ -96,7 +96,6 @@
          <Link
             href="/user/notifications"
             class="text-decoration-none position-relative"
-            @click.prevent="handleMarkAllAsRead"
           >
             <i class="bi bi-bell fs-5 text-success"></i>
 
@@ -223,26 +222,15 @@ onUnmounted(() => {
   clearInterval(pollingInterval)
 })
 
-// ✅ Mark all notifications as read
 // function handleMarkAllAsRead() {
-//   router.post('/seller/notifications/mark-all-as-read', {}, {
+//   router.post('/user/notifications/mark-all-as-read', {}, {
 //     preserveScroll: true,
 //     onSuccess: () => {
 //       store.markAllAsRead()
-//       router.visit('/seller/notifications')
+//       router.visit('/user/notifications')
 //     }
 //   })
 // }
-
-function handleMarkAllAsRead() {
-  router.post('/user/notifications/mark-all-as-read', {}, {
-    preserveScroll: true,
-    onSuccess: () => {
-      store.markAllAsRead()
-      router.visit('/user/notifications')
-    }
-  })
-}
 
 
 

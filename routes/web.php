@@ -65,6 +65,7 @@ Route::middleware(['auth'])->prefix('seller')->name('seller.')->group(function (
     Route::post('/notifications/{id}/read', [NotificationController::class, 'markAsRead'])->name('notifications.read');
     Route::delete('/notifications/{id}', [NotificationController::class, 'destroy'])->name('notifications.destroy');
     Route::post('/notifications/delete-read', [NotificationController::class, 'deleteRead'])->name('notifications.deleteRead');
+    Route::post('/notifications/mark-all-as-read', [NotificationController::class, 'markAllAsRead'])->name('notifications.markAllAsRead');
 });
 
 
@@ -106,12 +107,6 @@ Route::prefix('seller')->middleware('auth')->group(function () {
     Route::get('/orders/{order}/receipt', [OrderController::class, 'sellerReceipt'])->name('seller.receipt');
 });
 
-
-
-// Route::post('/seller/notifications/{id}/read', [NotificationController::class, 'markAsRead']);
-// Route::post('/seller/notifications/mark-all-as-read', [NotificationController::class, 'markAllAsRead']);
-
-
 use App\Http\Controllers\User\UserNotificationController;
 
 Route::middleware(['auth'])->group(function () {
@@ -120,8 +115,6 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/user/notifications/mark-all-as-read', [UserNotificationController::class, 'markAllAsRead'])->name('user.notifications.markAll');
     Route::post('/user/notifications/{id}/mark-as-read', [UserNotificationController::class, 'markAsRead'])->name('user.notifications.markOne');
 });
-
-
 
 //For Buy
 Route::middleware(['auth'])->group(function () {
@@ -188,7 +181,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/seller/inbox/{user}', [MessageController::class, 'sellerInbox'])->name('seller.inbox.chat');// 💬 Chat with a customer
 
-    
+
     Route::post('/messages/send', [MessageController::class, 'send'])->name('messages.send');
 
     Route::get('/messages/unread-count', [MessageController::class, 'unreadCount']);
