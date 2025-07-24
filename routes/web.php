@@ -250,8 +250,6 @@ Route::prefix('admin')->middleware('auth')->name('admin.')->group(function () {
 
 
 
-// routes/web.php
-
 use App\Http\Controllers\AdminDashboardController;
 
 Route::get('/admin/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
