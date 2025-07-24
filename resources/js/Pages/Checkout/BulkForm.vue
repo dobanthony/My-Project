@@ -43,27 +43,29 @@ import { useForm, Link } from '@inertiajs/vue3'
 import { defineProps } from 'vue'
 
 const props = defineProps({
-  cartItems: Array
+  cartItems: Array,
+  lastDeliveryInfo: Object
 })
 
+// ✅ Only include items with valid product
 const validItems = props.cartItems.filter(item => item.product && item.product.id)
 
 const orders = validItems.map(item => ({
   product_id: item.product.id,
-  quantity: item.quantity
+  quantity: item.quantity || 1
 }))
 
+// ✅ Pre-fill form if lastDeliveryInfo is available
 const form = useForm({
-  full_name: '',
-  phone_number: '',
-  email: '',
-  delivery_address: '',
-  notes: '',
+  full_name: props.lastDeliveryInfo?.full_name || '',
+  phone_number: props.lastDeliveryInfo?.phone_number || '',
+  email: props.lastDeliveryInfo?.email || '',
+  delivery_address: props.lastDeliveryInfo?.delivery_address || '',
+  notes: props.lastDeliveryInfo?.notes || '',
   orders
 })
 
 const submit = () => {
-  form.post('/checkout-bulk/store', {
-  })
+  form.post('/checkout-bulk/store')
 }
 </script>

@@ -44,7 +44,7 @@
                 </td>
                 <td>₱{{ (item.quantity * Number(item.product?.price ?? 0)).toFixed(2) }}</td>
                 <td class="text-center">
-                  <button @click="removeFromCart(item)" class="btn btn-danger btn-sm">
+                  <button @click="confirmDelete(item)" class="btn btn-danger btn-sm">
                     <i class="bi bi-trash"></i>
                   </button>
                 </td>
@@ -67,7 +67,7 @@
                   />
                   <strong class="text-break">{{ item.product?.name ?? 'Unknown Product' }}</strong>
                 </div>
-                <button @click="removeFromCart(item)" class="btn btn-sm btn-outline-danger">
+                <button @click="confirmDelete(item)" class="btn btn-sm btn-outline-danger">
                   <i class="bi bi-trash"></i>
                 </button>
               </div>
@@ -99,41 +99,46 @@
         </div>
 
         <!-- 💳 Cart Summary -->
-        <div
-          class="mt-4 d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3"
-        >
+        <div class="mt-4 d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3">
           <div>
             <strong>Selected Total:</strong>
             <span class="fs-5 text-success">₱{{ selectedTotal.toFixed(2) }}</span>
           </div>
-          <button
-            class="btn btn-success"
-            :disabled="selectedCartIds.length === 0"
-            @click="buyNow"
-          >
+          <button class="btn btn-success" :disabled="selectedCartIds.length === 0" @click="buyNow">
             <i class="bi bi-bag me-2"></i>Buy Now
           </button>
         </div>
       </div>
     </div>
 
-    <!-- ✅ Bootstrap Toast Notification -->
+    <!-- ✅ Toast Notification -->
     <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 2000">
-      <div
-        class="toast align-items-center text-bg-success border-0"
-        role="alert"
-        aria-live="assertive"
-        aria-atomic="true"
-        ref="successToast"
-      >
+      <div class="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true" ref="successToast">
         <div class="d-flex">
           <div class="toast-body" ref="toastMessage">Success</div>
-          <button
-            type="button"
-            class="btn-close btn-close-white me-2 m-auto"
-            data-bs-dismiss="toast"
-            aria-label="Close"
-          ></button>
+          <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div class="modal fade" id="deleteModal" tabindex="-1" ref="deleteModalRef">
+      <div
+        class="modal-dialog modal-lg"
+        style="position: absolute; top: 5%; left: 50%; transform: translateX(-50%)"
+      >
+        <div class="modal-content">
+          <div class="modal-header bg-success text-white">
+            <h5 class="modal-title"><i class="bi bi-trash"></i> Confirm Removal</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            Are you sure you want to remove <strong>{{ itemToDelete?.product?.name }}</strong> from your cart?
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-outline-success" data-bs-dismiss="modal">Cancel</button>
+            <button type="button" class="btn btn-danger" @click="deleteConfirmed">Remove</button>
+          </div>
         </div>
       </div>
     </div>
@@ -148,28 +153,23 @@ import { ref, computed } from 'vue'
 const props = defineProps({ cartItems: Array })
 
 const selectedCartIds = ref([])
-
-
-const allSelected = computed(() => {
-  return props.cartItems.length > 0 &&
-    selectedCartIds.value.length === props.cartItems.length
-})
-
-const toggleAllSelection = () => {
-  if (allSelected.value) {
-    selectedCartIds.value = []
-  } else {
-    selectedCartIds.value = props.cartItems.map(item => item.id)
-  }
-}
-
-// ✅ Toast setup
 const successToast = ref(null)
 const toastMessage = ref('')
-function showToast(message = 'Success!') {
+const itemToDelete = ref(null)
+const deleteModalRef = ref(null)
+
+const showToast = (message = 'Success!') => {
   toastMessage.value = message
   const toast = new bootstrap.Toast(successToast.value)
   toast.show()
+}
+
+const allSelected = computed(() =>
+  props.cartItems.length > 0 && selectedCartIds.value.length === props.cartItems.length
+)
+
+const toggleAllSelection = () => {
+  selectedCartIds.value = allSelected.value ? [] : props.cartItems.map(item => item.id)
 }
 
 const updateQuantity = (item) => {
@@ -179,18 +179,26 @@ const updateQuantity = (item) => {
   })
 }
 
-const removeFromCart = (item) => {
-  if (confirm('Remove this item from cart?')) {
-    router.delete(route('cart.destroy', item.id), {
-      preserveScroll: true,
-      onSuccess: () => showToast('Item removed from cart!')
-    })
-  }
+const confirmDelete = (item) => {
+  itemToDelete.value = item
+  const modal = new bootstrap.Modal(deleteModalRef.value)
+  modal.show()
 }
 
-const selectedItems = computed(() => {
-  return props.cartItems.filter(item => selectedCartIds.value.includes(item.id))
-})
+const deleteConfirmed = () => {
+  const modal = bootstrap.Modal.getInstance(deleteModalRef.value)
+  router.delete(route('cart.destroy', itemToDelete.value.id), {
+    preserveScroll: true,
+    onSuccess: () => {
+      showToast('Item removed from cart!')
+      modal.hide()
+    }
+  })
+}
+
+const selectedItems = computed(() =>
+  props.cartItems.filter(item => selectedCartIds.value.includes(item.id))
+)
 
 const selectedTotal = computed(() => {
   return selectedItems.value.reduce((sum, item) => {
@@ -201,11 +209,9 @@ const selectedTotal = computed(() => {
 
 const buyNow = () => {
   const items = selectedItems.value
-
   if (items.length === 0) return
 
   showToast('Redirecting to delivery info...')
-
   setTimeout(() => {
     router.visit(route('checkout.bulkForm'), {
       data: {
@@ -218,11 +224,10 @@ const buyNow = () => {
           quantity: i.quantity
         }))
       },
-      method: 'post', // ✅ Required for controller to receive $request->input('items')
+      method: 'post',
       preserveState: true,
       preserveScroll: true
     })
   }, 1000)
 }
-
 </script>

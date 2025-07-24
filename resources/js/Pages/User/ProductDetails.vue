@@ -94,8 +94,8 @@
               :disabled="followLoading"
               @click="toggleFollow"
             >
-              <span v-if="isFollowing">✅ Following</span>
-              <span v-else>➕ Follow Shop</span>
+              <span v-if="isFollowing"><i class="bi bi-bell-fill"></i> Following</span>
+              <span v-else><i class="bi bi-plus-lg"></i> Follow</span>
             </button>
             <div class="text-muted mt-1">Followers: {{ followerCount }}</div>
           </div>
@@ -281,8 +281,8 @@
           <div class="d-flex justify-content-between align-items-center mb-2">
             <div class="d-flex align-items-center gap-2">
               <img
-                :src="rating.user?.avatar 
-                  ? `/storage/${rating.user.avatar}` 
+                :src="rating.user?.avatar
+                  ? `/storage/${rating.user.avatar}`
                   : `https://ui-avatars.com/api/?name=${encodeURIComponent(rating.user?.name ?? 'User')}`"
                 alt="User Avatar"
                 class="rounded-circle border"

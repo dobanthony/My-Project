@@ -36,7 +36,7 @@
           <textarea v-model="form.notes" class="form-control" rows="2"></textarea>
         </div>
 
-        <!-- Customization (Optional, for later use) -->
+        <!-- Customization -->
         <div v-if="product.customization" class="border rounded p-3 bg-light mb-4">
           <h5>🎨 Product Customization</h5>
 
@@ -99,11 +99,12 @@
 
 <script setup>
 import { useForm, Link } from '@inertiajs/vue3'
-import { defineProps } from 'vue'
+import { defineProps, onMounted } from 'vue'
 
 const props = defineProps({
   product: Object,
-  quantity: Number
+  quantity: Number,
+  lastDeliveryInfo: Object // contains: full_name, phone_number, email, delivery_address
 })
 
 const form = useForm({
@@ -115,11 +116,21 @@ const form = useForm({
   notes: '',
   quantity: props.quantity || 1,
 
-  // Custom fields (not required yet)
+  // Custom fields
   color: '',
   size: '',
   material: '',
   custom_name: ''
+})
+
+// Prefill form on mount if lastDeliveryInfo exists
+onMounted(() => {
+  if (props.lastDeliveryInfo) {
+    form.full_name = props.lastDeliveryInfo.full_name || ''
+    form.phone_number = props.lastDeliveryInfo.phone_number || ''
+    form.email = props.lastDeliveryInfo.email || ''
+    form.delivery_address = props.lastDeliveryInfo.delivery_address || ''
+  }
 })
 
 const submit = () => {

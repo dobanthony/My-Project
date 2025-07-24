@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Order;
 use App\Models\Product;
+use App\Models\DeliveryInfo;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -13,11 +14,40 @@ class CheckoutController extends Controller
     {
         $quantity = (int) $request->input('quantity', 1);
 
+        // Get latest delivery info if available
+        $deliveryInfo = auth()->user()->deliveryInfo()->latest()->first();
+
         return Inertia::render('Checkout/Form', [
             'product' => $product,
-            'quantity' => $quantity
+            'quantity' => $quantity,
+            'deliveryInfo' => $deliveryInfo,
         ]);
     }
+
+
+public function create(Product $product)
+{
+    $lastInfo = auth()->user()->deliveryInfos()->latest()->first();
+
+    return Inertia::render('Checkout/Form', [
+        'product' => $product,
+        'quantity' => request('quantity', 1),
+        'lastDeliveryInfo' => $lastInfo,
+    ]);
+}
+
+public function bulkForm(Request $request)
+{
+    $cartItems = collect($request->input('items', []));
+    $lastInfo = auth()->user()->deliveryInfos()->latest()->first();
+
+    return Inertia::render('Checkout/BulkForm', [
+        'cartItems' => $cartItems,
+        'lastDeliveryInfo' => $lastInfo,
+    ]);
+}
+
+
 
     public function store(Request $request)
     {
@@ -28,7 +58,7 @@ class CheckoutController extends Controller
             'email' => 'required|email',
             'delivery_address' => 'required|string',
             'notes' => 'nullable|string',
-            'quantity' => 'required|integer|min:1'
+            'quantity' => 'required|integer|min:1',
         ]);
 
         $product = Product::findOrFail($request->product_id);
@@ -37,6 +67,16 @@ class CheckoutController extends Controller
         if ($product->stock < $request->quantity) {
             return back()->withErrors(['quantity' => 'Not enough stock available.']);
         }
+
+        // Save delivery info to new table for future use
+        DeliveryInfo::create([
+            'user_id' => auth()->id(),
+            'full_name' => $request->full_name,
+            'phone_number' => $request->phone_number,
+            'email' => $request->email,
+            'delivery_address' => $request->delivery_address,
+            'notes' => $request->notes,
+        ]);
 
         // Create the order
         Order::create([
@@ -48,7 +88,7 @@ class CheckoutController extends Controller
             'delivery_address' => $request->delivery_address,
             'notes' => $request->notes,
             'quantity' => $request->quantity,
-            'status' => 'pending'
+            'status' => 'pending',
         ]);
 
         // Update product stock and sold count
@@ -58,14 +98,15 @@ class CheckoutController extends Controller
         return redirect()->route('my-orders')->with('success', 'Order placed. Waiting for approval.');
     }
 
-    public function bulkForm(Request $request)
-    {
-        $cartItems = collect($request->input('items', []));
+    // ✅ No changes to bulkForm or bulkStore
+    // public function bulkForm(Request $request)
+    // {
+    //     $cartItems = collect($request->input('items', []));
 
-        return Inertia::render('Checkout/BulkForm', [
-            'cartItems' => $cartItems
-        ]);
-    }
+    //     return Inertia::render('Checkout/BulkForm', [
+    //         'cartItems' => $cartItems
+    //     ]);
+    // }
 
     public function bulkStore(Request $request)
     {
@@ -90,7 +131,6 @@ class CheckoutController extends Controller
                 ]);
             }
 
-            // Create order
             Order::create([
                 'user_id' => auth()->id(),
                 'product_id' => $product->id,
@@ -103,7 +143,6 @@ class CheckoutController extends Controller
                 'notes' => $request->notes,
             ]);
 
-            // Update stock and sold
             $product->decrement('stock', $order['quantity']);
             $product->increment('total_sold', $order['quantity']);
         }

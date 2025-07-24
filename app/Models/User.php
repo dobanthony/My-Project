@@ -93,4 +93,11 @@ public function latestMessage()
 }
 
 
+
+public function deliveryInfos()
+{
+    return $this->hasMany(\App\Models\DeliveryInfo::class);
+}
+
+
 }
