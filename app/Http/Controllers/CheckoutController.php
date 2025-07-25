@@ -14,40 +14,37 @@ class CheckoutController extends Controller
     {
         $quantity = (int) $request->input('quantity', 1);
 
-        // Get latest delivery info if available
-        $deliveryInfo = auth()->user()->deliveryInfo()->latest()->first();
+        // ✅ Get latest delivery info for the user
+        $deliveryInfo = auth()->user()->deliveryInfos()->latest()->first();
 
         return Inertia::render('Checkout/Form', [
             'product' => $product,
             'quantity' => $quantity,
-            'deliveryInfo' => $deliveryInfo,
+            'lastDeliveryInfo' => $deliveryInfo, // 🧠 Pass as prop
         ]);
     }
 
+    public function create(Product $product)
+    {
+        $lastInfo = auth()->user()->deliveryInfos()->latest()->first();
 
-public function create(Product $product)
-{
-    $lastInfo = auth()->user()->deliveryInfos()->latest()->first();
+        return Inertia::render('Checkout/Form', [
+            'product' => $product,
+            'quantity' => request('quantity', 1),
+            'lastDeliveryInfo' => $lastInfo,
+        ]);
+    }
 
-    return Inertia::render('Checkout/Form', [
-        'product' => $product,
-        'quantity' => request('quantity', 1),
-        'lastDeliveryInfo' => $lastInfo,
-    ]);
-}
+    public function bulkForm(Request $request)
+    {
+        $cartItems = collect($request->input('items', []));
+        $lastInfo = auth()->user()->deliveryInfos()->latest()->first();
 
-public function bulkForm(Request $request)
-{
-    $cartItems = collect($request->input('items', []));
-    $lastInfo = auth()->user()->deliveryInfos()->latest()->first();
-
-    return Inertia::render('Checkout/BulkForm', [
-        'cartItems' => $cartItems,
-        'lastDeliveryInfo' => $lastInfo,
-    ]);
-}
-
-
+        return Inertia::render('Checkout/BulkForm', [
+            'cartItems' => $cartItems,
+            'lastDeliveryInfo' => $lastInfo,
+        ]);
+    }
 
     public function store(Request $request)
     {
@@ -63,22 +60,23 @@ public function bulkForm(Request $request)
 
         $product = Product::findOrFail($request->product_id);
 
-        // Check if stock is enough
         if ($product->stock < $request->quantity) {
             return back()->withErrors(['quantity' => 'Not enough stock available.']);
         }
 
-        // Save delivery info to new table for future use
-        DeliveryInfo::create([
-            'user_id' => auth()->id(),
-            'full_name' => $request->full_name,
-            'phone_number' => $request->phone_number,
-            'email' => $request->email,
-            'delivery_address' => $request->delivery_address,
-            'notes' => $request->notes,
-        ]);
+        // ✅ Update or create one delivery info per user
+        DeliveryInfo::updateOrCreate(
+            ['user_id' => auth()->id()],
+            [
+                'full_name' => $request->full_name,
+                'phone_number' => $request->phone_number,
+                'email' => $request->email,
+                'delivery_address' => $request->delivery_address,
+                'notes' => $request->notes,
+            ]
+        );
 
-        // Create the order
+        // ✅ Create the order
         Order::create([
             'user_id' => auth()->id(),
             'product_id' => $product->id,
@@ -91,22 +89,11 @@ public function bulkForm(Request $request)
             'status' => 'pending',
         ]);
 
-        // Update product stock and sold count
         $product->decrement('stock', $request->quantity);
         $product->increment('total_sold', $request->quantity);
 
         return redirect()->route('my-orders')->with('success', 'Order placed. Waiting for approval.');
     }
-
-    // ✅ No changes to bulkForm or bulkStore
-    // public function bulkForm(Request $request)
-    // {
-    //     $cartItems = collect($request->input('items', []));
-
-    //     return Inertia::render('Checkout/BulkForm', [
-    //         'cartItems' => $cartItems
-    //     ]);
-    // }
 
     public function bulkStore(Request $request)
     {
@@ -121,10 +108,21 @@ public function bulkForm(Request $request)
             'orders.*.quantity' => 'required|integer|min:1'
         ]);
 
+        // ✅ Update or create delivery info (1 per user)
+        DeliveryInfo::updateOrCreate(
+            ['user_id' => auth()->id()],
+            [
+                'full_name' => $request->full_name,
+                'phone_number' => $request->phone_number,
+                'email' => $request->email,
+                'delivery_address' => $request->delivery_address,
+                'notes' => $request->notes,
+            ]
+        );
+
         foreach ($request->orders as $order) {
             $product = Product::findOrFail($order['product_id']);
 
-            // Check stock per item
             if ($product->stock < $order['quantity']) {
                 return back()->withErrors([
                     'orders' => "Not enough stock for product: {$product->name}"

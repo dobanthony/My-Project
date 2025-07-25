@@ -19,10 +19,10 @@
         <div class="col-12 col-md-3">
           <select v-model="statusFilter" class="form-select" @change="handleSearch">
             <option value="">All Statuses</option>
-            <option value="pending">Pending</option>
-            <option value="approved">Approved</option>
-            <option value="declined">Declined</option>
-            <option value="canceled">Canceled</option>
+            <option class="text-warning" value="pending">Pending</option>
+            <option class="text-success" value="approved">Approved</option>
+            <option class="text-dark" value="declined">Declined</option>
+            <option class="text-danger" value="canceled">Canceled</option>
           </select>
         </div>
       </div>
@@ -67,9 +67,9 @@
                     v-model="deliveryStatuses[order.id]"
                     @change="updateDeliveryStatus(order.id)"
                   >
-                    <option value="pending">Pending</option>
-                    <option value="delivered">Delivered</option>
-                    <option value="failed">Failed</option>
+                    <option class="text-warning" value="pending">Pending</option>
+                    <option class="text-success" value="delivered">Delivered</option>
+                    <option class="text-danger" value="failed">Failed</option>
                   </select>
                 </div>
                 <span v-else class="badge bg-secondary">
