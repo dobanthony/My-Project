@@ -75,29 +75,26 @@ class User extends Authenticatable
         return $this->belongsToMany(User::class, 'shop_user_follows');
     }
 
-
     //delte this
     public function sentMessages()
-{
-    return $this->hasMany(Message::class, 'sender_id');
-}
+    {
+        return $this->hasMany(Message::class, 'sender_id');
+    }
 
-public function receivedMessages()
-{
-    return $this->hasMany(Message::class, 'receiver_id');
-}
+    public function receivedMessages()
+    {
+        return $this->hasMany(Message::class, 'receiver_id');
+    }
 
-public function latestMessage()
-{
-    return $this->hasMany(\App\Models\Message::class, 'sender_id')->latest();
-}
+    public function latestMessage()
+    {
+        return $this->hasMany(\App\Models\Message::class, 'sender_id')->latest();
+    }
 
-
-
-public function deliveryInfos()
-{
-    return $this->hasMany(\App\Models\DeliveryInfo::class);
-}
+    public function deliveryInfos()
+    {
+        return $this->hasMany(\App\Models\DeliveryInfo::class);
+    }
 
 
 }

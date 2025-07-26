@@ -24,12 +24,12 @@ class OrderController extends Controller
 
         $product = Product::findOrFail($validated['product_id']);
 
-        // ✅ Stock check
+        // Stock check
         if ($product->stock < $validated['quantity']) {
             return back()->withErrors(['quantity' => 'Not enough stock available.']);
         }
 
-        // ✅ Place order
+        // Place order
         Order::create([
             'user_id' => auth()->id(),
             'product_id' => $product->id,
@@ -37,7 +37,7 @@ class OrderController extends Controller
             'status' => 'pending',
         ]);
 
-        // ✅ Update stock and sold
+        // Update stock and sold
         $product->decrement('stock', $validated['quantity']);
         $product->increment('total_sold', $validated['quantity']);
 
@@ -86,12 +86,12 @@ class OrderController extends Controller
 
         $product = $order->product;
 
-        // ✅ Re-check stock (for safety)
+        // Re-check stock (for safety)
         if ($product->stock < $order->quantity) {
             return back()->with('error', 'Not enough stock to approve the order.');
         }
 
-        // ✅ Deduct only if not already deducted on creation
+        // Deduct only if not already deducted on creation
         // Optional safety: you may track a 'deducted' field or skip this if already handled
 
         $order->update([
