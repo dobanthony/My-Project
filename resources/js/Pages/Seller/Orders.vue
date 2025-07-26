@@ -1,7 +1,7 @@
 <template>
   <SellerDashboardLayout>
     <div class="container">
-      <h2 class="mb-4 text-center text-md-start"><i class="bi bi-box-seam me-2"></i> Orders Orders</h2>
+      <h2 class="mb-4 text-center text-md-start"><i class="bi bi-box-seam me-2"></i> Orders</h2>
 
       <!-- 🔍 Search & Filter -->
       <div class="row gy-2 gx-2 mb-3">
