@@ -255,5 +255,14 @@ use App\Http\Controllers\AdminDashboardController;
 Route::get('/admin/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
 
 
+use App\Http\Controllers\Admin\AdminMarketplaceController;
+
+Route::prefix('admin/marketplace')->name('admin.marketplace.')->group(function () {
+    Route::get('/', [AdminMarketplaceController::class, 'index'])->name('index');
+    Route::get('/{product}', [AdminMarketplaceController::class, 'show'])->name('show');
+    Route::delete('/{product}', [AdminMarketplaceController::class, 'destroy'])->name('destroy');
+});
+
+
 
 require __DIR__.'/auth.php';
