@@ -59,7 +59,7 @@
           <tbody>
             <tr v-for="product in products" :key="product.id">
               <td>{{ product.name }}</td>
-              <td>{{ product.user?.name }}</td>
+              <td>{{ product.shop.shop_name }}</td>
               <td>{{ formatDate(product.created_at) }}</td>
               <td>
                 <div class="d-flex flex-wrap gap-2">
