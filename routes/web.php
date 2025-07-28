@@ -264,5 +264,16 @@ Route::prefix('admin/marketplace')->name('admin.marketplace.')->group(function (
 });
 
 
+use App\Http\Controllers\Seller\OrderCancelNotificationController;
+
+Route::prefix('seller/notifications/canceled')->middleware(['auth', 'verified'])->group(function () {
+    Route::get('/', [OrderCancelNotificationController::class, 'index'])->name('seller.notifications.canceled');
+    Route::post('/{id}/read', [OrderCancelNotificationController::class, 'markAsRead']);
+    Route::post('/mark-all-as-read', [OrderCancelNotificationController::class, 'markAllAsRead']);
+});
+
+Route::post('/orders/{id}/cancel', [OrderController::class, 'cancel'])->middleware('auth');
+
+
 
 require __DIR__.'/auth.php';

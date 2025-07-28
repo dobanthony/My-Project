@@ -52,33 +52,15 @@
             <span class="badge bg-success me-2">✅ Order Received</span>
           </div>
 
+          <!-- ❌ Order Canceled -->
+          <div v-else-if="n.message.includes('was canceled')" class="mt-2">
+            <span class="badge bg-danger me-2">❌ Order Canceled</span>
+          </div>
+
           <!-- Timestamp -->
           <p class="mb-0">
             <small class="text-muted">{{ n.created_at }}</small>
           </p>
-        </div>
-      </div>
-
-      <!-- ⚠️ Deleted Order Modal -->
-      <div class="modal fade" tabindex="-1" id="deletedOrderModal" ref="deletedOrderModal">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header bg-warning text-dark">
-              <h5 class="modal-title">⚠️ Order Not Found</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-              <p>
-                Order ID <strong>#{{ missingOrderId }}</strong> has been deleted
-                or is no longer available.
-              </p>
-            </div>
-            <div class="modal-footer">
-              <button class="btn btn-secondary" data-bs-dismiss="modal">
-                Close
-              </button>
-            </div>
-          </div>
         </div>
       </div>
     </div>

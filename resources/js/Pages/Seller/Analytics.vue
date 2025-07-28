@@ -126,7 +126,7 @@
                 <tr v-for="order in recentOrders" :key="order.id">
                   <td>#{{ order.id }}</td>
                   <!-- <td>{{ order.customer_name }}</td> -->
-                  <td>{{ order.first_name }} {{ order.last_name }}</td>
+                  <td>{{ order.first_name }},   {{ order.last_name }}</td>
                   <td>₱{{ order.total }}</td>
                   <td><span class="badge bg-info">{{ order.status }}</span></td>
                   <td>{{ order.date }}</td>

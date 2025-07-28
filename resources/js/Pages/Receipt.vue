@@ -132,10 +132,6 @@
 
           <!-- Mark as received or report -->
           <div v-if="order.status === 'approved' && order.delivery_status === 'delivered'">
-            <!-- <div v-if="!order.received_order && !hasReported" class="mt-4 text-end">
-              <button class="btn btn-success me-2" @click="markAsReceived">✅ Order Received</button>
-              <button class="btn btn-outline-danger" @click="showReportForm = !showReportForm">📝 Report for Not Received</button>
-            </div> -->
             <div v-if="!order.received_order && !hasReported" class="mt-4 text-end">
               <button class="btn btn-success me-2" @click="markAsReceived">✅ Order Received</button>
               <button class="btn btn-outline-danger" @click="showReportForm = !showReportForm">📝 Report for Not Received</button>
@@ -241,7 +237,7 @@ const props = defineProps({
   order: Object,
   userId: Number,
   isSeller: Boolean,
-   hasReported: Boolean, 
+   hasReported: Boolean,
 })
 
 const hasReported = ref(props.hasReported)

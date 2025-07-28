@@ -11,6 +11,7 @@ use App\Notifications\OrderReceivedNotification;
 use App\Notifications\OrderStatusNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Notification;
+use App\Notifications\OrderCanceledNotification;
 use Inertia\Inertia;
 
 class OrderController extends Controller
@@ -289,14 +290,31 @@ class OrderController extends Controller
         return back()->with('message', 'Review submitted successfully.');
     }
 
-    public function cancel(Order $order)
+    // public function cancel(Order $order)
+    // {
+    //     if ($order->status !== 'pending') {
+    //         return back()->withErrors(['message' => 'Only pending orders can be canceled.']);
+    //     }
+
+    //     $order->update(['status' => 'canceled', 'delivery_status' => 'canceled']);
+
+    //     return back()->with('success', 'Order canceled successfully.');
+    // }
+    public function cancel($id)
     {
-        if ($order->status !== 'pending') {
-            return back()->withErrors(['message' => 'Only pending orders can be canceled.']);
+        $order = Order::with('product.shop.user')->findOrFail($id);
+
+        // Update order status
+        $order->status = 'canceled';
+        $order->save();
+
+        // Notify seller
+        $seller = $order->product->shop->user;
+        if ($seller) {
+            $seller->notify(new OrderCanceledNotification($order));
         }
 
-        $order->update(['status' => 'canceled', 'delivery_status' => 'canceled']);
-
-        return back()->with('success', 'Order canceled successfully.');
+        return back()->with('success', 'Order has been canceled.');
     }
+
 }

@@ -5,7 +5,7 @@ namespace App\Notifications;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 
-class OrderReceivedNotification extends Notification
+class OrderCanceledNotification extends Notification
 {
     use Queueable;
 
@@ -25,7 +25,7 @@ class OrderReceivedNotification extends Notification
     {
         return [
             'order_id' => $this->order->id,
-            'message' => "Order #{$this->order->id} was marked as received by the buyer.",
+            'message' => "❌ Order #{$this->order->id} was canceled by the buyer.",
         ];
     }
 }
