@@ -1,6 +1,6 @@
 <template>
   <SellerDashboardLayout>
-  <div class="container my-5">
+  <div class="container">
     <div class="border p-4 shadow-sm rounded bg-white mx-auto" style="max-width: 800px">
       <!-- Delivery Info -->
       <div class="mb-4">
