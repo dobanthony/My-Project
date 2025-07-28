@@ -33,7 +33,7 @@ class AnalyticsController extends Controller
         $productIds = $shop->products->pluck('id');
 
         // Orders marked as received (completed)
-        $deliveredOrders = ReceivedOrder::whereHas('order', fn ($query) => 
+        $deliveredOrders = ReceivedOrder::whereHas('order', fn ($query) =>
             $query->whereIn('product_id', $productIds)
         )->where('created_at', '>=', $startDate)
          ->with('order.product')
@@ -88,13 +88,16 @@ class AnalyticsController extends Controller
             ->where('created_at', '>=', now()->subDays(7))
             ->count();
 
+        // ✅ UPDATED RECENT ORDERS WITH first_name and last_name
         $recentOrders = Order::whereIn('product_id', $productIds)
-            ->latest()->take(5)
+            ->latest()
+            ->take(5)
             ->with(['user', 'product'])
             ->get()
             ->map(fn ($order) => [
                 'id' => $order->id,
-                'customer_name' => $order->user->name,
+                'first_name' => $order->user->first_name ?? '',
+                'last_name' => $order->user->last_name ?? '',
                 'total' => $order->quantity * $order->product->price,
                 'status' => $order->status,
                 'date' => $order->created_at->format('M d, Y'),
