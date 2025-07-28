@@ -18,7 +18,7 @@ class OrderReceivedNotification extends Notification
 
     public function via($notifiable)
     {
-        return ['database'];
+        return ['database']; // You can also add 'mail' here if needed
     }
 
     public function toArray($notifiable)
