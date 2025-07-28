@@ -27,7 +27,6 @@
           @click="handleClick(n)"
           style="cursor: pointer; transition: color 0.3s;"
         >
-          <!-- Highlight unread vs read -->
           <p
             :class="{
               'text-dark fw-bold': !n.read_at,
@@ -38,8 +37,16 @@
             {{ n.message }}
           </p>
 
+          <!-- 🗑 Product Deleted -->
+          <div v-if="n.message.includes('was deleted by an admin')" class="mt-2">
+            <span class="badge bg-danger me-2">🗑 Product Deleted</span>
+            <p class="mb-0">
+              <small class="text-muted">This product was removed from your listings.</small>
+            </p>
+          </div>
+
           <!-- 🟡 Reported Issue -->
-          <div v-if="n.message.includes('Issue reported')" class="mt-2">
+          <div v-else-if="n.message.includes('Issue reported')" class="mt-2">
             <span class="badge bg-warning text-dark me-2">📢 Report</span>
             <p class="mb-1"><small class="text-muted">Report Content:</small></p>
             <p class="bg-light border p-2 rounded">
@@ -64,6 +71,25 @@
         </div>
       </div>
     </div>
+
+    <!-- 🧾 Modal for Deleted Product Info -->
+    <div class="modal fade" ref="deletedProductModal" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Product <span class="text-danger">Deleted</span></h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+            <p><strong>Product Name:</strong> {{ modalProductName }}</p>
+            <p><strong>Reason:</strong> {{ modalReason }}</p>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-outline-success" data-bs-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
   </SellerDashboardLayout>
 </template>
 
@@ -72,6 +98,7 @@ import { ref, computed, onMounted } from 'vue'
 import { router } from '@inertiajs/vue3'
 import { useNotificationStore } from '@/stores/notification'
 import SellerDashboardLayout from '@/Layouts/SellerDashboardLayout.vue'
+import * as bootstrap from 'bootstrap'
 
 const props = defineProps({
   notifications: {
@@ -90,18 +117,34 @@ onMounted(() => {
 const notifications = computed(() => store.notifications)
 const hasUnread = computed(() => store.hasUnread)
 
-const missingOrderId = ref(null)
-const deletedOrderModal = ref(null)
+const deletedProductModal = ref(null)
+const modalInstance = ref(null)
+const modalProductName = ref('')
+const modalReason = ref('')
 
 function extractReport(msg) {
   const parts = msg.split(':')
   return parts.length > 1 ? parts.slice(1).join(':').trim() : 'No details provided.'
 }
 
-function handleClick(notification) {
-  const { id, order_id, message } = notification
+function extractProductDeletionInfo(msg) {
+  const match = msg.match(/Your product "(.*?)" was deleted by an admin\. Reason: (.*)/)
+  if (match) {
+    return {
+      productName: match[1],
+      reason: match[2]
+    }
+  }
+  return {
+    productName: 'Unknown',
+    reason: 'No reason provided.'
+  }
+}
 
-  // If related to an order, try visiting it
+function handleClick(notification) {
+  const { id, order_id, product_id, message } = notification
+
+  // Handle order receipt-related
   if (order_id) {
     router.post(`/seller/notifications/${id}/read`, {}, {
       preserveScroll: true,
@@ -111,21 +154,39 @@ function handleClick(notification) {
         router.visit(`/seller/orders/${order_id}/receipt`)
       },
       onError: () => {
-        missingOrderId.value = order_id
-        const modal = new bootstrap.Modal(deletedOrderModal.value)
-        modal.show()
+        // fallback error modal if order doesn't exist
+        alert('Order not found.')
       }
     })
-  } else {
-    // If not order-related (e.g., product deleted), just mark as read
+    return
+  }
+
+  // Handle deleted product notifications
+  if (message.includes('was deleted by an admin')) {
+    const info = extractProductDeletionInfo(message)
+    modalProductName.value = info.productName
+    modalReason.value = info.reason
+
     router.post(`/seller/notifications/${id}/read`, {}, {
       preserveScroll: true,
       preserveState: true,
       onSuccess: () => {
         store.markAsRead(id)
+        modalInstance.value = new bootstrap.Modal(deletedProductModal.value)
+        modalInstance.value.show()
       }
     })
+    return
   }
+
+  // Default notification handler
+  router.post(`/seller/notifications/${id}/read`, {}, {
+    preserveScroll: true,
+    preserveState: true,
+    onSuccess: () => {
+      store.markAsRead(id)
+    }
+  })
 }
 
 function markAllAsRead() {

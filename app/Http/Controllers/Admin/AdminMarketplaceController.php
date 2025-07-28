@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Notifications\ProductDeletedByAdmin;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -16,7 +17,8 @@ class AdminMarketplaceController extends Controller
         $sort = $request->query('sort', 'all'); // default sort is 'all'
         $cutoff = Carbon::now()->subDays(2); // 2-day threshold
 
-        $query = Product::with(['user', 'shop']);
+        // Load shop and its user (seller)
+        $query = Product::with(['shop.user']);
 
         if ($sort === 'newest') {
             $query->where('created_at', '>=', $cutoff)->orderBy('created_at', 'desc');
@@ -35,7 +37,7 @@ class AdminMarketplaceController extends Controller
     // Show a single product in the detailed view page
     public function show(Product $product)
     {
-        $product->load(['user', 'shop']);
+        $product->load(['shop.user']); // also load seller through shop
 
         return Inertia::render('Admin/Marketplace/View', [
             'product' => $product,
@@ -49,17 +51,28 @@ class AdminMarketplaceController extends Controller
             'reason' => 'required|string|max:255',
         ]);
 
-        $seller = $product->user;
+        // Load the related shop and user (seller)
+        $product->load('shop.user');
+        $seller = optional($product->shop)->user;
 
+        // Fallback if no seller is found
+        if (!$seller) {
+            return redirect()->route('admin.marketplace.index')
+                ->with('error', 'Seller not found for this product.');
+        }
+
+        // Send notification to seller before deleting
+        $seller->notify(new ProductDeletedByAdmin(
+            $product->name,
+            $request->reason,
+            $product->id
+        ));
+
+        // Delete product
         $product->delete();
 
+        // Flash message
         session()->flash('message', 'Product deleted. Seller will be notified.');
-
-        session()->flash('seller_notification', [
-            'title' => 'Product Deleted',
-            'message' => 'Your product "' . $product->name . '" was deleted by an admin. Reason: ' . $request->reason,
-            'product_id' => $product->id,
-        ]);
 
         return redirect()->route('admin.marketplace.index');
     }
