@@ -15,6 +15,7 @@ class Message extends Model
         'receiver_id',
         'message',
         'is_read',
+        'product_id',
     ];
 
     // 🔗 Relationships
@@ -33,4 +34,9 @@ class Message extends Model
     {
         return $this->belongsTo(User::class, 'receiver_id');
     }
+    public function product()
+    {
+        return $this->belongsTo(\App\Models\Product::class);
+    }
+
 }

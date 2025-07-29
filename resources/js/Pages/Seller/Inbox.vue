@@ -7,7 +7,27 @@
           :key="userId"
           class="border rounded mb-5 p-4 bg-white shadow-sm"
         >
-          <h5 class="mb-4">Chat with {{ conversation.firs_name }}</h5>
+          <h5 class="mb-4">Chat with {{ conversation.user_name }}</h5>
+
+          <!-- 📌 Pinned Product -->
+          <div
+            v-if="conversation.product"
+            class="border rounded p-3 mb-3 bg-light d-flex align-items-center"
+          >
+            <img
+              :src="conversation.product.image ? `/storage/${conversation.product.image}` : 'https://via.placeholder.com/100x100?text=No+Image'"
+              alt="Product Image"
+              class="me-3"
+              style="width: 60px; height: 60px; object-fit: cover; border-radius: 10px;"
+            />
+            <div>
+              <div class="fw-bold">{{ conversation.product.name }}</div>
+              <div class="text-muted small">₱{{ parseFloat(conversation.product.price).toFixed(2) }}</div>
+              <Link :href="`/product/${conversation.product.id}`" class="text-decoration-none small">
+                🔍 View Product
+              </Link>
+            </div>
+          </div>
 
           <!-- 💬 Chat Box -->
           <div class="chat-box mb-3 p-3 bg-light rounded overflow-auto">
@@ -39,6 +59,20 @@
                     {{ message.sender.id === shop.user_id ? 'You' : message.sender.first_name }}
                   </div>
                   <div class="small">{{ message.message }}</div>
+
+                  <!-- 🛒 Product inside message -->
+                  <div v-if="message.product" class="card mt-2 border" style="max-width: 250px;">
+                    <img
+                      :src="message.product.image ? `/storage/${message.product.image}` : 'https://via.placeholder.com/100x100?text=No+Image'"
+                      class="card-img-top"
+                      style="height: 120px; object-fit: cover;"
+                    />
+                    <div class="card-body p-2">
+                      <h6 class="card-title mb-1 text-success">{{ message.product.name }}</h6>
+                      <p class="text-muted small mb-1">₱{{ parseFloat(message.product.price).toFixed(2) }}</p>
+                      <Link :href="`/product/${message.product.id}`" class="text-decoration-none small">🔍 View Product</Link>
+                    </div>
+                  </div>
                 </div>
 
                 <!-- Timestamp & Read Status -->
@@ -85,7 +119,7 @@
 <script setup>
 import SellerDashboardLayout from '@/Layouts/SellerDashboardLayout.vue'
 import { reactive, onMounted, onBeforeUnmount } from 'vue'
-import { router } from '@inertiajs/vue3'
+import { router, Link } from '@inertiajs/vue3'
 import { defineProps } from 'vue'
 
 const { shop, messages } = defineProps({
@@ -98,12 +132,11 @@ let interval = null
 
 function groupAllMessages() {
   const prevReplies = {}
-
   for (const userId in groupedMessages) {
     prevReplies[userId] = groupedMessages[userId].reply
   }
 
-  Object.keys(groupedMessages).forEach((key) => delete groupedMessages[key])
+  Object.keys(groupedMessages).forEach(key => delete groupedMessages[key])
 
   messages.forEach((msg) => {
     const userId = msg.sender.id !== shop.user_id ? msg.sender.id : msg.receiver.id
@@ -114,21 +147,31 @@ function groupAllMessages() {
         user_name: msg.sender.id !== shop.user_id ? msg.sender.name : msg.receiver.name,
         messages: [],
         reply: prevReplies[userId] || '',
+        product: msg.product || null
       }
     }
 
     groupedMessages[userId].messages.push(msg)
+
+    // Only set product once
+    if (msg.product && !groupedMessages[userId].product) {
+      groupedMessages[userId].product = msg.product
+    }
   })
 }
-groupAllMessages()
 
 function sendReply(conversation) {
   if (!conversation.reply.trim()) return
+
+  const hasSentProductBefore = conversation.messages.some(
+    (msg) => msg.sender.id === shop.user_id && msg.product
+  )
 
   router.post('/messages/send', {
     shop_id: shop.id,
     message: conversation.reply,
     receiver_id: conversation.user_id,
+    product_id: !hasSentProductBefore && conversation.product?.id ? conversation.product.id : null,
   }, {
     onSuccess: () => {
       conversation.reply = ''
@@ -164,6 +207,7 @@ function isLastOwnMessage(messages, index) {
 }
 
 onMounted(() => {
+  groupAllMessages()
   interval = setInterval(() => {
     router.reload({
       only: ['messages'],
@@ -181,12 +225,12 @@ onBeforeUnmount(() => {
 
 <style scoped>
 textarea.form-control {
-  border-color: #28a745; /* green */
+  border-color: #28a745;
   box-shadow: none;
 }
 textarea.form-control:focus {
-  border-color: #28a745; /* green */
-  box-shadow: 0 0 0 0.25rem rgba(40, 167, 69, 0.5); /* green with 50% opacity */
+  border-color: #28a745;
+  box-shadow: 0 0 0 0.25rem rgba(40, 167, 69, 0.5);
 }
 
 .chat-box {

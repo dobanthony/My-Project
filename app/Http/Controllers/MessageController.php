@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Message;
+use App\Models\Product;
 use App\Models\Shop;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -10,62 +11,72 @@ use Inertia\Inertia;
 
 class MessageController extends Controller
 {
-    public function userInbox(Shop $shop)
+    public function userInbox(Shop $shop, Request $request)
     {
-        //Mark unread messages as read
         Message::where('shop_id', $shop->id)
             ->where('receiver_id', auth()->id())
             ->where('is_read', false)
             ->update(['is_read' => true]);
 
-        // Fetch messages
         $messages = Message::where('shop_id', $shop->id)
             ->where(function ($query) {
                 $query->where('sender_id', auth()->id())
-                      ->orWhere('receiver_id', auth()->id());
+                    ->orWhere('receiver_id', auth()->id());
             })
-            ->with(['sender', 'receiver'])
+            ->with(['sender', 'receiver', 'product'])
             ->orderBy('created_at')
             ->get();
+
+        // ✅ Check from message first
+        $pinnedProduct = $messages->whereNotNull('product_id')->first()?->product;
+
+        // ✅ If no pinned product in messages, check if passed in query
+        if (!$pinnedProduct && $request->has('product_id')) {
+            $pinnedProduct = \App\Models\Product::find($request->input('product_id'));
+        }
 
         return Inertia::render('User/Inbox', [
             'shop' => $shop,
             'messages' => $messages,
+            'pinnedProduct' => $pinnedProduct,
         ]);
     }
+
 
     public function sellerInbox(User $user)
     {
         $shop = auth()->user()->shop;
 
-        //Mark unread messages as read
         Message::where('shop_id', $shop->id)
             ->where('receiver_id', auth()->id())
             ->where('is_read', false)
             ->update(['is_read' => true]);
 
-        // Fetch messages
         $messages = Message::where('shop_id', $shop->id)
             ->where(function ($query) use ($user) {
                 $query->where('sender_id', $user->id)
                       ->orWhere('receiver_id', $user->id);
             })
-            ->with(['sender', 'receiver'])
+            ->with(['sender', 'receiver', 'product']) // include product
             ->orderBy('created_at')
             ->get();
+
+        $pinnedProduct = $messages->whereNotNull('product_id')->first()?->product;
 
         return Inertia::render('Seller/Inbox', [
             'shop' => $shop,
             'messages' => $messages,
+            'pinnedProduct' => $pinnedProduct,
         ]);
     }
 
     public function send(Request $request)
     {
         $data = $request->validate([
-            'shop_id' => 'required|exists:shops,id',
-            'message' => 'required|string',
+            'shop_id'     => 'required|exists:shops,id',
+            'message'     => 'required|string',
             'receiver_id' => 'required|exists:users,id',
+            'product_id'  => 'nullable|exists:products,id',
         ]);
 
         Message::create([
@@ -73,6 +84,7 @@ class MessageController extends Controller
             'sender_id'   => auth()->id(),
             'receiver_id' => $data['receiver_id'],
             'message'     => $data['message'],
+            'product_id'  => $data['product_id'] ?? null,
             'is_read'     => false,
         ]);
 
@@ -114,9 +126,6 @@ class MessageController extends Controller
         ]);
     }
 
-    /**
-     *Seller Inbox List: Get all users who messaged the shop
-     */
     public function sellerInboxList()
     {
         $shop = auth()->user()->shop;
@@ -125,7 +134,7 @@ class MessageController extends Controller
             ->pluck('sender_id')
             ->merge(Message::where('shop_id', $shop->id)->pluck('receiver_id'))
             ->unique()
-            ->filter(fn($id) => $id !== auth()->id()); // exclude self
+            ->filter(fn($id) => $id !== auth()->id());
 
         $users = User::whereIn('id', $userIds)
             ->get()
@@ -146,13 +155,13 @@ class MessageController extends Controller
             'users' => $users,
         ]);
     }
+
     public function unreadCount()
-{
-    $count = Message::where('receiver_id', auth()->id())
-        ->where('is_read', false)
-        ->count();
+    {
+        $count = Message::where('receiver_id', auth()->id())
+            ->where('is_read', false)
+            ->count();
 
-    return response()->json(['count' => $count]);
-}
-
+        return response()->json(['count' => $count]);
+    }
 }
