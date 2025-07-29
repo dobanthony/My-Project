@@ -49,21 +49,6 @@
             </Link>
           </li>
 
-          <!-- Notifications -->
-          <li class="nav-item position-relative">
-            <Link href="/seller/notifications" class="nav-link text-white d-flex align-items-center">
-              <i class="bi bi-bell-fill me-2"></i>
-              Notifications
-              <span
-                v-if="store.unreadCount > 0"
-                class="badge bg-danger ms-2"
-                style="font-size: 0.7rem;"
-              >
-                {{ store.unreadCount }}
-              </span>
-            </Link>
-          </li>
-
           <!-- Inbox -->
           <li class="nav-item position-relative">
             <Link
@@ -113,34 +98,54 @@
       </div>
 
       <!-- Profile Avatar Dropdown -->
-      <div class="position-relative">
-        <img
-          :src="user?.avatar ? `/storage/${user.avatar}` : getDefaultAvatar"
+      <!-- 🔔 Notifications + 👤 Avatar aligned side-by-side -->
+    <div class="d-flex align-items-center gap-3 position-relative">
+    <!-- Notification Bell -->
+    <Link
+        href="/seller/notifications"
+        class="text-decoration-none position-relative"
+    >
+        <i class="bi bi-bell-fill fs-5 text-success"></i>
 
-          class="avatar cursor-pointer"
-          @click="toggleProfileModal"
+        <span
+        v-if="store.unreadCount > 0"
+        class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+        style="font-size: 0.6rem;"
+        >
+        {{ store.unreadCount }}
+        </span>
+    </Link>
+
+    <!-- Avatar + Profile Modal -->
+    <div class="position-relative">
+        <img
+        :src="user?.avatar ? `/storage/${user.avatar}` : getDefaultAvatar"
+        class="avatar cursor-pointer"
+        @click="toggleProfileModal"
         />
 
-        <!-- Custom Profile Modal -->
         <div v-show="profileModalOpen" class="profile-modal shadow rounded bg-white">
-          <div class="d-flex align-items-center gap-3 p-3 border-bottom">
-            <img
-              :src="user?.avatar ? `/storage/${user.avatar}` : getDefaultAvatar"
-              class="avatar-lg"
-            />
-            <div>
-              <div class="fw-bold">Hi, {{ $page.props.auth?.user?.name ?? 'N/A' }}</div>
-              <div class="text-muted small">{{ $page.props.auth?.user?.email ?? 'N/A' }}</div>
-              <div class="text-primary small bg-light px-2 py-1 rounded d-inline">{{ $page.props.auth?.user?.role ?? 'N/A' }}</div>
-              
+            <div class="d-flex align-items-center gap-3 p-3 border-bottom">
+                <img
+                :src="user?.avatar ? `/storage/${user.avatar}` : getDefaultAvatar"
+                class="avatar-lg"
+                />
+                <div>
+                <div class="fw-bold">Hi, {{ $page.props.auth?.user?.name ?? 'N/A' }}</div>
+                <div class="text-muted small">{{ $page.props.auth?.user?.email ?? 'N/A' }}</div>
+                <div class="text-primary small bg-light px-2 py-1 rounded d-inline">
+                    {{ $page.props.auth?.user?.role ?? 'N/A' }}
+                </div>
+                </div>
             </div>
-          </div>
-          <div>
-            <Link class="dropdown-item" href="/profile">My Profile</Link>
-            <Link class="dropdown-item" href="/logout" method="post" as="button">Log Out</Link>
-          </div>
+                <div>
+                    <Link class="dropdown-item" href="/profile">My Profile</Link>
+                    <Link class="dropdown-item" href="/logout" method="post" as="button">Log Out</Link>
+                </div>
+            </div>
         </div>
-      </div>
+    </div>
+
     </nav>
 
     <!-- Overlay for mobile sidebar -->
