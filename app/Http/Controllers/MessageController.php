@@ -13,35 +13,72 @@ class MessageController extends Controller
 {
     public function userInbox(Shop $shop, Request $request)
     {
+        $userId = auth()->id();
+
+        // ✅ Mark messages as read
         Message::where('shop_id', $shop->id)
-            ->where('receiver_id', auth()->id())
+            ->where('receiver_id', $userId)
             ->where('is_read', false)
             ->update(['is_read' => true]);
 
+        // ✅ Fetch all conversation messages
         $messages = Message::where('shop_id', $shop->id)
-            ->where(function ($query) {
-                $query->where('sender_id', auth()->id())
-                    ->orWhere('receiver_id', auth()->id());
+            ->where(function ($query) use ($userId) {
+                $query->where('sender_id', $userId)
+                      ->orWhere('receiver_id', $userId);
             })
             ->with(['sender', 'receiver', 'product'])
             ->orderBy('created_at')
             ->get();
 
-        // ✅ Check from message first
-        $pinnedProduct = $messages->whereNotNull('product_id')->first()?->product;
+        // ✅ FIXED: Prioritize query param over message history
+        $pinnedProduct = null;
 
-        // ✅ If no pinned product in messages, check if passed in query
-        if (!$pinnedProduct && $request->has('product_id')) {
-            $pinnedProduct = \App\Models\Product::find($request->input('product_id'));
+        if ($request->has('product_id')) {
+            $pinnedProduct = Product::find($request->input('product_id'));
+        }
+
+        if (!$pinnedProduct) {
+            $pinnedProduct = $messages->whereNotNull('product_id')->first()?->product;
+        }
+
+        // ✅ Optional: Send auto-message if `msg` param is present
+        if ($request->has('msg') && $pinnedProduct) {
+            $existing = Message::where('shop_id', $shop->id)
+                ->where('sender_id', $userId)
+                ->where('receiver_id', $shop->user_id)
+                ->where('message', $request->input('msg'))
+                ->where('product_id', $pinnedProduct->id)
+                ->first();
+
+            if (!$existing) {
+                Message::create([
+                    'shop_id'     => $shop->id,
+                    'sender_id'   => $userId,
+                    'receiver_id' => $shop->user_id,
+                    'message'     => $request->input('msg'),
+                    'product_id'  => $pinnedProduct->id,
+                    'is_read'     => false,
+                ]);
+
+                // Re-fetch updated message list
+                $messages = Message::where('shop_id', $shop->id)
+                    ->where(function ($query) use ($userId) {
+                        $query->where('sender_id', $userId)
+                              ->orWhere('receiver_id', $userId);
+                    })
+                    ->with(['sender', 'receiver', 'product'])
+                    ->orderBy('created_at')
+                    ->get();
+            }
         }
 
         return Inertia::render('User/Inbox', [
-            'shop' => $shop,
-            'messages' => $messages,
+            'shop'          => $shop,
+            'messages'      => $messages,
             'pinnedProduct' => $pinnedProduct,
         ]);
     }
-
 
     public function sellerInbox(User $user)
     {
@@ -57,7 +94,7 @@ class MessageController extends Controller
                 $query->where('sender_id', $user->id)
                       ->orWhere('receiver_id', $user->id);
             })
-            ->with(['sender', 'receiver', 'product']) // include product
+            ->with(['sender', 'receiver', 'product'])
             ->orderBy('created_at')
             ->get();
 
