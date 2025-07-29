@@ -62,13 +62,23 @@ const props = defineProps({
 // }
 
 function markAllAsRead() {
+  //Locally mark all as read (instant UI change)
+  props.notifications.forEach(n => {
+    if (!n.read_at) {
+      n.read_at = new Date().toISOString()
+    }
+  })
+
+  //Then send the backend request
   router.post('/user/notifications/mark-all-as-read', {}, {
     preserveScroll: true,
     onSuccess: () => {
+      // Optional, reload from server to fully sync
       router.reload({ only: ['notifications'] })
     }
   })
 }
+
 
 
 function markAsRead(notificationId, orderId) {
