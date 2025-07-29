@@ -51,15 +51,25 @@ const props = defineProps({
   notifications: Array,
 })
 
+// function markAllAsRead() {
+//   router.post('/user/notifications/mark-all-as-read', {}, {
+//     preserveScroll: true,
+//     onSuccess: () => {
+//       store.markAllAsRead()
+//       router.visit('/user/notifications')
+//     }
+//   })
+// }
+
 function markAllAsRead() {
   router.post('/user/notifications/mark-all-as-read', {}, {
     preserveScroll: true,
     onSuccess: () => {
-      store.markAllAsRead()
-      router.visit('/user/notifications')
+      router.reload({ only: ['notifications'] })
     }
   })
 }
+
 
 function markAsRead(notificationId, orderId) {
   // Update read_at in local notification list (instant blue style)
