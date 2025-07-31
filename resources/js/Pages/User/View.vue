@@ -75,7 +75,7 @@
         </nav>
 
         <!-- No Products Message -->
-        <div v-if="products.data.length === 0" class="alert alert-info mt-3">
+        <div v-if="products.data.length === 0" class="alert alert-success mt-3">
           No products found.
         </div>
       </div>
