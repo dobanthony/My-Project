@@ -1,7 +1,6 @@
 <template>
   <Navbars>
     <div>
-      <!-- Hero Section -->
       <section class="bg-light text-center py-5 border-bottom">
         <div class="container">
           <h1 class="display-5 fw-bold text-dark">Welcome to <span class="text-success">CraftSmart</span></h1>
@@ -14,7 +13,6 @@
         </div>
       </section>
 
-      <!-- Features Section with Hover -->
       <section class="py-5 bg-white">
         <div class="container">
           <h2 class="h3 fw-semibold text-success text-center mb-4">Why Shop With Us?</h2>
@@ -44,7 +42,6 @@
         </div>
       </section>
 
-      <!-- Call to Action -->
       <section class="py-5 bg-success text-white text-center">
         <div class="container">
           <h2 class="h3 fw-bold">Join Thousands of Happy Customers</h2>

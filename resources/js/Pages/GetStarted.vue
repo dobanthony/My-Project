@@ -3,7 +3,6 @@
     <div class="container py-5">
       <h1 class="mb-4 fw-bold">Getting Started</h1>
 
-      <!-- Step 1: Create Account -->
       <section class="border rounded p-4 mb-4 step-card">
         <h4>1. Create an Account</h4>
         <p class="text-secondary">
@@ -13,7 +12,6 @@
         <router-link to="/register" class="btn btn-outline-primary btn-sm">Sign Up Now</router-link>
       </section>
 
-      <!-- Step 2: Browse Products -->
       <section class="border rounded p-4 mb-4 step-card">
         <h4>2. Browse Our Products</h4>
         <p class="text-secondary">
@@ -23,7 +21,6 @@
         <router-link to="/shop" class="btn btn-outline-secondary btn-sm">Shop Now</router-link>
       </section>
 
-      <!-- Step 3: Add to Cart & Checkout -->
       <section class="border rounded p-4 mb-4 step-card">
         <h4>3. Add to Cart & Checkout</h4>
         <p class="text-secondary">
@@ -31,7 +28,6 @@
         </p>
       </section>
 
-      <!-- Step 4: Track Your Order -->
       <section class="border rounded p-4 mb-4 step-card">
         <h4>4. Track Your Order</h4>
         <p class="text-secondary">
@@ -39,7 +35,6 @@
         </p>
       </section>
 
-      <!-- Step 5: Need Help? -->
       <section class="border rounded p-4 step-card">
         <h4>5. Need Help?</h4>
         <p class="text-secondary">
