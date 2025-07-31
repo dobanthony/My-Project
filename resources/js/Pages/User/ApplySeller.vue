@@ -3,9 +3,9 @@
     <div class="container py-4">
       <div class="row justify-content-center">
         <div class="col-12 col-md-10 col-lg-8">
-          <div class="bg-success text-white p-2 mb-3 rounded-top-4">
+          <!-- <div class="bg-success text-white p-2 mb-3 rounded-top-4">
             <h2 class="mb-1 text-center text-md-start"><i class="bi bi-envelope-paper me-2"></i>Apply to Become a Seller</h2>
-          </div>
+          </div> -->
 
           <!-- 🔒 Already Applied -->
           <div v-if="user.seller_status === 'pending' || user.seller_status === 'approved'">
