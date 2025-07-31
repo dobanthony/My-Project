@@ -3,9 +3,8 @@
 
   <DashboardLayout>
     <div class="container">
-      <!-- ✅ Card: Update Profile -->
-      <div class="card shadow-sm border-0 mb-5 rounded-4">
-        <div class="card-header bg-success text-white rounded-top-4">
+      <div class="card shadow-sm border-0 mb-5 rounded-2">
+        <div class="card-header bg-success text-white rounded-top-2">
           <strong>Update Your Profile Information</strong>
         </div>
         <div class="card-body">
