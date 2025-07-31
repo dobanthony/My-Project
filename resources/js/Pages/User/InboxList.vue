@@ -1,7 +1,7 @@
 <template>
   <DashboardLayout>
     <div class="container">
-      <div class="bg-success text-white p-2 mb-3 rounded-top-4">
+      <div class="bg-success text-white p-2 mb-3 rounded-top-2">
         <h3>Conversations with Customers</h3>
       </div>
 
