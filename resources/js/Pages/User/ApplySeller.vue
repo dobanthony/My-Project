@@ -7,7 +7,7 @@
             <h2 class="mb-1 text-center text-md-start"><i class="bi bi-envelope-paper me-2"></i>Apply to Become a Seller</h2>
           </div> -->
 
-          <!-- 🔒 Already Applied -->
+          <!-- Already Applied -->
           <div v-if="user.seller_status === 'pending' || user.seller_status === 'approved'">
             <div class="bg-light border p-4 rounded mb-3">
               <p class="text-success mb-1"><strong class="text-dark">Name:</strong> {{ user.first_name }}</p>
@@ -30,7 +30,7 @@
             </div>
           </div>
 
-          <!-- ✅ Application Form -->
+          <!-- Application Form -->
           <div v-else>
             <form @submit.prevent="submitApplication">
               <!-- Name (read-only) -->
@@ -75,7 +75,7 @@
             </form>
           </div>
 
-          <!-- ✅ Success Modal -->
+          <!-- Success Modal -->
           <div
             class="modal fade"
             id="successModal"
