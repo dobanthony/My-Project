@@ -1,6 +1,6 @@
 <template>
   <DashboardLayout>
-  <!-- ✅ Toast Notification -->
+  <!-- Toast Notification -->
   <div class="toast-container position-fixed top-0 start-50 translate-middle-x p-3" style="z-index: 2000;">
     <div
       class="toast align-items-center text-bg-success border-0"
@@ -18,7 +18,7 @@
 
   <div class="bg-light py-5 px-2 px-md-0">
     <div class="container bg-white rounded shadow p-4" style="max-width: 1000px;">
-      <!-- 🧭 Breadcrumb -->
+      <!-- Breadcrumb -->
       <nav class="mb-4">
         <ol class="breadcrumb bg-light p-2 rounded mb-0">
           <li class="breadcrumb-item">
@@ -51,7 +51,7 @@
         <div class="col-12 col-lg-6">
           <h2 class="text-dark fw-bold mb-2">{{ product.name }}</h2>
 
-          <!-- ⭐ Rating & Stats -->
+          <!-- Rating & Stats -->
           <div class="d-flex flex-wrap gap-3 mb-3">
             <div>
               <span class="fw-bold me-1 text-success">{{ averageRating }}</span>
@@ -73,7 +73,7 @@
             </div>
           </div>
 
-          <!-- 👤 Shop Info -->
+          <!-- Shop Info -->
           <div class="d-flex align-items-center gap-2 mb-3">
             <img
               :src="product.shop?.shop_logo ? `/storage/${product.shop.shop_logo}` : 'https://via.placeholder.com/50?text=No+Logo'"
@@ -87,7 +87,7 @@
             </div>
           </div>
 
-          <!-- 👥 Follow -->
+          <!-- Follow -->
           <div class="mt-2">
             <button
               class="btn btn-outline-success btn-sm"
@@ -100,11 +100,11 @@
             <div class="text-muted mt-1">Followers: {{ followerCount }}</div>
           </div>
 
-          <!-- 📄 Description -->
+          <!-- Description -->
           <p class="text-secondary mt-3">{{ product.description }}</p>
           <h3 class="text-success fw-bold mb-4">₱{{ parseFloat(product.price).toFixed(2) }}</h3>
 
-          <!-- 🔢 Quantity -->
+          <!-- Quantity -->
           <div class="mb-3">
             <label class="text-success form-label fw-semibold">Quantity</label>
             <input
@@ -118,7 +118,7 @@
             <small class="text-danger">*Stock will be deducted after seller approval.</small>
           </div>
 
-          <!-- 🎨 Customize / Add to Cart -->
+          <!-- Customize / Add to Cart -->
           <div class="d-grid gap-2 d-md-flex mt-4">
             <button
               v-if="product.customization"
@@ -134,12 +134,12 @@
             </template>
           </div>
 
-          <!-- 🎨 Customization Form -->
+          <!-- Customization Form -->
           <div
             v-if="showCustomizeForm && product.customization"
             class="mt-4 p-3 border rounded bg-light"
           >
-            <h5>🧰 Customize Your Product</h5>
+            <h5> Customize Your Product</h5>
 
             <div v-if="product.customization.allow_color" class="mb-3">
               <label class="form-label">Color</label>
@@ -202,7 +202,7 @@
         </div>
       </div>
 
-      <!-- 🏪 Shop Info -->
+      <!-- Shop Info -->
       <div class="card mt-5 p-4 border-0 shadow rounded-4">
         <h5 class="mb-4 text-success fw-bold">🛍 About the Seller</h5>
 
