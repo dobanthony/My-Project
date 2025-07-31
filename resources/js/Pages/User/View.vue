@@ -5,7 +5,7 @@
           <h4 class="text-white">Products</h4>
         </div> -->
 
-        <!-- 🔍 Search Form -->
+        <!-- Search Form -->
         <form @submit.prevent="searchProducts" class="row g-2 mb-4">
           <div class="col-md-10">
             <input
@@ -20,7 +20,7 @@
           </div>
         </form>
 
-        <!-- 📦 Product Cards -->
+        <!-- Product Cards -->
         <div class="row">
           <div
             class="col-6 col-md-4 col-lg-3 mb-4"
@@ -55,7 +55,7 @@
           </div>
         </div>
 
-        <!-- 🔢 Traditional Pagination -->
+        <!-- Traditional Pagination -->
         <nav v-if="products.links.length > 3" class="d-flex justify-content-center mt-4">
           <ul class="pagination">
             <li
@@ -74,7 +74,7 @@
           </ul>
         </nav>
 
-        <!-- ℹ️ No Products Message -->
+        <!-- No Products Message -->
         <div v-if="products.data.length === 0" class="alert alert-info mt-3">
           No products found.
         </div>

@@ -21,7 +21,7 @@
               ₱{{ parseFloat(product.price).toFixed(2) }}
             </p>
 
-            <!-- ✅ Inertia Link for ProductDetails.vue -->
+            <!-- Inertia Link for ProductDetails.vue -->
             <Link
               :href="`/product/${product.id}`"
               class="btn btn-primary btn-sm mt-auto"
