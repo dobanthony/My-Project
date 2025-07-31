@@ -16,7 +16,7 @@
             class="border rounded p-3 mb-3 d-flex align-items-center hover-shadow"
             style="cursor: pointer;"
           >
-            <!-- 🖼️ Shop Logo -->
+            <!-- Shop Logo -->
             <img
               :src="`/storage/${shop.shop_logo}`"
               alt="Shop Logo"
@@ -24,11 +24,11 @@
               style="width: 60px; height: 60px; object-fit: cover;"
             />
 
-            <!-- 🛍️ Shop Details -->
+            <!-- Shop Details -->
             <div class="flex-grow-1">
               <strong class="text-success">{{ shop.shop_name }}</strong>
 
-              <!-- 💬 Latest message preview -->
+              <!-- Latest message preview -->
               <p
                 class="mb-0 small"
                 :class="{
