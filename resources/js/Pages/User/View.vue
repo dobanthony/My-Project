@@ -1,12 +1,12 @@
 <template>
    <DashboardLayout>
       <div class="container">
-        <div class="bg-success text-white p-2 rounded-top-4">
+        <!-- <div class="bg-success text-white p-2 rounded-top-4">
           <h4 class="text-white">Products</h4>
-        </div>
+        </div> -->
 
         <!-- 🔍 Search Form -->
-        <form @submit.prevent="searchProducts" class="row g-2 mb-4 mt-4">
+        <form @submit.prevent="searchProducts" class="row g-2 mb-4">
           <div class="col-md-10">
             <input
               type="text"
