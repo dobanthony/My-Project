@@ -5,7 +5,7 @@
         <i class="bi bi-envelope me-2"></i>{{ shop.shop_name }}
       </h4>
 
-      <!-- 💬 Chat Messages -->
+      <!-- Chat Messages -->
       <div
         ref="chatBox"
         class="chat-box mb-3 p-3 border rounded bg-light"
@@ -52,7 +52,7 @@
                 </span>
               </div>
 
-              <!-- ✅ Seen Time -->
+              <!-- Seen Time -->
               <div
                 v-if="msg.sender.id !== shop.user_id && isLastOwnMessage(index) && msg.is_read"
                 class="text-success small mt-1"
@@ -60,7 +60,7 @@
                 <i class="bi bi-check-all me-2"></i>Seen {{ formatSeenTime(msg.updated_at || msg.created_at) }}
               </div>
 
-              <!-- 🛒 Product inside message -->
+              <!-- Product inside message -->
               <div v-if="msg.product" class="card mt-2 border" style="max-width: 250px;">
                 <img
                   :src="msg.product.image ? `/storage/${msg.product.image}` : 'https://via.placeholder.com/100x100?text=No+Image'"
@@ -78,9 +78,9 @@
         </div>
       </div>
 
-      <!-- ✉️ Send Message -->
+      <!-- Send Message -->
       <form @submit.prevent="sendMessage">
-        <!-- 📌 Pinned Product inside input area (only before first send) -->
+        <!-- Pinned Product inside input area (only before first send) -->
         <div v-if="pinnedProduct && !hasSentProduct" class="card mb-2 border bg-light shadow-sm position-relative">
           <div class="row g-0 align-items-center">
             <div class="col-auto">
@@ -97,7 +97,7 @@
                 <Link :href="`/product/${pinnedProduct.id}`" class="text-decoration-none small">🔍 View Product</Link>
               </div>
             </div>
-            <!-- ❌ Remove Button -->
+            <!-- Remove Button -->
             <button
               type="button"
               class="btn-close position-absolute top-0 end-0 m-2"
