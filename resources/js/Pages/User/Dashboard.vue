@@ -17,7 +17,7 @@
         </div>
       </div>
 
-      <!-- 📢 Announcements Header -->
+      <!-- Announcements Header -->
       <div class="d-flex justify-content-between align-items-center bg-success text-white p-2 rounded mb-4">
         <strong class="ms-2"><i class="bi bi-megaphone me-2"></i> Latest Announcements</strong>
       </div>
@@ -27,7 +27,7 @@
         No announcements have been posted yet.
       </div>
 
-      <!-- ✅ Responsive Announcement Grid: 2 on mobile, 4 on desktop -->
+      <!--  Responsive Announcement Grid: 2 on mobile, 4 on desktop -->
       <div class="row row-cols-1 row-cols-md-3 g-4">
         <div
           v-for="announcement in announcements"
@@ -83,7 +83,7 @@ function formatDate(date) {
   })
 }
 
-// Truncate long content
+// Minimize long content
 function truncateContent(content, maxLength = 120) {
   if (content.length <= maxLength) return content
   return content.slice(0, maxLength) + '...'
