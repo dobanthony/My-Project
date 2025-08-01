@@ -38,7 +38,9 @@ class Product extends Model
     {
         return $this->belongsTo(User::class);
     }
-
-
+    public function productRatings()
+    {
+        return $this->hasMany(\App\Models\ShopRating::class, 'product_id');
+    }
 
 }

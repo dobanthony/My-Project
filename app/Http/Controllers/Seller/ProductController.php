@@ -130,22 +130,52 @@ class ProductController extends Controller
         $search = $request->input('search');
         $perPage = $request->input('perPage', 12); // default items per page
 
-        $query = Product::with('shop.user');
+        $query = Product::with(['shop.user'])
+            // average of product_rating from ShopRating
+            ->withAvg('productRatings', 'product_rating')
+            // count of product ratings
+            ->withCount(['productRatings as ratings_count'])
+            // total sold: sum of quantity for approved orders
+            ->withSum(['orders as total_sold' => function ($q) {
+                $q->where('status', 'approved');
+            }], 'quantity');
 
         if ($search) {
             $query->where(function ($q) use ($search) {
-                $q->where('name', 'like', "%$search%")
-                ->orWhere('description', 'like', "%$search%");
+                $q->where('name', 'like', "%{$search}%")
+                ->orWhere('description', 'like', "%{$search}%");
             });
         }
 
-        $products = $query->orderBy('id', 'desc')->paginate($perPage)->withQueryString();
+        $products = $query
+            ->orderBy('id', 'desc')
+            ->paginate($perPage)
+            ->withQueryString()
+            ->through(fn ($p) => [
+                'id' => $p->id,
+                'name' => $p->name,
+                'description' => $p->description,
+                'price' => $p->price,
+                'image' => $p->image,
+                'average_rating' => $p->product_ratings_avg_product_rating
+                    ? round($p->product_ratings_avg_product_rating, 1)
+                    : 0.0,
+                'ratings_count' => $p->ratings_count ?? 0,
+                'total_sold' => $p->total_sold ?? 0,
+                'shop' => [
+                    'user' => [
+                        'name' => $p->shop?->user?->name,
+                    ],
+                    'address' => $p->shop?->address,
+                ],
+            ]);
 
         return Inertia::render('User/View', [
             'products' => $products,
             'search' => $search,
         ]);
     }
+
 
 
     public function show($id)
