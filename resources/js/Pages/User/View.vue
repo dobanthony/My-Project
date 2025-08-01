@@ -1,9 +1,6 @@
 <template>
    <DashboardLayout>
       <div class="container">
-        <!-- <div class="bg-success text-white p-2 rounded-top-4">
-          <h4 class="text-white">Products</h4>
-        </div> -->
 
         <!-- Search Form -->
         <form @submit.prevent="searchProducts" class="row g-2 mb-4">
