@@ -10,15 +10,16 @@ class Shop extends Model
     use HasFactory;
 
     protected $fillable = [
-        'user_id',    
+        'user_id',
         'shop_name',
         'shop_description',
         'shop_logo',
+        'address',
     ];
     // protected $appends = ['shop_rating'];
     protected $appends = ['shop_rating', 'shop_rating_count'];
 
-    
+
     public function user()
     {
         return $this->belongsTo(User::class);

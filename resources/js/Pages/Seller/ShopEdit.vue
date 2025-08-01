@@ -15,6 +15,7 @@
         <p><strong>Description:</strong> {{ shop.shop_description }}</p>
         <p><strong>Phone Number:</strong> {{ shop.phone_number }}</p>
         <p><strong>Email Address:</strong> {{ shop.email_address }}</p>
+        <p v-if="shop.address"><strong>Address:</strong> {{ shop.address }}</p>
         <div v-if="shop.shop_logo">
           <img :src="`/storage/${shop.shop_logo}`" alt="Shop Logo" class="img-thumbnail" style="max-height: 120px" />
         </div>
@@ -42,6 +43,11 @@
           <div class="mb-3">
             <label class="form-label">Email Address</label>
             <input type="email" class="form-control" v-model="form.email_address" />
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Address</label>
+            <input type="text" class="form-control" v-model="form.address" />
           </div>
 
           <div class="mb-3">
@@ -79,6 +85,7 @@ const form = useForm({
   shop_logo: null,
   phone_number: props.shop?.phone_number ?? '',
   email_address: props.shop?.email_address ?? '',
+  address: props.shop?.address ?? '',
 })
 
 const submit = () => {

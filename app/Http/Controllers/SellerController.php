@@ -39,6 +39,7 @@ class SellerController extends Controller
             'shop_logo' => 'nullable|image|max:2048',
             'phone_number' => 'nullable|string|max:20',
             'email_address' => 'nullable|email|max:255',
+            'address' => 'nullable|string|max:500',
         ]);
 
         $shop = $user->shop ?? new Shop(['user_id' => $user->id]);
@@ -47,6 +48,7 @@ class SellerController extends Controller
         $shop->shop_description = $request->shop_description;
         $shop->phone_number = $request->phone_number;
         $shop->email_address = $request->email_address;
+        $shop->address = $request->address;
 
         if ($request->hasFile('shop_logo')) {
             $shop->shop_logo = $request->file('shop_logo')->store('shop_logos', 'public');
