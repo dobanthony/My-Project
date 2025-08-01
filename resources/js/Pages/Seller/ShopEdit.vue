@@ -1,6 +1,28 @@
 <template>
   <SellerDashboardLayout>
-    <div class="container py-5">
+    <!-- Toast Notification -->
+    <div
+    v-if="showToast"
+    class="toast-container position-fixed start-50 translate-middle-x p-3"
+    style="top: 1.5rem; z-index: 9999;"
+    >
+      <div class="toast show align-items-center text-white bg-success border-0 shadow" role="alert">
+        <div class="d-flex">
+          <div class="toast-body">
+            <i class="bi bi-check-circle-fill me-2"></i> {{ toastMessage }}
+          </div>
+          <button
+            type="button"
+            class="btn-close btn-close-white me-2 m-auto"
+            aria-label="Close"
+            @click="showToast = false"
+          ></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ✅ Shop Edit Main Content -->
+    <div class="container">
       <!-- Header -->
       <div class="d-flex flex-column flex-md-row justify-content-between align-items-start mb-4 gap-3">
         <div>
@@ -69,10 +91,7 @@
           <div class="card shadow-sm rounded-4 p-4">
             <div class="d-flex justify-content-between align-items-center mb-3">
               <h5 class="text-success mb-0">{{ shop ? 'Update Your Shop' : 'Create Your Shop' }}</h5>
-              <span
-                v-if="shop"
-                class="badge bg-success d-none d-md-inline"
-              >Editing</span>
+              <span v-if="shop" class="badge bg-success d-none d-md-inline">Editing</span>
             </div>
 
             <form @submit.prevent="submit" enctype="multipart/form-data" class="row g-3">
@@ -156,7 +175,8 @@
 <script setup>
 import SellerDashboardLayout from '@/Layouts/SellerDashboardLayout.vue'
 import Flash from '@/Layouts/Flash.vue'
-import { useForm } from '@inertiajs/vue3'
+import { useForm, usePage } from '@inertiajs/vue3'
+import { ref, onMounted } from 'vue'
 import { defineOptions, defineProps } from 'vue'
 
 defineOptions({
@@ -168,6 +188,23 @@ const props = defineProps({
   shop: Object
 })
 
+// Setup toast handling
+const page = usePage()
+const showToast = ref(false)
+const toastMessage = ref('')
+
+onMounted(() => {
+  const success = page.props.flash?.success
+  if (success) {
+    toastMessage.value = success
+    showToast.value = true
+    setTimeout(() => {
+      showToast.value = false
+    }, 3000)
+  }
+})
+
+// Setup form
 const form = useForm({
   shop_name: props.shop?.shop_name ?? '',
   shop_description: props.shop?.shop_description ?? '',
@@ -178,8 +215,20 @@ const form = useForm({
 })
 
 const submit = () => {
-  form.post('/seller/shop', { forceFormData: true })
+  form.post('/seller/shop', {
+    forceFormData: true,
+    preserveScroll: true,
+    onSuccess: () => {
+      toastMessage.value = 'Shop updated successfully!'
+      showToast.value = true
+      setTimeout(() => {
+        showToast.value = false
+      }, 3000)
+    }
+  })
 }
+
+
 </script>
 
 <style scoped>

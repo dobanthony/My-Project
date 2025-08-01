@@ -56,6 +56,7 @@ class SellerController extends Controller
 
         $shop->save();
 
-        return redirect()->route('seller.dashboard')->with('success', 'Shop profile saved.');
+        return redirect()->route('seller.seller.shop.edit')->with('success', 'Shop profile saved.');
+
     }
 }

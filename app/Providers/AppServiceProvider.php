@@ -46,6 +46,13 @@ class AppServiceProvider extends ServiceProvider
                 return [];
             },
 
+            'flash' => function () {
+                return [
+                    'success' => session('success'),
+                    'error' => session('error'),
+                ];
+            },
+
             // Unread message badge count (custom)
             'unreadMessagesCount' => function () {
                 if (Auth::check()) {
