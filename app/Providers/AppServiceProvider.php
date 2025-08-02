@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Models\Message;
+use App\Models\Cart;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Vite;
 use Illuminate\Support\ServiceProvider;
@@ -24,7 +25,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Inertia::share([
-            //Authenticated user
+            // Authenticated user
             'auth' => function () {
                 return [
                     'user' => Auth::user(),
@@ -46,6 +47,7 @@ class AppServiceProvider extends ServiceProvider
                 return [];
             },
 
+            // Flash messages
             'flash' => function () {
                 return [
                     'success' => session('success'),
@@ -62,7 +64,8 @@ class AppServiceProvider extends ServiceProvider
                 }
                 return 0;
             },
-             // Pending orders count (new)
+
+            // Pending orders count (new)
             'pendingOrdersCount' => function () {
                 if (Auth::check()) {
                     return \App\Models\Order::where('status', 'pending')
@@ -72,6 +75,31 @@ class AppServiceProvider extends ServiceProvider
                         ->count();
                 }
                 return 0;
+            },
+
+            // Cart from DB (for authenticated user)
+            'cart' => function () {
+                if (!Auth::check()) {
+                    return ['items' => []];
+                }
+
+                $cartItems = Cart::with('product')
+                    ->where('user_id', Auth::id())
+                    ->get()
+                    ->map(function ($cart) {
+                        $product = $cart->product;
+                        return [
+                            'id' => $cart->id,
+                            'product_id' => $product?->id,
+                            'name' => $product?->name ?? 'Unknown',
+                            'image' => $product?->image_url ?? '', // adjust if different
+                            'quantity' => $cart->quantity,
+                            'price' => $product?->price ?? 0,
+                            'total' => ($product?->price ?? 0) * $cart->quantity,
+                        ];
+                    })->all();
+
+                return ['items' => $cartItems];
             },
         ]);
 

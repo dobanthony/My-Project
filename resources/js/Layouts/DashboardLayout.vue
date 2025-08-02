@@ -2,69 +2,62 @@
   <div>
     <!-- Sidebar -->
     <nav id="sidebar" class="p-3 text-white bg-success" :class="{ show: sidebarOpen }">
-  <!-- Brand -->
-  <h4 class="text-center fw-bold mb-3">CraftSmart</h4>
-  <hr class="bg-secondary" />
+      <!-- Brand -->
+      <h4 class="text-center fw-bold mb-3">CraftSmart</h4>
+      <hr class="bg-secondary" />
 
-  <!-- Navigation -->
-  <ul class="nav flex-column mb-3">
+      <!-- Navigation -->
+      <ul class="nav flex-column mb-3">
+        <!-- Home -->
+        <li class="nav-item">
+          <Link href="/user/dashboard" class="nav-link text-white">
+            <i class="bi bi-house-door me-2"></i> Home
+          </Link>
+        </li>
 
-    <!-- Home -->
-    <li class="nav-item">
-      <Link href="/user/dashboard" class="nav-link text-white">
-        <i class="bi bi-house-door me-2"></i> Home
-      </Link>
-    </li>
+        <!-- Browse All Products -->
+        <li class="nav-item">
+          <Link href="/view" class="nav-link text-white">
+            <i class="bi bi-grid me-2"></i> Products
+          </Link>
+        </li>
 
-    <!-- Browse All Products -->
-    <li class="nav-item">
-      <Link href="/view" class="nav-link text-white">
-        <i class="bi bi-grid me-2"></i> Products
-      </Link>
-    </li>
+        <!-- My Orders -->
+        <li class="nav-item">
+          <Link href="/my-orders" class="nav-link text-white">
+            <i class="bi bi-receipt me-2"></i> Orders
+          </Link>
+        </li>
 
-    <!-- My Orders -->
-    <li class="nav-item">
-      <Link href="/my-orders" class="nav-link text-white">
-        <i class="bi bi-receipt me-2"></i> Orders
-      </Link>
-    </li>
+        <!-- Inbox -->
+        <li class="nav-item position-relative">
+          <Link
+            href="/user/inbox"
+            class="nav-link d-flex justify-content-between align-items-center text-white"
+            @click="inboxClicked = true"
+          >
+            <span><i class="bi bi-envelope me-2"></i> Message</span>
+            <span
+              v-if="!inboxClicked && unreadMessagesCount > 0"
+              class="badge bg-danger ms-2"
+              style="font-size: 0.75rem;"
+            >
+              {{ unreadMessagesCount }}
+            </span>
+          </Link>
+        </li>
 
-    <!-- Cart -->
-    <li class="nav-item">
-      <Link href="/cart" class="nav-link text-white">
-        <i class="bi bi-cart-check me-2"></i> Cart
-      </Link>
-    </li>
+        <!-- Apply as Seller -->
+        <li class="nav-item">
+          <Link href="/apply-seller" class="nav-link text-white">
+            <i class="bi bi-briefcase me-2"></i> Apply as Seller
+          </Link>
+        </li>
+      </ul>
 
-    <li class="nav-item position-relative">
-      <Link
-        href="/user/inbox"
-        class="nav-link d-flex justify-content-between align-items-center text-white"
-        @click="inboxClicked = true"
-      >
-        <span><i class="bi bi-envelope me-2"></i> Message</span>
-        <span
-          v-if="!inboxClicked && unreadMessagesCount > 0"
-          class="badge bg-danger ms-2"
-          style="font-size: 0.75rem;"
-        >
-          {{ unreadMessagesCount }}
-        </span>
-      </Link>
-    </li>
+      <hr class="bg-secondary" />
+    </nav>
 
-    <!-- Apply as Seller -->
-    <li class="nav-item">
-      <Link href="/apply-seller" class="nav-link text-white">
-        <i class="bi bi-briefcase me-2"></i> Apply as Seller
-      </Link>
-    </li>
-
-  </ul>
-
-  <hr class="bg-secondary" />
-</nav>
     <!-- Desktop Sidebar Toggle -->
     <button
       id="hideSidebarBtn"
@@ -90,23 +83,31 @@
         <h4 class="fw-bold text-success">CraftSmart</h4>
       </div>
 
-      <!-- RIGHT: Notifications + Profile -->
+      <!-- RIGHT: Notifications + Cart + Profile -->
       <div class="d-flex align-items-center gap-3 position-relative">
         <!-- 🔔 Notifications -->
-         <Link
-            href="/user/notifications"
-            class="text-decoration-none position-relative"
+        <Link href="/user/notifications" class="text-decoration-none position-relative">
+          <i class="bi bi-bell fs-5 text-success"></i>
+          <span
+            v-if="store.hasUnread"
+            class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+            style="font-size: 0.6rem;"
           >
-            <i class="bi bi-bell fs-5 text-success"></i>
+            {{ store.unreadCount }}
+          </span>
+        </Link>
 
-            <span
-              v-if="store.hasUnread"
-              class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
-              style="font-size: 0.6rem;"
-            >
-              {{ store.unreadCount }}
-            </span>
-          </Link>
+        <!-- 🛒 Cart Icon -->
+        <Link href="/cart" class="text-decoration-none position-relative">
+          <i class="bi bi-cart-check fs-5 text-success"></i>
+          <span
+            v-if="cartItemCount > 0"
+            class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+            style="font-size: 0.6rem;"
+          >
+            {{ cartItemCount }}
+          </span>
+        </Link>
 
         <!-- 👤 Profile Avatar -->
         <div class="position-relative">
@@ -124,22 +125,30 @@
                 class="avatar-lg"
               />
               <div>
-                <div class="fw-bold">Hi, {{ $page.props.auth?.user?.first_name ?? 'N/A' }}</div>
-                <div class="text-muted small">{{ $page.props.auth?.user?.email ?? 'N/A' }}</div>
+                <div class="fw-bold">
+                  Hi, {{ page.props.auth?.user?.first_name ?? 'N/A' }}
+                </div>
+                <div class="text-muted small">
+                  {{ page.props.auth?.user?.email ?? 'N/A' }}
+                </div>
                 <div class="text-primary small bg-light px-2 py-1 rounded d-inline">
-                  {{ $page.props.auth?.user?.role ?? 'N/A' }}
+                  {{ page.props.auth?.user?.role ?? 'N/A' }}
                 </div>
               </div>
             </div>
             <div>
               <Link class="dropdown-item" href="/profile">My Profile</Link>
-              <Link class="dropdown-item" href="/logout" method="post" as="button">Sign Out</Link>
+              <Link class="dropdown-item" href="/cart">
+                <i class="bi bi-cart me-1"></i> View Cart ({{ cartItemCount }})
+              </Link>
+              <Link class="dropdown-item" href="/logout" method="post" as="button">
+                Sign Out
+              </Link>
             </div>
           </div>
         </div>
       </div>
     </nav>
-
 
     <!-- Overlay for mobile sidebar -->
     <div id="overlay" :class="{ show: isMobile && sidebarOpen }" @click="closeSidebar"></div>
@@ -152,7 +161,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
 import { Link, router, usePage } from '@inertiajs/vue3'
 import { useNotificationStore } from '@/stores/notification'
 
@@ -185,8 +194,22 @@ const handleResize = () => {
 }
 
 const unreadMessagesCount = computed(() => {
-  return usePage().props.unreadMessagesCount ?? 0
+  return page.props.unreadMessagesCount ?? 0
 })
+
+// --- CART STATE ---
+const cartItems = ref(page.props.cart?.items ? [...page.props.cart.items] : [])
+const cartItemCount = computed(() =>
+  cartItems.value.reduce((sum, it) => sum + (it.quantity || 0), 0)
+)
+
+// keep cart synced on prop changes
+watch(
+  () => page.props.cart,
+  (newCart) => {
+    cartItems.value = newCart?.items ? [...newCart.items] : []
+  }
+)
 
 let pollingInterval = null
 
@@ -196,21 +219,22 @@ onMounted(() => {
   document.addEventListener('click', closeProfileModal)
 
   // Detect if inbox is active
-  if (usePage().url.startsWith('/user/inbox')) {
+  if (page.url.startsWith('/user/inbox')) {
     inboxClicked.value = true
   }
 
   // Initial Notifications
   store.setNotifications(page.props.notifications || [])
 
-  // 🔄 Poll every 10 seconds using Inertia's reload
+  // 🔄 Poll every 10 seconds including cart
   pollingInterval = setInterval(() => {
     router.reload({
-      only: ['notifications', 'unreadMessagesCount'],
+      only: ['notifications', 'unreadMessagesCount', 'cart'],
       preserveScroll: true,
       preserveState: true,
-      onSuccess: (page) => {
-        store.setNotifications(page.props.notifications || [])
+      onSuccess: (p) => {
+        store.setNotifications(p.props.notifications || [])
+        // cartItems will update via watcher
       }
     })
   }, 10000)
@@ -222,24 +246,11 @@ onUnmounted(() => {
   clearInterval(pollingInterval)
 })
 
-// function handleMarkAllAsRead() {
-//   router.post('/user/notifications/mark-all-as-read', {}, {
-//     preserveScroll: true,
-//     onSuccess: () => {
-//       store.markAllAsRead()
-//       router.visit('/user/notifications')
-//     }
-//   })
-// }
-
-
-
-// 🚪 Logout action
+// Logout action
 function logout() {
   router.post('/logout')
 }
 </script>
-
 
 <style scoped>
 body {
