@@ -70,7 +70,7 @@ class OrderController extends Controller
         }
 
         return Inertia::render('Seller/Orders', [
-            'orders' => $query->latest()->paginate(30)->withQueryString(),
+            'orders' => $query->latest()->paginate(100)->withQueryString(),
             'filters' => $request->only('search', 'status'),
         ]);
     }
@@ -125,7 +125,7 @@ class OrderController extends Controller
     public function myOrders(Request $request)
     {
         $search = $request->input('search');
-        $limit = (int) $request->input('limit', 30);
+        $limit = (int) $request->input('limit', 100);
 
         $query = Order::with(['product.shop.user', 'receivedOrder'])
             ->where('user_id', auth()->id());
@@ -290,16 +290,6 @@ class OrderController extends Controller
         return back()->with('message', 'Review submitted successfully.');
     }
 
-    // public function cancel(Order $order)
-    // {
-    //     if ($order->status !== 'pending') {
-    //         return back()->withErrors(['message' => 'Only pending orders can be canceled.']);
-    //     }
-
-    //     $order->update(['status' => 'canceled', 'delivery_status' => 'canceled']);
-
-    //     return back()->with('success', 'Order canceled successfully.');
-    // }
     public function cancel($id)
     {
         $order = Order::with('product.shop.user')->findOrFail($id);
@@ -325,7 +315,7 @@ class OrderController extends Controller
         $order->load([
             'user',
             'product.shop.user',
-            'deliveryInfo' // load delivery info from relationship
+            'deliveryInfo'
         ]);
 
         return Inertia::render('Seller/View', [
@@ -333,6 +323,5 @@ class OrderController extends Controller
             'isSeller' => true,
         ]);
     }
-
 
 }
