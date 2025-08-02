@@ -1,6 +1,6 @@
 <template>
   <SellerDashboardLayout>
-    <div class="container py-4">
+    <div class="container">
       <h2 class="mb-4">➕ Create Custom Product</h2>
 
       <form @submit.prevent="submit">
