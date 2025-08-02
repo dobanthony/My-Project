@@ -285,5 +285,9 @@ Route::prefix('seller/notifications/canceled')->middleware(['auth', 'verified'])
 Route::post('/orders/{id}/cancel', [OrderController::class, 'cancel'])->middleware('auth');
 
 
+Route::get('/seller/orders/{order}/view', [OrderController::class, 'sellerView'])->name('seller.orders.view');
+Route::get('/seller/orders', [OrderController::class, 'sellerOrders'])->name('seller.orders');
+
+
 
 require __DIR__.'/auth.php';

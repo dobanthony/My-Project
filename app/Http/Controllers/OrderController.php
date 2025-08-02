@@ -316,5 +316,23 @@ class OrderController extends Controller
 
         return back()->with('success', 'Order has been canceled.');
     }
+    public function sellerView(Order $order)
+    {
+        if ($order->product->shop->user_id !== auth()->id()) {
+            abort(403);
+        }
+
+        $order->load([
+            'user',
+            'product.shop.user',
+            'deliveryInfo' // load delivery info from relationship
+        ]);
+
+        return Inertia::render('Seller/View', [
+            'order' => $order,
+            'isSeller' => true,
+        ]);
+    }
+
 
 }

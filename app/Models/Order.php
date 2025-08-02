@@ -37,5 +37,10 @@ class Order extends Model
     {
         return $this->hasOne(ReceivedOrder::class);
     }
+    public function deliveryInfo()
+    {
+        return $this->hasOne(\App\Models\DeliveryInfo::class, 'user_id', 'user_id');
+    }
+
 
 }

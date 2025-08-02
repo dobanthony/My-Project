@@ -1,7 +1,6 @@
 <template>
   <SellerDashboardLayout>
     <div class="container">
-      <h2 class="mb-4 text-center text-md-start"><i class="bi bi-box-seam me-2"></i> Orders</h2>
 
       <!-- 🔍 Search & Filter -->
       <div class="row gy-2 gx-2 mb-3">
@@ -78,6 +77,10 @@
               </td>
               <td>
                 <div class="d-flex gap-1 justify-content-center flex-wrap">
+                  <Link :href="route('seller.orders.view', order.id)" class="btn btn-sm btn-primary">
+  View
+</Link>
+
                   <button v-if="order.status === 'pending'" @click="approve(order.id)" class="btn btn-sm btn-success">
                     Approve
                   </button>
@@ -134,6 +137,7 @@
               </select>
             </p>
             <div class="d-flex flex-wrap gap-2 justify-content-center mt-3">
+              <Link :href="route('seller.orders.view', order.id)" class="btn btn-sm btn-primary"> View</Link>
               <button v-if="order.status === 'pending'" @click="approve(order.id)" class="btn btn-sm btn-success">
                 Approve
               </button>
