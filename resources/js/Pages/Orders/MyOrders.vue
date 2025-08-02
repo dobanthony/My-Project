@@ -1,9 +1,6 @@
 <template>
   <DashboardLayout>
     <div class="container">
-      <!-- <div class="bg-success text-white p-2 mb-3 rounded-top-4">
-        <h4 class="text-white">My Orders</h4>
-      </div> -->
 
       <!-- 🔍 Search and Filter -->
       <div class="row mb-4 g-2">

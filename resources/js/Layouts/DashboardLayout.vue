@@ -138,9 +138,6 @@
             </div>
             <div>
               <Link class="dropdown-item" href="/profile">My Profile</Link>
-              <Link class="dropdown-item" href="/cart">
-                <i class="bi bi-cart me-1"></i> View Cart ({{ cartItemCount }})
-              </Link>
               <Link class="dropdown-item" href="/logout" method="post" as="button">
                 Sign Out
               </Link>
