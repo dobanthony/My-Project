@@ -1,9 +1,9 @@
 <template>
   <SellerDashboardLayout>
-    <div class="container py-4">
-      <h2 class="mb-4 text-success fw-bold">
-        📦 Order & Delivery Details
-      </h2>
+    <div class="container">
+      <h3 class="mb-3 text-success">
+        Order & Delivery Details
+      </h3>
 
       <div class="row g-4">
         <!-- Delivery Info -->

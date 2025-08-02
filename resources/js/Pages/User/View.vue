@@ -162,15 +162,20 @@ const searchProducts = () => {
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  transition: box-shadow .2s ease-in-out;
+  transition: box-shadow .25s ease-in-out, transform .25s ease-in-out, border-color .25s ease-in-out;
+  background: white;
+  border: 1px solid transparent;
 }
 .product-card:hover {
-  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+  box-shadow: 0 8px 20px rgba(40, 167, 69, 0.25); /* green glow shadow */
+  transform: translateY(-4px);
+  border-color: #28a745; /* green border on hover */
 }
 .image-wrapper {
   width: 100%;
-  padding-top: 75%; /* 4:3-ish ratio */
+  padding-top: 75%;
   position: relative;
+  overflow: hidden;
 }
 .image-wrapper img {
   position: absolute;
@@ -179,6 +184,10 @@ const searchProducts = () => {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  transition: transform .3s ease-in-out;
+}
+.product-card:hover .image-wrapper img {
+  transform: scale(1.05); /* slight zoom */
 }
 
 /* Text truncation helpers */
@@ -212,10 +221,10 @@ const searchProducts = () => {
 
 /* Stars coloring */
 .stars i.bi-star-fill {
-  color: #ffc107; /* yellow filled */
+  color: #ffc107;
 }
 .stars i.bi-star {
-  color: #ddd; /* light gray empty */
+  color: #ddd;
 }
 
 /* Responsive adjustments */
