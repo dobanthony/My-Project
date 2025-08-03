@@ -83,7 +83,7 @@
         <h4 class="fw-bold text-success">CraftSmart</h4>
       </div>
 
-      <!-- RIGHT: Notifications + Cart + Profile -->
+      <!-- Avatar -->
       <div class="d-flex align-items-center gap-3 position-relative">
         <!-- 🔔 Notifications -->
         <Link href="/user/notifications" class="text-decoration-none position-relative">

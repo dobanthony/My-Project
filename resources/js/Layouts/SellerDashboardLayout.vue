@@ -98,14 +98,13 @@
       </div>
 
       <!-- Profile Avatar Dropdown -->
-      <!-- 🔔 Notifications + 👤 Avatar aligned side-by-side -->
     <div class="d-flex align-items-center gap-3 position-relative">
     <!-- Notification Bell -->
     <Link
         href="/seller/notifications"
         class="text-decoration-none position-relative"
     >
-        <i class="bi bi-bell-fill fs-5 text-success"></i>
+        <i class="bi bi-bell fs-5 text-success"></i>
 
         <span
         v-if="store.unreadCount > 0"
