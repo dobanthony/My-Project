@@ -33,7 +33,7 @@ in this code
       <!-- 📋 Table View (Desktop) -->
       <div class="table-responsive d-none d-md-block">
         <table class="table table-hover table-bordered align-middle text-center">
-          <thead class="table-light">
+          <thead class="table-success">
             <tr>
               <th>Buyer</th>
               <th>Product</th>
