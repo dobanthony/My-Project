@@ -1,6 +1,6 @@
 <template>
   <AdminDashboardLayout>
-    <div class="container py-2">
+    <div class="container">
       <h2 class="mb-4 text-dark">
         <i class="bi bi-speedometer2 me-1 text-success"></i> Admin Dashboard
       </h2>
@@ -14,8 +14,12 @@
         >
           <div class="card shadow border-start border-1 h-100" :class="card.border">
             <div class="card-body d-flex align-items-center">
-              <div class="display-5 me-3">
-                <i :class="[card.icon, card.text]"></i>
+              <div class="me-3 d-flex align-items-center" :style="{ width: '2.5rem', justifyContent: 'center' }">
+                <i
+                  :class="[card.icon, card.text]"
+                  :style="{ fontSize: card.iconSize || '1.8rem', lineHeight: 1 }"
+                  aria-hidden="true"
+                ></i>
               </div>
               <div>
                 <h6 class="text-muted mb-1">{{ card.label }}</h6>
@@ -48,7 +52,7 @@
                 <i class="bi bi-cash-coin me-1 text-success"></i> Sales
               </h5>
               <div class="chart-container">
-                <Line :data="salesChartData" :options="chartOptions" />
+                <Line :data="salesChartData" :options="chartOptions('Sales (₱)')" />
               </div>
             </div>
           </div>
@@ -62,7 +66,7 @@
                 <i class="bi bi-basket me-1 text-primary"></i> Orders
               </h5>
               <div class="chart-container">
-                <Bar :data="orderChartData" :options="chartOptions" />
+                <Bar :data="orderChartData" :options="chartOptions('Orders')" />
               </div>
             </div>
           </div>
@@ -135,22 +139,28 @@ const props = defineProps({
   topMetrics: {
     type: Object,
     default: () => ({})
+  },
+  filter: {
+    type: String,
+    default: 'month'
   }
 })
 
-const selectedFilter = ref('month')
+// Initialize selectedFilter from incoming prop
+const selectedFilter = ref(props.filter)
+
 function applyFilter() {
   router.get(route('admin.dashboard'), { filter: selectedFilter.value }, { preserveScroll: true })
 }
 
-// Top Metric Cards
+// Top Metric Cards with customizable icon size
 const cards = computed(() => [
-  { label: 'Total Orders', count: props.metrics.totalOrders, icon: 'bi bi-bag', text: 'text-primary', border: 'border-primary' },
-  { label: 'Total Users', count: props.metrics.totalUsers, icon: 'bi bi-people', text: 'text-info', border: 'border-info' },
-  { label: 'Total Sellers', count: props.metrics.totalSellers, icon: 'bi bi-person-workspace', text: 'text-success', border: 'border-success' },
-  { label: 'Total Announcements', count: props.metrics.totalAnnouncements, icon: 'bi bi-megaphone', text: 'text-dark', border: 'border-secondary' },
-  { label: 'Total Products Listed', count: props.metrics.totalProducts, icon: 'bi bi-box-seam', text: 'text-warning', border: 'border-warning' },
-  { label: 'Pending Seller Applications', count: props.metrics.pendingSellerApplications, icon: 'bi bi-journal-text', text: 'text-danger', border: 'border-danger' },
+  { label: 'Total Orders', count: props.metrics.totalOrders, icon: 'bi bi-bag', text: 'text-primary', border: 'border-primary', iconSize: '1.8rem' },
+  { label: 'Total Users', count: props.metrics.totalUsers, icon: 'bi bi-people', text: 'text-info', border: 'border-info', iconSize: '1.8rem' },
+  { label: 'Total Sellers', count: props.metrics.totalSellers, icon: 'bi bi-person-workspace', text: 'text-success', border: 'border-success', iconSize: '1.8rem' },
+  { label: 'Total Announcements', count: props.metrics.totalAnnouncements, icon: 'bi bi-megaphone', text: 'text-dark', border: 'border-secondary', iconSize: '1.8rem' },
+  { label: 'Total Products Listed', count: props.metrics.totalProducts, icon: 'bi bi-box-seam', text: 'text-warning', border: 'border-warning', iconSize: '1.8rem' },
+  { label: 'Pending Seller Applications', count: props.metrics.pendingSellerApplications, icon: 'bi bi-journal-text', text: 'text-danger', border: 'border-danger', iconSize: '1.8rem' },
 ])
 
 // Bottom Metric Cards
@@ -178,12 +188,12 @@ const bottomMetrics = computed(() => [
   },
 ])
 
-// Chart Labels
-const labels = (props.monthlyStats || []).map(stat => stat.month)
+// Derived labels (could be days, months, etc.)
+const labels = computed(() => (props.monthlyStats || []).map(stat => stat.month || ''))
 
-// Chart Data
-const orderChartData = {
-  labels,
+// Reactive chart data
+const orderChartData = computed(() => ({
+  labels: labels.value,
   datasets: [
     {
       label: 'Orders',
@@ -191,10 +201,10 @@ const orderChartData = {
       data: (props.monthlyStats || []).map(stat => stat.orders),
     },
   ],
-}
+}))
 
-const salesChartData = {
-  labels,
+const salesChartData = computed(() => ({
+  labels: labels.value,
   datasets: [
     {
       label: 'Sales (₱)',
@@ -205,10 +215,10 @@ const salesChartData = {
       fill: true,
     },
   ],
-}
+}))
 
-// Chart Options
-const chartOptions = {
+// Chart Options factory so label-specific formatting works
+const chartOptions = (datasetLabel) => ({
   responsive: true,
   maintainAspectRatio: false,
   plugins: {
@@ -218,10 +228,13 @@ const chartOptions = {
       callbacks: {
         label: function (context) {
           const value = context.raw
-          return context.dataset.label + ': ₱' + value.toLocaleString(undefined, {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2,
-          })
+          if (datasetLabel.toLowerCase().includes('sales')) {
+            return context.dataset.label + ': ₱' + value.toLocaleString(undefined, {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            })
+          }
+          return context.dataset.label + ': ' + value.toLocaleString()
         }
       }
     }
@@ -230,15 +243,18 @@ const chartOptions = {
     y: {
       ticks: {
         callback: function (value) {
-          return '₱' + value.toLocaleString(undefined, {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2,
-          })
+          if (datasetLabel.toLowerCase().includes('sales')) {
+            return '₱' + value.toLocaleString(undefined, {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            })
+          }
+          return value.toLocaleString()
         }
       }
     }
   }
-}
+})
 </script>
 
 <style scoped>

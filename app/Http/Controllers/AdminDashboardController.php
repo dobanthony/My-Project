@@ -98,6 +98,7 @@ class AdminDashboardController extends Controller
             ->value('products.name');
 
         return Inertia::render('Admin/AdminDash', [
+            'filter' => $filter,
             'metrics' => [
                 'totalOrders' => Order::count(),
                 'totalUsers' => User::where('role', 'user')->count(),
@@ -113,5 +114,6 @@ class AdminDashboardController extends Controller
                 'topProduct' => $topProduct ?? 'N/A',
             ],
         ]);
+
     }
 }
