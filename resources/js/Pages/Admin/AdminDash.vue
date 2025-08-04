@@ -5,7 +5,7 @@
         <i class="bi bi-speedometer2 me-1 text-success"></i> Admin Dashboard
       </h2>
 
-      <!-- 🔢 Top Metric Cards -->
+      <!-- Top Metric Cards -->
       <div class="row g-4 mb-4">
         <div
           class="col-12 col-sm-6 col-lg-4"
@@ -26,7 +26,7 @@
         </div>
       </div>
 
-      <!-- 📅 Chart Filter -->
+      <!-- Chart Filter -->
       <div class="d-flex justify-content-between align-items-center mb-3">
         <h5 class="mb-0">
           <i class="bi bi-graph-up-arrow me-1 text-success"></i> Chart Filters
@@ -38,9 +38,9 @@
         </select>
       </div>
 
-      <!-- 📈 Charts -->
+      <!-- Charts -->
       <div class="row g-4">
-        <!-- 💰 Sales Chart -->
+        <!-- Sales Chart -->
         <div class="col-12">
           <div class="card shadow">
             <div class="card-body">
@@ -54,7 +54,7 @@
           </div>
         </div>
 
-        <!-- 🛒 Orders Chart -->
+        <!-- Orders Chart -->
         <div class="col-12">
           <div class="card shadow">
             <div class="card-body">
@@ -69,7 +69,7 @@
         </div>
       </div>
 
-      <!-- 🔥 Bottom Metric Cards -->
+      <!-- Bottom Metric Cards -->
       <div class="row g-4 mt-4">
         <div
           class="col-md-4"
@@ -143,7 +143,7 @@ function applyFilter() {
   router.get(route('admin.dashboard'), { filter: selectedFilter.value }, { preserveScroll: true })
 }
 
-// 💳 Top Metric Cards
+// Top Metric Cards
 const cards = computed(() => [
   { label: 'Total Orders', count: props.metrics.totalOrders, icon: 'bi bi-bag', text: 'text-primary', border: 'border-primary' },
   { label: 'Total Users', count: props.metrics.totalUsers, icon: 'bi bi-people', text: 'text-info', border: 'border-info' },
@@ -153,7 +153,7 @@ const cards = computed(() => [
   { label: 'Pending Seller Applications', count: props.metrics.pendingSellerApplications, icon: 'bi bi-journal-text', text: 'text-danger', border: 'border-danger' },
 ])
 
-// 🔥 Bottom Metric Cards
+// Bottom Metric Cards
 const bottomMetrics = computed(() => [
   {
     label: 'Top Shop',

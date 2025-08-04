@@ -1,16 +1,15 @@
 <template>
   <SellerDashboardLayout>
-    <div class="container py-4">
-      <h2 class="mb-4 text-center text-md-start">🛒 My Products</h2>
+    <div class="container">
 
       <!-- ➕ Create Custom Product -->
       <div class="mb-3 text-center text-md-start">
         <Link href="/seller/custom-products/create" class="btn btn-success">
-          ➕ Create Custom Product
+          Custom Product
         </Link>
       </div>
 
-      <!-- ⚠️ No Shop Warning -->
+      <!-- No Shop Warning -->
       <div v-if="!shop" class="alert alert-warning text-center">
         ⚠️ You need to create a shop before you can manage products.
         <div class="mt-2">
@@ -18,9 +17,9 @@
         </div>
       </div>
 
-      <!-- ✅ If Shop Exists -->
+      <!-- If Shop Exists -->
       <div v-else>
-        <!-- 📝 Create Product Form -->
+        <!-- Create Product Form -->
         <form @submit.prevent="submit" class="mb-5">
           <div class="row g-2 mb-2">
             <div class="col-12 col-md-4">
@@ -38,7 +37,7 @@
           <button type="submit" class="btn btn-primary w-100 w-md-auto">Add Product</button>
         </form>
 
-        <!-- 🔍 Filters -->
+        <!-- Filters -->
         <div class="row mb-4 g-2">
           <div class="col-12 col-md-6">
             <input v-model="search" @keyup.enter="handleSearch" class="form-control" placeholder="Search product name or description" />
@@ -48,7 +47,7 @@
           </div>
         </div>
 
-        <!-- 🧾 Products Table (Desktop) -->
+        <!-- Products Table (Desktop) -->
         <div class="table-responsive d-none d-md-block">
           <table class="table table-bordered align-middle text-center">
             <thead class="table-light">
@@ -80,7 +79,7 @@
           </table>
         </div>
 
-        <!-- 📱 Card View (Mobile) -->
+        <!-- Card View (Mobile) -->
         <div class="d-block d-md-none">
           <div v-for="product in products.data" :key="product.id" class="card mb-3 shadow-sm">
             <div class="card-body">
@@ -106,7 +105,7 @@
           </div>
         </div>
 
-        <!-- 🔢 Pagination -->
+        <!-- Pagination -->
         <nav v-if="products.links.length > 3" class="d-flex justify-content-center mt-4">
           <ul class="pagination flex-wrap gap-1 justify-content-center">
             <li
@@ -127,7 +126,7 @@
         </nav>
       </div>
 
-      <!-- ✏️ Edit Product Modal -->
+      <!-- Edit Product Modal -->
       <div v-if="editingProduct" class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5)">
         <div class="modal-dialog modal-dialog-centered">
           <div class="modal-content">

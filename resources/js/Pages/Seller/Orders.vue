@@ -76,7 +76,7 @@ in this code
               </td>
               <td>
                 <div class="d-flex gap-1 flex-wrap justify-content-center">
-                  <Link :href="route('seller.orders.view', order.id)" class="btn btn-sm btn-primary">View</Link>
+                  <Link :href="route('seller.orders.view', order.id)" class="btn btn-sm btn-outline-primary">View</Link>
                   <button v-if="order.status === 'pending'" @click="approve(order.id)" class="btn btn-sm btn-success">Approve</button>
                   <button v-if="order.status === 'pending'" @click="decline(order.id)" class="btn btn-sm btn-danger">Decline</button>
                 </div>
