@@ -4,7 +4,7 @@ in this code
   <SellerDashboardLayout>
     <div class="container py-3">
 
-      <!-- 🔍 Search & Filter -->
+      <!-- Search & Filter -->
       <div class="row gy-2 gx-2 align-items-center mb-3">
         <div class="col-12 col-sm-6 col-md-4">
           <input
@@ -30,7 +30,7 @@ in this code
         </div>
       </div>
 
-      <!-- 📋 Table View (Desktop) -->
+      <!-- Table View (Desktop) -->
       <div class="table-responsive d-none d-md-block">
         <table class="table table-hover table-bordered align-middle text-center">
           <thead class="table-success">
@@ -86,7 +86,7 @@ in this code
         </table>
       </div>
 
-      <!-- 📱 Mobile Card View -->
+      <!-- Mobile Card View -->
       <div class="d-block d-md-none">
         <div v-for="order in orders.data" :key="order.id" class="card mb-3 shadow-sm">
           <div class="card-body">
@@ -127,7 +127,7 @@ in this code
         </div>
       </div>
 
-      <!-- ❗ Empty State -->
+      <!-- Empty State -->
       <div v-if="orders.data.length === 0" class="alert alert-info mt-3 text-center">
         No matching orders found.
       </div>
