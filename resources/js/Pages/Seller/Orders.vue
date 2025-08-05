@@ -132,7 +132,7 @@ in this code
         No matching orders found.
       </div>
 
-      <!-- 🔢 Pagination -->
+      <!-- Pagination -->
       <nav v-if="orders.links.length > 3" class="mt-4">
         <ul class="pagination justify-content-center flex-wrap gap-1">
           <li v-for="(link, index) in orders.links" :key="index" class="page-item" :class="{ active: link.active, disabled: !link.url }">
@@ -141,7 +141,7 @@ in this code
         </ul>
       </nav>
 
-      <!-- ✅ Toast -->
+      <!-- Toast -->
       <div v-if="toastMessage" class="position-fixed top-0 start-50 translate-middle-x p-3 w-100" style="z-index: 1055; max-width: 360px;">
         <div class="toast show text-white bg-success d-flex align-items-center" role="alert">
           <div class="toast-body">
@@ -308,23 +308,21 @@ input.form-control:focus {
   box-shadow: 0 0 0 0.25rem rgba(0, 0, 0, 0.5);
 }
 
-/* 📱 Mobile adjustments */
+/* Mobile adjustments */
 @media (max-width: 576px) {
   .pagination {
     flex-wrap: wrap;
     gap: 4px;
   }
   .pagination .page-link {
-    padding: 4px 8px;        /* smaller padding */
-    font-size: 0.85rem;      /* smaller text */
-    min-width: 32px;         /* smaller min width */
+    padding: 4px 8px;
+    font-size: 0.85rem;
+    min-width: 32px;
   }
   .pagination li {
-    flex: 0 0 auto;          /* keep buttons consistent */
+    flex: 0 0 auto;
   }
 }
-
-
 @media (max-width: 576px) {
   .btn {
     width: 100%;
