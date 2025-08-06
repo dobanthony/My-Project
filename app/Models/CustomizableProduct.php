@@ -15,6 +15,7 @@ class CustomizableProduct extends Model
         'allow_name',
         'allow_size',
         'allow_material',
+        'allow_description',
     ];
 
     public function product()

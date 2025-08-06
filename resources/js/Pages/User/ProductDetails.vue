@@ -181,6 +181,16 @@
               />
             </div>
 
+            <div v-if="product.customization.allow_description" class="mb-3">
+              <label class="form-label">Custom Description / Comments</label>
+                <textarea
+                    v-model="customForm.custom_description"
+                    class="form-control"
+                    placeholder="Enter any specific instructions or preferences here..."
+                    rows="3"
+                ></textarea>
+            </div>
+
             <div class="mb-3">
               <label class="form-label">Quantity</label>
               <input
@@ -361,6 +371,7 @@ const customForm = useForm({
   size: '',
   material: '',
   custom_name: '',
+  custom_description: '',
   quantity: 1,
 })
 
@@ -391,9 +402,22 @@ const buyNow = () => {
   router.visit(`/checkout/${props.product.id}?quantity=${quantity.value}`)
 }
 
+// const buyNowCustom = () => {
+//   router.visit(`/checkout/${props.product.id}?quantity=${customForm.quantity}`)
+// }
 const buyNowCustom = () => {
-  router.visit(`/checkout/${props.product.id}?quantity=${customForm.quantity}`)
+  const query = new URLSearchParams({
+    quantity: customForm.quantity,
+    color: customForm.color,
+    size: customForm.size,
+    material: customForm.material,
+    custom_name: customForm.custom_name,
+    custom_description: customForm.custom_description,
+  }).toString()
+
+  router.visit(`/checkout/${props.product.id}?${query}`)
 }
+
 
 const toggleFollow = () => {
   followLoading.value = true

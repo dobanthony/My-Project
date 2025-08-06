@@ -74,6 +74,11 @@
             <label class="form-label">Custom Name</label>
             <input v-model="form.custom_name" type="text" class="form-control" placeholder="e.g. John or initials" />
           </div>
+
+          <div v-if="product.customization.allow_description" class="mb-3">
+            <label class="form-label">Custom Description</label>
+            <textarea v-model="form.custom_description" class="form-control" rows="2" placeholder="Describe your request (e.g. custom engraving, symbols, etc.)"></textarea>
+          </div>
         </div>
 
         <div class="mb-3">
@@ -104,32 +109,36 @@ import { defineProps, onMounted } from 'vue'
 const props = defineProps({
   product: Object,
   quantity: Number,
-  lastDeliveryInfo: Object // contains: full_name, phone_number, email, delivery_address
+  lastDeliveryInfo: Object,
+  customizations: Object,
 })
 
 const form = useForm({
   product_id: props.product.id,
-  full_name: '',
-  phone_number: '',
-  email: '',
-  delivery_address: '',
-  notes: '',
+  full_name: props.lastDeliveryInfo?.full_name || '',
+  phone_number: props.lastDeliveryInfo?.phone_number || '',
+  email: props.lastDeliveryInfo?.email || '',
+  delivery_address: props.lastDeliveryInfo?.delivery_address || '',
+  notes: props.lastDeliveryInfo?.notes || '',
+
   quantity: props.quantity || 1,
 
-  // Custom fields
-  color: '',
-  size: '',
-  material: '',
-  custom_name: ''
+  // Prefilled customization values
+  color: props.customizations?.color || '',
+  size: props.customizations?.size || '',
+  material: props.customizations?.material || '',
+  custom_name: props.customizations?.custom_name || '',
+  custom_description: props.customizations?.custom_description || '',
 })
 
-// Prefill form on mount if lastDeliveryInfo exists
+// Optional: fallback if you want to guarantee field population post-mount
 onMounted(() => {
-  if (props.lastDeliveryInfo) {
+  if (!form.full_name && props.lastDeliveryInfo) {
     form.full_name = props.lastDeliveryInfo.full_name || ''
     form.phone_number = props.lastDeliveryInfo.phone_number || ''
     form.email = props.lastDeliveryInfo.email || ''
     form.delivery_address = props.lastDeliveryInfo.delivery_address || ''
+    form.notes = props.lastDeliveryInfo.notes || ''
   }
 })
 

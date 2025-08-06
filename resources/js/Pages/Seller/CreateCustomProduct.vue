@@ -13,21 +13,31 @@
 
         <!-- Customization Options -->
         <h5>Customization Options</h5>
+
         <div class="form-check">
           <input v-model="form.allow_color" type="checkbox" class="form-check-input" id="color" />
           <label class="form-check-label" for="color">Allow Color</label>
         </div>
+
         <div class="form-check">
           <input v-model="form.allow_size" type="checkbox" class="form-check-input" id="size" />
           <label class="form-check-label" for="size">Allow Size</label>
         </div>
+
         <div class="form-check">
           <input v-model="form.allow_material" type="checkbox" class="form-check-input" id="material" />
           <label class="form-check-label" for="material">Allow Material</label>
         </div>
+
         <div class="form-check">
           <input v-model="form.allow_name" type="checkbox" class="form-check-input" id="name" />
           <label class="form-check-label" for="name">Allow Custom Name</label>
+        </div>
+
+        <!-- ✅ New: Allow Description -->
+        <div class="form-check">
+          <input v-model="form.allow_description" type="checkbox" class="form-check-input" id="description" />
+          <label class="form-check-label" for="description">Allow Description</label>
         </div>
 
         <button class="btn btn-success mt-3">Create Custom Product</button>
@@ -50,6 +60,7 @@ const form = useForm({
   allow_size: false,
   allow_material: false,
   allow_name: false,
+  allow_description: false, // ✅ NEW
 })
 
 const submit = () => {

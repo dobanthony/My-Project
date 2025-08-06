@@ -21,6 +21,11 @@ class Order extends Model
         'delivery_address',
         'notes',
         'delivery_status',
+        'customization_details', // 👈 make sure this is fillable
+    ];
+
+    protected $casts = [
+        'customization_details' => 'array', // ✅ Cast to array
     ];
 
     public function product()
@@ -37,10 +42,9 @@ class Order extends Model
     {
         return $this->hasOne(ReceivedOrder::class);
     }
+
     public function deliveryInfo()
     {
         return $this->hasOne(\App\Models\DeliveryInfo::class, 'user_id', 'user_id');
     }
-
-
 }

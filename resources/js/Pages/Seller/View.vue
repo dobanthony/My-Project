@@ -13,12 +13,12 @@
               Delivery Information
             </div>
             <div class="card-body">
-              <p><strong>Full Name:</strong> {{ order.delivery_info?.full_name || 'N/A' }}</p>
-              <p><strong>Phone Number:</strong> {{ order.delivery_info?.phone_number || 'N/A' }}</p>
-              <p><strong>Email:</strong> {{ order.delivery_info?.email || 'N/A' }}</p>
-              <p><strong>Address:</strong> {{ order.delivery_info?.delivery_address || 'N/A' }}</p>
-              <p v-if="order.delivery_info?.notes">
-                <strong>Notes:</strong> {{ order.delivery_info.notes }}
+              <p><strong>Full Name:</strong> {{ order.full_name || 'N/A' }}</p>
+              <p><strong>Phone Number:</strong> {{ order.phone_number || 'N/A' }}</p>
+              <p><strong>Email:</strong> {{ order.email || 'N/A' }}</p>
+              <p><strong>Address:</strong> {{ order.delivery_address || 'N/A' }}</p>
+              <p v-if="order.notes">
+                <strong>Notes:</strong> {{ order.notes }}
               </p>
             </div>
           </div>
@@ -33,6 +33,17 @@
             <div class="card-body">
               <p><strong>Product:</strong> {{ order.product.name }}</p>
               <p><strong>Quantity:</strong> {{ order.quantity }}</p>
+
+              <p><strong>Customizations:</strong></p>
+              <ul v-if="order.customization_details" class="mb-3">
+                <li v-if="order.customization_details.color"><strong>Color:</strong> {{ order.customization_details.color }}</li>
+                <li v-if="order.customization_details.size"><strong>Size:</strong> {{ order.customization_details.size }}</li>
+                <li v-if="order.customization_details.material"><strong>Material:</strong> {{ order.customization_details.material }}</li>
+                <li v-if="order.customization_details.custom_name"><strong>Custom Name:</strong> {{ order.customization_details.custom_name }}</li>
+                <li v-if="order.customization_details.custom_description"><strong>Description:</strong> {{ order.customization_details.custom_description }}</li>
+              </ul>
+              <p v-else class="text-muted">No customization provided.</p>
+
               <p>
                 <strong>Status:</strong>
                 <span
@@ -46,6 +57,7 @@
                   {{ order.status }}
                 </span>
               </p>
+
               <p><strong>Delivery Date:</strong> {{ order.delivery_date ?? 'N/A' }}</p>
               <p>
                 <strong>Delivery Status:</strong>

@@ -315,13 +315,13 @@ class OrderController extends Controller
         $order->load([
             'user',
             'product.shop.user',
-            'deliveryInfo'
         ]);
 
         return Inertia::render('Seller/View', [
-            'order' => $order,
+            'order' => $order->toArray(), // ✅ ensure customization_details gets included
             'isSeller' => true,
         ]);
     }
+
 
 }

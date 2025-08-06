@@ -4,6 +4,7 @@
 
     <div class="card p-4 shadow-sm">
       <form @submit.prevent="submit">
+        <!-- Delivery Info -->
         <div class="row">
           <div class="col-md-6 mb-3">
             <label class="form-label">Full Name</label>
@@ -31,6 +32,56 @@
           <textarea v-model="form.notes" class="form-control" rows="2"></textarea>
         </div>
 
+        <hr />
+
+        <!-- Orders & Customizations -->
+        <div v-for="(order, index) in form.orders" :key="index" class="mb-4 border rounded p-3 bg-light">
+          <h5 class="mb-2">🧺 {{ order.product.name }} (x{{ order.quantity }})</h5>
+
+          <!-- Customization options -->
+          <div v-if="order.product.customization">
+            <div v-if="order.product.customization.allow_color" class="mb-2">
+              <label class="form-label">Color</label>
+              <select v-model="order.color" class="form-select">
+                <option disabled value="">Choose color</option>
+                <option>Red</option>
+                <option>Blue</option>
+                <option>Black</option>
+              </select>
+            </div>
+
+            <div v-if="order.product.customization.allow_size" class="mb-2">
+              <label class="form-label">Size</label>
+              <select v-model="order.size" class="form-select">
+                <option disabled value="">Choose size</option>
+                <option>Small</option>
+                <option>Medium</option>
+                <option>Large</option>
+              </select>
+            </div>
+
+            <div v-if="order.product.customization.allow_material" class="mb-2">
+              <label class="form-label">Material</label>
+              <select v-model="order.material" class="form-select">
+                <option disabled value="">Choose material</option>
+                <option>Beads</option>
+                <option>Leather</option>
+                <option>Metal</option>
+              </select>
+            </div>
+
+            <div v-if="order.product.customization.allow_name" class="mb-2">
+              <label class="form-label">Custom Name</label>
+              <input v-model="order.custom_name" type="text" class="form-control" placeholder="e.g. John's Bracelet" />
+            </div>
+
+            <div v-if="order.product.customization.allow_description" class="mb-2">
+              <label class="form-label">Custom Description</label>
+              <textarea v-model="order.custom_description" class="form-control" rows="2" placeholder="Describe your custom request..."></textarea>
+            </div>
+          </div>
+        </div>
+
         <button type="submit" class="btn btn-success">🛒 Place Orders</button>
         <Link href="/cart" class="btn btn-outline-secondary ms-2">⬅ Back to Cart</Link>
       </form>
@@ -47,15 +98,22 @@ const props = defineProps({
   lastDeliveryInfo: Object
 })
 
-// ✅ Only include items with valid product
-const validItems = props.cartItems.filter(item => item.product && item.product.id)
+// 🛒 Map cart items into form.orders with prefilled custom values (if any)
+const orders = props.cartItems
+  .filter(item => item.product && item.product.id)
+  .map(item => ({
+    product_id: item.product.id,
+    quantity: item.quantity || 1,
+    product: item.product, // for display only
 
-const orders = validItems.map(item => ({
-  product_id: item.product.id,
-  quantity: item.quantity || 1
-}))
+    // Customization fields – prefilled if passed from cart
+    color: item.color || '',
+    size: item.size || '',
+    material: item.material || '',
+    custom_name: item.custom_name || '',
+    custom_description: item.custom_description || ''
+  }))
 
-// ✅ Pre-fill form if lastDeliveryInfo is available
 const form = useForm({
   full_name: props.lastDeliveryInfo?.full_name || '',
   phone_number: props.lastDeliveryInfo?.phone_number || '',
