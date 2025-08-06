@@ -108,7 +108,7 @@ class CheckoutController extends Controller
             'orders.*.quantity' => 'required|integer|min:1'
         ]);
 
-        // ✅ Update or create delivery info (1 per user)
+        // Update or create delivery info (1 per user)
         DeliveryInfo::updateOrCreate(
             ['user_id' => auth()->id()],
             [
