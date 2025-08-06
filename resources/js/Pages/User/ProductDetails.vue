@@ -407,12 +407,6 @@ const toggleFollow = () => {
   })
 }
 
-
-
-// const goToChat = () => {
-//   router.visit(`/user/inbox/${props.product.shop.id}`)
-// }
-
 const goToChat = () => {
   router.visit(`/user/inbox/${props.product.shop.id}?product_id=${props.product.id}`)
 }
