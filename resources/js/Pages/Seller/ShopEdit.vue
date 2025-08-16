@@ -232,24 +232,79 @@ const submit = () => {
 </script>
 
 <style scoped>
+/* General Card Styling */
 .card {
   border: none;
+  border-radius: 1rem;
 }
+
+/* Headings */
 h2 {
   font-weight: 600;
+  font-size: clamp(1.5rem, 2vw + 1rem, 2.25rem); /* Responsive scaling */
 }
-.small {
-  font-size: 0.85rem;
+
+h5 {
+  font-size: clamp(1.1rem, 1vw + 0.8rem, 1.4rem);
+  font-weight: 600;
 }
+
+/* Small texts */
+.small,
+.text-muted {
+  font-size: clamp(0.8rem, 0.5vw + 0.7rem, 0.95rem);
+  line-height: 1.4;
+}
+
+/* Toast */
+.toast-body {
+  font-size: clamp(0.9rem, 0.6vw + 0.8rem, 1rem);
+}
+
+/* Badge */
 .badge {
-  font-size: 0.75rem;
-  padding: 0.5em 0.75em;
+  font-size: clamp(0.7rem, 0.5vw + 0.6rem, 0.85rem);
+  padding: 0.4em 0.8em;
   border-radius: 12px;
 }
+
+/* Inputs */
+input,
+textarea {
+  font-size: clamp(0.9rem, 0.6vw + 0.8rem, 1rem);
+}
+
+/* Buttons */
+button {
+  font-size: clamp(0.95rem, 0.7vw + 0.8rem, 1.1rem);
+  font-weight: 500;
+  padding: 0.75rem;
+  border-radius: 0.75rem;
+}
+
+button.btn-lg {
+  padding: 0.5rem 1rem;  /* reduce height */
+  font-size: 1rem;       /* smaller text */
+}
+
+/* Responsive adjustments for smaller devices */
 @media (max-width: 991px) {
   .container {
     padding-left: 0.75rem;
     padding-right: 0.75rem;
+  }
+
+  h2 {
+    font-size: 1.5rem; /* keep heading readable on mobile */
+  }
+
+  .avatar {
+    width: 64px !important;
+    height: 64px !important;
+  }
+
+  .card {
+    padding: 1rem !important;
   }
 }
 </style>

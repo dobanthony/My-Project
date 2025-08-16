@@ -341,7 +341,7 @@ const submitRating = () => {
   formData.append('product_rating', ratingForm.value.product_rating)
   formData.append('shop_rating', ratingForm.value.shop_rating)
   formData.append('comment', ratingForm.value.comment)
-  if (ratingForm.value.image) formData.append('photo', ratingForm.value.image)
+  if (ratingForm.value.image) formData.append('image', ratingForm.value.image)
 
   router.post(`/orders/${props.order.id}/rate-shop`, formData, {
     forceFormData: true,
