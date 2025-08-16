@@ -81,7 +81,7 @@
                   {{ capitalize(order.status) }}
                 </span>
               </td>
-              <td>{{ order.product?.shop?.user?.name ?? 'Unknown' }}</td>
+              <td>{{ order.product?.shop?.user?.first_name ?? 'Unknown' }}</td>
               <td class="text-nowrap">{{ formatDate(order.created_at) }}</td>
               <td>
                 <button

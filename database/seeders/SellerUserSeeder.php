@@ -17,7 +17,7 @@ class SellerUserSeeder extends Seeder
         User::firstOrCreate(
             ['email' => 'juan@gmail.com'],
             [
-                'name' => 'Juan Dela Cruz',
+                'first_name' => 'Juan',
                 'password' => Hash::make('juan12345'), // default password
                 'role' => 'seller',
             ],
@@ -25,16 +25,8 @@ class SellerUserSeeder extends Seeder
         User::firstOrCreate(
             ['email' => 'maria@gmail.com'],
             [
-                'name' => 'Maria Clara',
+                'first_name' => 'Maria',
                 'password' => Hash::make('maria12345'),
-                'role' => 'seller',
-            ]
-        );
-            User::firstOrCreate(
-            ['email' => 'binay@gmail.com'],
-            [
-                'name' => 'Binay Jojo',
-                'password' => Hash::make('binay12345'),
                 'role' => 'seller',
             ]
         );
