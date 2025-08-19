@@ -79,8 +79,10 @@ class AnalyticsController extends Controller
             ->join('products', 'orders.product_id', '=', 'products.id')
             ->whereIn('orders.product_id', $productIds)
             ->where('orders.created_at', '>=', $startDate)
-            ->select('users.name', DB::raw('SUM(orders.quantity * products.price) as total_spent'))
-            ->groupBy('users.name')
+            ->select('users.first_name',
+                    'users.last_name',
+                    DB::raw('SUM(orders.quantity * products.price) as total_spent'))
+            ->groupBy('users.first_name', 'users.last_name')
             ->orderByDesc('total_spent')
             ->first();
 
@@ -153,7 +155,8 @@ class AnalyticsController extends Controller
             'topSelling' => $topSelling,
             'lowStock' => $lowStock,
             'customerStats' => [
-                'name' => $topCustomer->name ?? 'N/A',
+                'first_name' => $topCustomer->first_name ?? 'N/A',
+                'last_name'  => $topCustomer->last_name ?? '',
                 'total_spent' => round($topCustomer->total_spent ?? 0, 2),
             ],
             'ratings' => [

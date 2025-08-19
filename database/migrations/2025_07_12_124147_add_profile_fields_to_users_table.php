@@ -12,13 +12,13 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string('first_name')->nullable();
-            $table->string('middle_name')->nullable();
-            $table->string('last_name')->nullable();
-            $table->string('phone')->nullable();
-            $table->string('address')->nullable();
-            $table->date('dob')->nullable();
-            $table->json('social_links')->nullable(); // store as JSON
+            $table->string('first_name')->nullable()->after('id');
+            $table->string('middle_name')->nullable()->after('first_name');
+            $table->string('last_name')->nullable()->after('middle_name');
+            $table->string('phone')->nullable()->after('last_name');
+            $table->string('address')->nullable()->after('phone');
+            $table->date('dob')->nullable()->after('address');
+            $table->json('social_links')->nullable()->after('dob'); // store as JSON
         });
     }
 
@@ -28,7 +28,15 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn(['first_name', 'middle_name', 'last_name', 'phone', 'address', 'dob', 'social_links']);
+            $table->dropColumn([
+                'first_name',
+                'middle_name',
+                'last_name',
+                'phone',
+                'address',
+                'dob',
+                'social_links'
+            ]);
         });
     }
 };

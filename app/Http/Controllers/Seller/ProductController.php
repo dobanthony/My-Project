@@ -164,7 +164,8 @@ class ProductController extends Controller
                 'total_sold' => $p->total_sold ?? 0,
                 'shop' => [
                     'user' => [
-                        'name' => $p->shop?->user?->name,
+                        'first_name' => $p->shop?->user?->first_name,
+                        'last_name' => $p->shop?->user?->last_name,
                     ],
                     'address' => $p->shop?->address,
                 ],

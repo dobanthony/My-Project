@@ -47,7 +47,7 @@
           <h2 class="h3 fw-bold">Join Thousands of Happy Customers</h2>
           <p class="lead mb-4">Start your journey with us today.</p>
           <Link href="/register" class="btn btn-outline-light btn-lg">
-            Sign Up Now
+            Register Now
           </Link>
         </div>
       </section>

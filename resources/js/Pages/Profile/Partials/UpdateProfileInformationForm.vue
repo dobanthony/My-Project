@@ -146,7 +146,7 @@ watch(() => form.recentlySuccessful, (val) => {
             </div>
         </form>
 
-        <!-- ✅ Toast Modal -->
+        <!-- Toast Modal -->
         <transition
             enter-active-class="transition ease-out duration-300"
             enter-from-class="opacity-0 -translate-y-4"
@@ -157,7 +157,7 @@ watch(() => form.recentlySuccessful, (val) => {
                 v-if="showToast"
                 class="fixed top-6 left-1/2 transform -translate-x-1/2 z-50 px-4 py-3 bg-green-600 text-white rounded shadow-lg"
             >
-                ✅ Profile updated successfully!
+                Profile updated successfully!
             </div>
         </transition>
     </section>

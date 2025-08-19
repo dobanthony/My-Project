@@ -139,7 +139,7 @@
             <div>
               <Link class="dropdown-item" href="/profile">My Profile</Link>
               <Link class="dropdown-item" href="/logout" method="post" as="button">
-                Sign Out
+                Log Out
               </Link>
             </div>
           </div>

@@ -82,7 +82,7 @@
 
                 <div class="shop-info mb-1 small text-muted">
                   <div class="mb-1 ellipsis-one">
-                    Sold by: <strong>{{ product.shop?.user?.name ?? 'Unknown' }}</strong>
+                    Sold by: <strong>{{ product.shop?.user?.first_name ?? 'Unknown' }} {{ product.shop?.user?.last_name ?? 'Unknown' }}</strong>
                   </div>
                   <div v-if="product.shop?.address" class="ellipsis-one">
                     <i class="bi bi-geo-alt-fill me-1"></i>

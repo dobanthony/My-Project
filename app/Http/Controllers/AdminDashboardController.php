@@ -73,22 +73,22 @@ class AdminDashboardController extends Controller
         }
 
         // 🔝 Top Shop (most orders from seller's products)
-        $topShop = User::select('users.name')
+        $topShop = User::select('users.first_name')
             ->join('shops', 'shops.user_id', '=', 'users.id')
             ->join('products', 'products.shop_id', '=', 'shops.id')
             ->join('orders', 'orders.product_id', '=', 'products.id')
             ->where('users.role', 'seller')
-            ->groupBy('users.id', 'users.name')
+            ->groupBy('users.id', 'users.first_name')
             ->orderByRaw('COUNT(orders.id) DESC')
-            ->value('users.name');
+            ->value('users.first_name');
 
         // 🧍 Top Customer (most orders)
-        $topCustomer = User::select('users.name')
+        $topCustomer = User::select('users.first_name')
             ->join('orders', 'orders.user_id', '=', 'users.id')
             ->where('users.role', 'user')
-            ->groupBy('users.id', 'users.name')
+            ->groupBy('users.id', 'users.first_name')
             ->orderByRaw('COUNT(orders.id) DESC')
-            ->value('users.name');
+            ->value('users.first_name');
 
         // 🛍️ Top Product (by quantity sold)
         $topProduct = Product::select('products.name')

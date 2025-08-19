@@ -30,7 +30,7 @@
 
 <li class="nav-item">
   <Link class="nav-link" href="/admin/marketplace">
-    🛒 Manage Marketplace
+     Manage Marketplace
   </Link>
 </li>
 
@@ -83,12 +83,12 @@
               <div class="fw-bold">Hi, {{ $page.props.auth?.user?.name ?? 'N/A' }}</div>
               <div class="text-muted small">{{ $page.props.auth?.user?.email ?? 'N/A' }}</div>
               <div class="text-primary small bg-light px-2 py-1 rounded d-inline">{{ $page.props.auth?.user?.role ?? 'N/A' }}</div>
-              
+
             </div>
           </div>
           <div>
             <Link class="dropdown-item" href="/profile">My Profile</Link>
-            <Link class="dropdown-item" href="/logout" method="post" as="button">Sign Out</Link>
+            <Link class="dropdown-item" href="/logout" method="post" as="button">Log Out</Link>
           </div>
         </div>
       </div>

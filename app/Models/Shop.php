@@ -16,7 +16,6 @@ class Shop extends Model
         'shop_logo',
         'address',
     ];
-    // protected $appends = ['shop_rating'];
     protected $appends = ['shop_rating', 'shop_rating_count'];
 
 
@@ -25,47 +24,45 @@ class Shop extends Model
         return $this->belongsTo(User::class);
     }
 
-    // In Shop.php
     public function products()
     {
         return $this->hasMany(Product::class);
     }
 
     public function followers()
-{
-    return $this->belongsToMany(User::class, 'shop_user_follows');
-}
+    {
+        return $this->belongsToMany(User::class, 'shop_user_follows');
+    }
 
-public function followedShops()
-{
-    return $this->belongsToMany(Shop::class, 'shop_user_follows');
-}
+    public function followedShops()
+    {
+        return $this->belongsToMany(Shop::class, 'shop_user_follows');
+    }
 
-public function ratings()
-{
-    return $this->hasMany(ShopRating::class);
-}
+    public function ratings()
+    {
+        return $this->hasMany(ShopRating::class);
+    }
 
-public function getShopRatingAttribute()
-{
-    return round($this->ratings()->avg('shop_rating'), 1) ?? 0;
-}
-public function getShopRatingCountAttribute()
-{
-    return $this->ratings()->count();
-}
+    public function getShopRatingAttribute()
+    {
+        return round($this->ratings()->avg('shop_rating'), 1) ?? 0;
+    }
+    public function getShopRatingCountAttribute()
+    {
+        return $this->ratings()->count();
+    }
 
-//delete this
+    //delete this
 
-public function messages()
-{
-    return $this->hasMany(Message::class);
-}
+    public function messages()
+    {
+        return $this->hasMany(Message::class);
+    }
 
-public function owner()
-{
-    return $this->belongsTo(User::class, 'user_id');
-}
-
+    public function owner()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
 
 }

@@ -82,7 +82,7 @@
             <div class="card shadow border-info text-center h-100">
               <div class="card-body">
                 <h6 class="text-muted">🏆 Top Customer</h6>
-                <p class="mb-1 fw-semibold">{{ customerStats.name }}</p>
+                <p class="mb-1 fw-semibold">{{ customerStats.first_name }} {{ customerStats.last_name }}</p>
                 <p class="text-success">₱ {{ customerStats.total_spent }}</p>
               </div>
             </div>
