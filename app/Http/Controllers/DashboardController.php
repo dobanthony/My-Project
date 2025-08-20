@@ -29,11 +29,11 @@ class DashboardController extends Controller
                 'user' => $user,
             ]);
         }
-        
+
         //user
         return Inertia::render('User/Dashboard', [
             'user' => $user,
-            'announcements' => Announcement::latest()->take(6)->get(),
+            'announcements' => Announcement::latest()->take(100)->get(),
         ]);
     }
 }
