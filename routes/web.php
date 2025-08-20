@@ -44,12 +44,7 @@ Route::middleware(['auth'])->prefix('seller')->name('seller.')->group(function (
     // Dashboard
     Route::get('/dashboard', [SellerController::class, 'dashboard'])->name('dashboard');
 
-    // Shop
-    // Route::get('/shop', [SellerController::class, 'index'])->name('shop');
-    // Route::post('/shop', [SellerController::class, 'storeOrUpdate'])->name('shop.store');
-    // Route::get('/seller/shop', [SellerController::class, 'index'])->name('seller.shop.edit');
-
-    // Place this one first to avoid being overridden by /shop
+    //shop
     Route::get('/seller/shop', [SellerController::class, 'index'])->name('seller.shop.edit');
 
     // Optional: If needed for guest/shop view
