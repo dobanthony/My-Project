@@ -17,10 +17,8 @@ class ShopRating extends Model
         'product_rating',
         'shop_rating',
         'comment',
-        'image', // ✅ include this to allow mass assignment
+        'image',
     ];
-
-    // 👇 Relationships (optional but useful)
 
     public function user()
     {

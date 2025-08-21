@@ -93,7 +93,6 @@ Route::middleware('auth')->group(function () {
 });
 
 
-
 // Orders
 Route::middleware('auth')->group(function () {
     Route::post('/buy', [OrderController::class, 'store']);
@@ -136,13 +135,11 @@ Route::middleware('auth')->group(function () {
 Route::post('/checkout-bulk', [CheckoutController::class, 'bulkForm'])->name('checkout.bulkForm');
 
 
-
 use App\Http\Controllers\ShopFollowController;
 
 Route::middleware(['auth'])->post('/shop/{shop}/toggle-follow', [ShopFollowController::class, 'toggle']);
 
 Route::post('/seller/orders/{order}/delivery-status', [OrderController::class, 'updateDeliveryStatus']);
-
 
 
 use App\Http\Controllers\Seller\CustomProductController;
@@ -177,14 +174,14 @@ use App\Http\Controllers\MessageController;
 
 Route::middleware(['auth'])->group(function () {
 
-    Route::get('/user/inbox', [MessageController::class, 'userInboxList'])->name('user.inbox.list');  // 📨 Show list of shops
+    Route::get('/user/inbox', [MessageController::class, 'userInboxList'])->name('user.inbox.list');  // Show list of shops
 
-    Route::get('/user/inbox/{shop}', [MessageController::class, 'userInbox'])->name('user.inbox.chat'); // 💬 Chat with a shop
+    Route::get('/user/inbox/{shop}', [MessageController::class, 'userInbox'])->name('user.inbox.chat'); // Chat with a shop
 
 
-    Route::get('/seller/inbox', [MessageController::class, 'sellerInboxList'])->name('seller.inbox.list');// 📨 Show list of users
+    Route::get('/seller/inbox', [MessageController::class, 'sellerInboxList'])->name('seller.inbox.list');// Show list of users
 
-    Route::get('/seller/inbox/{user}', [MessageController::class, 'sellerInbox'])->name('seller.inbox.chat');// 💬 Chat with a customer
+    Route::get('/seller/inbox/{user}', [MessageController::class, 'sellerInbox'])->name('seller.inbox.chat');// Chat with a customer
 
 
     Route::post('/messages/send', [MessageController::class, 'send'])->name('messages.send');
@@ -284,5 +281,14 @@ Route::get('/seller/orders/{order}/view', [OrderController::class, 'sellerView']
 Route::get('/seller/orders', [OrderController::class, 'sellerOrders'])->name('seller.orders');
 
 
+use App\Http\Controllers\ChatBotController;
+
+// Chat page route (renders the Vue chatbot)
+Route::get('/chat', function () {
+    return Inertia::render('ChatBot');
+})->name('chat');
+
+// BotMan handle route (handles user messages)
+Route::post('/botman', [ChatBotController::class, 'handle'])->name('botman.handle');
 
 require __DIR__.'/auth.php';

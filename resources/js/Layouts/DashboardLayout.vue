@@ -85,6 +85,15 @@
 
       <!-- Avatar -->
       <div class="d-flex align-items-center gap-3 position-relative">
+        <Link class="text-decoration-none position-relative" :href="route('chat')">
+            <svg xmlns="http://www.w3.org/2000/svg"
+                width="20" height="20"
+                fill="currentColor"
+                class="bi text-success align-middle"
+                viewBox="0 0 16 16">
+                <path d="M8 0a1 1 0 0 0-1 1v1H6a2 2 0 0 0-2 2v1H3a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-1V4a2 2 0 0 0-2-2H9V1a1 1 0 0 0-1-1zM5 7a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm8 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm-9 3h8v2H4v-2z"/>
+            </svg>
+        </Link>
         <!-- 🔔 Notifications -->
         <Link href="/user/notifications" class="text-decoration-none position-relative">
           <i class="bi bi-bell fs-5 text-success"></i>

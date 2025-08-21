@@ -14,7 +14,7 @@ class AnnouncementController extends Controller
     {
         return Inertia::render('User/Dashboard', [ // ✅ Located at: resources/js/Pages/User/Dashboard.vue
             // 'dashboard' => Announcement::latest()->get(),
-            'announcements' => Announcement::latest()->take(6)->get(),
+            'announcements' => Announcement::latest()->take(100)->get(),
         ]);
     }
 
