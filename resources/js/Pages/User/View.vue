@@ -38,7 +38,16 @@
                   alt="Product Image"
                   loading="lazy"
                 />
+
+                <!-- ECO-FRIENDLY BADGE -->
+                <span
+                  v-if="product.eco_friendly"
+                  class="badge eco-badge position-absolute"
+                >
+                  <i class="bi bi-leaf-fill me-1"></i> Eco-Friendly
+                </span>
               </div>
+
               <div class="card-body d-flex flex-column px-2 py-2">
                 <h6 class="card-title text-dark mb-1 ellipsis-two">
                   {{ product.name }}
@@ -188,6 +197,21 @@ const searchProducts = () => {
 }
 .product-card:hover .image-wrapper img {
   transform: scale(1.05); /* slight zoom */
+}
+
+/* ECO badge */
+.eco-badge {
+  top: 8px;
+  left: 8px;
+  background-color: #28a745;
+  color: white;
+  font-size: 0.7rem;
+  border-radius: 12px;
+  padding: 0.35em 0.6em;
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
 }
 
 /* Text truncation helpers */

@@ -18,6 +18,11 @@ class Product extends Model
         'price',
         'stock',
         'image',
+        'eco_friendly',
+    ];
+
+    protected $casts = [
+        'eco_friendly' => 'boolean',
     ];
 
     public function shop()

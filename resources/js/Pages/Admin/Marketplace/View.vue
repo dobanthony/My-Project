@@ -22,8 +22,15 @@
           <!-- Product Info -->
           <div class="col-md-7">
             <div class="card-body p-4">
-              <h3 class="card-title mb-3">
+              <h3 class="card-title mb-3 d-flex align-items-center">
                 {{ product.name }}
+                <!-- Show eco-friendly only if true -->
+                <span
+                  v-if="product.eco_friendly"
+                  class="badge bg-success ms-3 d-flex align-items-center"
+                >
+                  <i class="bi bi-leaf me-1"></i> Eco-Friendly
+                </span>
               </h3>
 
               <p class="text-muted mb-2">

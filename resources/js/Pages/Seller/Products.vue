@@ -32,8 +32,17 @@
               <input v-model="form.stock" type="number" class="form-control" placeholder="Stock" />
             </div>
           </div>
+
           <textarea v-model="form.description" class="form-control mb-2" placeholder="Description"></textarea>
+
+          <!-- ✅ Eco-Friendly Checkbox -->
+          <div class="form-check mb-2">
+            <input v-model="form.eco_friendly" type="checkbox" class="form-check-input" id="ecoFriendly" />
+            <label class="form-check-label" for="ecoFriendly">Eco-Friendly</label>
+          </div>
+
           <input type="file" @change="e => form.image = e.target.files[0]" class="form-control mb-2" />
+
           <button type="submit" class="btn btn-primary w-100 w-md-auto">Add Product</button>
         </form>
 
@@ -57,6 +66,7 @@
                 <th>Price</th>
                 <th>Stock</th>
                 <th>Description</th>
+                <th>Eco-Friendly</th>
                 <th>Actions</th>
               </tr>
             </thead>
@@ -70,6 +80,10 @@
                 <td>₱{{ product.price }}</td>
                 <td>{{ product.stock }}</td>
                 <td>{{ product.description }}</td>
+                <td>
+                  <span v-if="product.eco_friendly" class="badge bg-success">✅ Yes</span>
+                  <span v-else class="badge bg-secondary">❌ No</span>
+                </td>
                 <td>
                   <button class="btn btn-sm btn-warning me-1" @click="openEdit(product)">Edit</button>
                   <button class="btn btn-sm btn-danger" @click="deleteProduct(product.id)">Delete</button>
@@ -97,6 +111,10 @@
               <p><strong>Price:</strong> ₱{{ product.price }}</p>
               <p><strong>Stock:</strong> {{ product.stock }}</p>
               <p><strong>Description:</strong> {{ product.description }}</p>
+              <p><strong>Eco-Friendly:</strong>
+                <span v-if="product.eco_friendly" class="text-success">✅ Yes</span>
+                <span v-else class="text-muted">❌ No</span>
+              </p>
               <div class="d-flex gap-2 justify-content-center">
                 <button class="btn btn-sm btn-warning" @click="openEdit(product)">Edit</button>
                 <button class="btn btn-sm btn-danger" @click="deleteProduct(product.id)">Delete</button>
@@ -147,7 +165,15 @@
                     <input v-model="editForm.stock" type="number" class="form-control" placeholder="Stock" />
                   </div>
                 </div>
+
                 <textarea v-model="editForm.description" class="form-control mb-2" placeholder="Description"></textarea>
+
+                <!-- ✅ Eco-Friendly Checkbox in Edit -->
+                <div class="form-check mb-2">
+                  <input v-model="editForm.eco_friendly" type="checkbox" class="form-check-input" id="editEcoFriendly" />
+                  <label class="form-check-label" for="editEcoFriendly">Eco-Friendly</label>
+                </div>
+
                 <input type="file" @change="e => editForm.image = e.target.files[0]" class="form-control mb-3" />
               </div>
               <div class="modal-footer">
@@ -176,11 +202,27 @@ const props = defineProps({
 })
 
 // State
-const form = useForm({ name: '', price: '', stock: '', description: '', image: null })
+const form = useForm({
+  name: '',
+  price: '',
+  stock: '',
+  description: '',
+  image: null,
+  eco_friendly: false // ✅ new
+})
+
 const search = ref(props.search ?? '')
 const limit = ref(props.limit ?? 5)
 const editingProduct = ref(null)
-const editForm = useForm({ id: null, name: '', price: '', stock: '', description: '', image: null })
+const editForm = useForm({
+  id: null,
+  name: '',
+  price: '',
+  stock: '',
+  description: '',
+  image: null,
+  eco_friendly: false // ✅ new
+})
 
 // Add Product
 function submit() {
@@ -202,6 +244,7 @@ function openEdit(product) {
   editForm.stock = product.stock
   editForm.description = product.description
   editForm.image = null
+  editForm.eco_friendly = !!product.eco_friendly
 }
 
 function updateProduct() {

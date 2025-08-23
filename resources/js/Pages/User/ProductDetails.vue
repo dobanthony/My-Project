@@ -49,7 +49,15 @@
         </div>
 
         <div class="col-12 col-lg-6">
-          <h2 class="text-dark fw-bold mb-2">{{ product.name }}</h2>
+          <h2 class="text-dark fw-bold mb-2 d-flex align-items-center gap-2">
+            {{ product.name }}
+            <span
+                v-if="product.eco_friendly"
+                class="badge bg-success d-flex align-items-center"
+            >
+                <i class="bi bi-leaf me-1"></i> Eco-Friendly
+            </span>
+          </h2>
 
           <!-- Rating & Stats -->
           <div class="d-flex flex-wrap gap-3 mb-3">
