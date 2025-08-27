@@ -4,7 +4,7 @@ import axios from 'axios'
 import DashboardLayout from '@/Layouts/DashboardLayout.vue'
 
 const messages = ref([
-  { from: 'bot', text: '🤖 Hi! Type something to chat with me.' }
+  { from: 'bot', text: '🤖 Hi there! I’m CraftSmartBot.! Type something to chat with me.' }
 ])
 
 const quickMessages = ref([
@@ -89,7 +89,7 @@ watch(messages, async () => {
           <!-- Bot typing indicator -->
           <div v-if="botTyping" class="chat-message bot mb-2">
             <div class="message-bubble typing">
-              🤖 Bot is typing...
+              🤖 CraftSmartBot is typing...
             </div>
           </div>
         </div>

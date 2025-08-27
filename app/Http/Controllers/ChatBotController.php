@@ -29,9 +29,7 @@ class ChatBotController extends Controller
         ]);
     }
 
-    /* -----------------------------------------------------------------
-     |  Message Routing
-     |-----------------------------------------------------------------*/
+    // Message Routing
     private function routeMessage(string $message, $user = null): string
     {
         if ($reply = $this->handleGreeting($message)) return $reply;
@@ -44,9 +42,7 @@ class ChatBotController extends Controller
         return "🤖 I didn't get that. Try typing 'help' for things you can ask me about!";
     }
 
-    /* -----------------------------------------------------------------
-     |  Handlers
-     |-----------------------------------------------------------------*/
+     //Handlers
     private function handleGreeting(string $msg): ?string
     {
         $greetings = ['hi', 'hello', 'hey'];
@@ -67,28 +63,28 @@ class ChatBotController extends Controller
     {
         if ($msg === 'help' || strpos($msg, 'what can you do') !== false) {
             return <<<HELP
-You can ask me about products, orders, or shops. For example:
-- Cheapest product / Most expensive product
-- Cheapest eco-friendly product
-- Out of stock products
-- Product stock for [product name]
-- Product info for [product name]
-- 🌱 Eco-friendly products
-- Is [product name] eco friendly?
-- How many orders exist / My latest order / pending or completed orders
-- Order history / Track my past orders
-- Order status #1234
-- Delivery info
-- Shop info for [shop name]
-- What shops are available?
-- Payment methods
-- Return policy
-- Shipping / delivery options
-- Contact support
-- Recommend me [category]
-HELP;
-        }
-        return null;
+                You can ask me about products, orders, or shops. For example:
+                - Cheapest product / Most expensive product
+                - Cheapest eco-friendly product
+                - Out of stock products
+                - Product stock for [product name]
+                - Product info for [product name]
+                - 🌱 Eco-friendly products
+                - Is [product name] eco friendly?
+                - How many orders exist / My latest order / pending or completed orders
+                - Order history / Track my past orders
+                - Order status #1234
+                - Delivery info
+                - Shop info for [shop name]
+                - What shops are available?
+                - Payment methods
+                - Return policy
+                - Shipping / delivery options
+                - Contact support
+                - Recommend me [category]
+                HELP;
+            }
+            return null;
     }
 
     private function handleProductQueries(string $msg): ?string
@@ -204,9 +200,7 @@ HELP;
         return null;
     }
 
-    /* -----------------------------------------------------------------
-     |  Helpers
-     |-----------------------------------------------------------------*/
+    // Helpers
     private function normalizeMessage($msg): string
     {
         $msg = strtolower(trim((string)$msg));
