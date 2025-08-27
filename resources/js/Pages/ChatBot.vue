@@ -1,98 +1,182 @@
 <script setup>
-
 import { ref, watch, nextTick } from 'vue'
-import { useForm } from '@inertiajs/vue3'
+import axios from 'axios'
 import DashboardLayout from '@/Layouts/DashboardLayout.vue'
 
-// Chat messages
 const messages = ref([
   { from: 'bot', text: '🤖 Hi! Type something to chat with me.' }
 ])
 
-// Form for sending message
-const form = useForm({ message: '' })
+const quickMessages = ref([
+  'Hi',
+  'Help',
+  'Cheapest product',
+  'Most expensive product',
+  'My latest order',
+  'Delivery info'
+])
 
-// Reference to chat container for auto-scroll
+const messageInput = ref('')
 const chatContainer = ref(null)
+const botTyping = ref(false)
 
-// Send message function
-async function sendMessage() {
-  if (!form.message) return
+/**
+ * Send a message to the bot.
+ * @param {string|null} msg Optional message override (for quick messages)
+ * @param {Event|null} event Optional event (for form submit)
+ */
+async function sendMessage(msg = null, event = null) {
+  if (event) event.preventDefault(); // prevent form submit reload
 
-  // Push user message
-  messages.value.push({ from: 'user', text: form.message })
+  const messageToSend = msg || messageInput.value
+  if (!messageToSend) return
 
-  // Send message to backend
-  await form.post(route('botman.handle'), {
-    preserveState: true,
-    onSuccess: (page) => {
-      // Get the bot reply from flash
-      const botReply = page.props.flash.botman_reply
-      if (botReply) {
-        messages.value.push({ from: 'bot', text: botReply })
-      }
-      form.reset()
-    }
-  })
+  // Add user message to chat
+  messages.value.push({ from: 'user', text: messageToSend })
+  messageInput.value = ''
+
+  // Show bot typing indicator
+  botTyping.value = true
+  await nextTick()
+  chatContainer.value.scrollTop = chatContainer.value.scrollHeight
+
+  try {
+    const response = await axios.post(route('botman.handle'), { message: messageToSend })
+    const botReply = response.data?.botman_reply || "🤖 Sorry, I couldn't process your message."
+
+    // Add a slight delay to simulate typing
+    setTimeout(() => {
+      messages.value.push({ from: 'bot', text: botReply })
+      botTyping.value = false
+    }, 600)
+  } catch (error) {
+    messages.value.push({ from: 'bot', text: "⚠️ An error occurred while sending your message." })
+    botTyping.value = false
+  }
 }
 
-// Auto-scroll when messages update
+// Auto-scroll chat when new messages appear
 watch(messages, async () => {
   await nextTick()
   if (chatContainer.value) {
-    chatContainer.value.scrollTop = chatContainer.value.scrollHeight
+    chatContainer.value.scrollTo({
+      top: chatContainer.value.scrollHeight,
+      behavior: 'smooth'
+    })
   }
 })
 </script>
 
 <template>
-    <DashboardLayout>
-        <div class="container mt-4">
-            <div class="card shadow">
-            <div class="card-header bg-primary text-white">
-                Chat with BotMan
-            </div>
-
-            <div
-                class="card-body"
-                style="height: 400px; overflow-y: auto;"
-                ref="chatContainer"
-            >
-                <div v-for="(msg, i) in messages" :key="i" class="mb-2">
-                <!-- User message -->
-                <div v-if="msg.from === 'user'" class="text-end">
-                    <span
-                    class="badge bg-success p-2"
-                    style="white-space: pre-wrap; word-wrap: break-word; display: inline-block; max-width: 100%;"
-                    >
-                    {{ msg.text }}
-                    </span>
-                </div>
-
-                <!-- Bot message -->
-                <div v-else class="text-start">
-                    <span
-                    class="badge bg-secondary p-2"
-                    style="white-space: pre-wrap; word-wrap: break-word; display: inline-block; max-width: 100%;"
-                    >
-                    {{ msg.text }}
-                    </span>
-                </div>
-                </div>
-            </div>
-
-            <div class="card-footer">
-                <form @submit.prevent="sendMessage" class="d-flex">
-                <input
-                    v-model="form.message"
-                    type="text"
-                    class="form-control me-2"
-                    placeholder="Type a message..."
-                />
-                <button class="btn btn-primary">Send</button>
-                </form>
-            </div>
-            </div>
+  <DashboardLayout>
+    <div class="container">
+      <div class="card shadow rounded-3">
+        <div class="card-header bg-success text-white rounded-top">
+          <strong>Chat with BotMan</strong>
         </div>
+
+        <!-- Chat messages -->
+        <div
+          class="card-body chat-body"
+          ref="chatContainer"
+        >
+          <div v-for="(msg, i) in messages" :key="i" class="chat-message mb-2" :class="msg.from">
+            <div class="message-bubble">
+              {{ msg.text }}
+            </div>
+          </div>
+
+          <!-- Bot typing indicator -->
+          <div v-if="botTyping" class="chat-message bot mb-2">
+            <div class="message-bubble typing">
+              🤖 Bot is typing...
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick messages toolbar -->
+        <div class="p-2 border-top d-flex flex-wrap gap-2">
+          <button
+            v-for="(quick, i) in quickMessages"
+            :key="i"
+            @click="sendMessage(quick)"
+            class="btn btn-outline-success btn-sm quick-chip"
+          >
+            {{ quick }}
+          </button>
+        </div>
+
+        <!-- Message input -->
+        <div class="card-footer">
+          <form @submit="sendMessage(null, $event)" class="d-flex">
+            <input
+              v-model="messageInput"
+              type="text"
+              class="form-control me-2"
+              placeholder="Type a message..."
+            />
+            <button class="btn btn-success">Send</button>
+          </form>
+        </div>
+      </div>
+    </div>
   </DashboardLayout>
 </template>
+
+<style scoped>
+.chat-body {
+  height: 400px;
+  overflow-y: auto;
+  padding: 1rem;
+  background: #f8f9fa;
+}
+
+.chat-message {
+  display: flex;
+}
+
+.chat-message.user {
+  justify-content: flex-end;
+}
+
+.chat-message.bot {
+  justify-content: flex-start;
+}
+
+.message-bubble {
+  max-width: 70%;
+  padding: 0.6rem 1rem;
+  border-radius: 20px;
+  background: #e2e3e5;
+  word-wrap: break-word;
+  white-space: pre-wrap;
+  transition: all 0.3s ease;
+}
+
+.chat-message.user .message-bubble {
+  background: #28a745;
+  color: white;
+}
+
+.message-bubble.typing {
+  font-style: italic;
+  opacity: 0.7;
+}
+
+.quick-chip {
+  border-radius: 20px;
+  padding: 0.25rem 0.75rem;
+  transition: all 0.2s;
+}
+
+.quick-chip:hover {
+  background: #28a745;
+  color: white;
+  border-color: #28a745;
+}
+
+input.form-control:focus {
+  border-color: #28a745;
+  box-shadow: 0 0 0 0.25rem rgba(40, 167, 69, 0.25);
+}
+</style>
