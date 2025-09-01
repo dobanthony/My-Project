@@ -306,7 +306,10 @@
                 class="rounded-circle border"
                 style="width: 40px; height: 40px; object-fit: cover;"
               />
-              <strong class="text-dark">{{ rating.user?.name ?? 'Anonymous' }}</strong>
+              <strong class="text-dark">{{ (rating.user?.first_name ?? 'Anonymous')
+                                          +(rating.user?.last_name ? ' ' + rating.user.last_name : '')
+                                        }}</strong>
+
             </div>
             <small class="text-muted">{{ new Date(rating.created_at).toLocaleString() }}</small>
           </div>

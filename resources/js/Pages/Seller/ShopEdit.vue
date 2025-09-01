@@ -26,7 +26,7 @@
       <!-- Header -->
       <div class="d-flex flex-column flex-md-row justify-content-between align-items-start mb-4 gap-3">
         <div>
-          <h2 class="mb-1"><i class="bi bi-shop-window me-2 text-success"></i>Hello, {{ user.name }}</h2>
+          <h2 class="mb-1"><i class="bi bi-shop-window me-2 text-success"></i>Hello, {{ user.first_name }} {{ user.last_name }}</h2>
           <p class="text-muted mb-0">Manage your shop details. Buyers will see this on your storefront.</p>
         </div>
       </div>

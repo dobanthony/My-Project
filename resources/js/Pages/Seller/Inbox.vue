@@ -9,6 +9,33 @@
         >
           <h5 class="mb-4">Chat with {{ conversation.user_name }}</h5>
 
+          <!-- 📌 Auto-pinned Reported Product -->
+          <div v-if="pinnedReportedProduct" class="card mb-3 border bg-light shadow-sm">
+            <div class="row g-0 align-items-center">
+              <div class="col-auto">
+                <img
+                  :src="pinnedReportedProduct.image ? `/storage/${pinnedReportedProduct.image}` : 'https://via.placeholder.com/100x100?text=No+Image'"
+                  class="img-fluid rounded-start"
+                  style="width: 80px; height: 80px; object-fit: cover;"
+                />
+              </div>
+              <div class="col">
+                <div class="card-body py-2">
+                  <h6 class="card-title mb-1" :class="pinnedReportedProduct.is_reported ? 'text-danger' : 'text-success'">
+                    {{ pinnedReportedProduct.name }}
+                    <span v-if="pinnedReportedProduct.is_reported" class="badge bg-danger ms-2">⚠ Reported</span>
+                  </h6>
+                  <p class="card-text text-muted small mb-1">
+                    ₱{{ parseFloat(pinnedReportedProduct.price).toFixed(2) }}
+                  </p>
+                  <Link :href="`/product/${pinnedReportedProduct.id}`" class="text-decoration-none small">
+                    🔍 View Product
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <!-- 💬 Chat Box -->
           <div class="chat-box mb-3 p-3 bg-light rounded overflow-auto">
             <div
@@ -41,7 +68,7 @@
                   <div class="small">{{ message.message }}</div>
                 </div>
 
-                <!-- 🛒 Pinned Product (in message) -->
+                <!-- 🛒 Product inside message -->
                 <div
                   v-if="message.product"
                   class="card mt-2 border"
@@ -53,7 +80,10 @@
                     style="height: 120px; object-fit: cover;"
                   />
                   <div class="card-body p-2">
-                    <h6 class="card-title mb-1 text-success">{{ message.product.name }}</h6>
+                    <h6 class="card-title mb-1" :class="message.product.is_reported ? 'text-danger' : 'text-success'">
+                      {{ message.product.name }}
+                      <span v-if="message.product.is_reported" class="badge bg-danger ms-2">⚠ Reported</span>
+                    </h6>
                     <p class="text-muted small mb-1">₱{{ parseFloat(message.product.price).toFixed(2) }}</p>
                     <Link :href="`/product/${message.product.id}`" class="text-decoration-none small">🔍 View Product</Link>
                   </div>
@@ -100,22 +130,23 @@
   </SellerDashboardLayout>
 </template>
 
-
 <script setup>
 import SellerDashboardLayout from '@/Layouts/SellerDashboardLayout.vue'
-import { reactive, onMounted, onBeforeUnmount } from 'vue'
-import { router } from '@inertiajs/vue3'
+import { reactive, ref, onMounted, onBeforeUnmount } from 'vue'
+import { router, usePage } from '@inertiajs/vue3'
 import { defineProps } from 'vue'
 
-const { shop, messages, pinnedProduct } = defineProps({
+const { shop, messages } = defineProps({
   shop: Object,
   messages: Array,
-  pinnedProduct: Object,
 })
-
 
 const groupedMessages = reactive({})
 let interval = null
+
+// 📌 For reported product pinning
+const pinnedReportedProduct = ref(null)
+const page = usePage()
 
 function groupAllMessages() {
   const prevReplies = {}
@@ -138,6 +169,11 @@ function groupAllMessages() {
       }
     }
 
+    // ✅ Normalize reported flag into `is_reported`
+    if (msg.product) {
+      msg.product.is_reported = msg.product.is_reported ?? msg.product.reported ?? msg.is_reported ?? false
+    }
+
     groupedMessages[userId].messages.push(msg)
   })
 }
@@ -150,9 +186,12 @@ function sendReply(conversation) {
     shop_id: shop.id,
     message: conversation.reply,
     receiver_id: conversation.user_id,
+    product_id: pinnedReportedProduct.value ? pinnedReportedProduct.value.id : null,
+    is_reported: pinnedReportedProduct.value ? pinnedReportedProduct.value.is_reported : false, // ✅ send normalized field
   }, {
     onSuccess: () => {
       conversation.reply = ''
+      pinnedReportedProduct.value = null
       router.reload({
         only: ['messages'],
         preserveScroll: true,
@@ -193,6 +232,17 @@ onMounted(() => {
       onSuccess: () => groupAllMessages()
     })
   }, 3000)
+
+  const urlParams = new URLSearchParams(window.location.search)
+  const reportedProductId = urlParams.get('product_id')
+  const isReported = urlParams.get('is_reported') === '1' || urlParams.get('reported') === '1'
+
+  if (reportedProductId) {
+    const product = messages.find(m => m.product && m.product.id == reportedProductId)?.product
+    if (product) {
+      pinnedReportedProduct.value = { ...product, is_reported: isReported || product.is_reported || product.reported }
+    }
+  }
 })
 
 onBeforeUnmount(() => {
@@ -201,15 +251,6 @@ onBeforeUnmount(() => {
 </script>
 
 <style scoped>
-textarea.form-control {
-  border-color: #28a745; /* green */
-  box-shadow: none;
-}
-textarea.form-control:focus {
-  border-color: #28a745; /* green */
-  box-shadow: 0 0 0 0.25rem rgba(40, 167, 69, 0.5); /* green with 50% opacity */
-}
-
 .chat-box {
   max-height: 400px;
   overflow-y: auto;

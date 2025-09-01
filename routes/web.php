@@ -175,17 +175,14 @@ use App\Http\Controllers\MessageController;
 Route::middleware(['auth'])->group(function () {
 
     Route::get('/user/inbox', [MessageController::class, 'userInboxList'])->name('user.inbox.list');  // Show list of shops
-
     Route::get('/user/inbox/{shop}', [MessageController::class, 'userInbox'])->name('user.inbox.chat'); // Chat with a shop
 
 
     Route::get('/seller/inbox', [MessageController::class, 'sellerInboxList'])->name('seller.inbox.list');// Show list of users
-
     Route::get('/seller/inbox/{user}', [MessageController::class, 'sellerInbox'])->name('seller.inbox.chat');// Chat with a customer
 
 
     Route::post('/messages/send', [MessageController::class, 'send'])->name('messages.send');
-
     Route::get('/messages/unread-count', [MessageController::class, 'unreadCount']);
 
 });
@@ -222,17 +219,12 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
     Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
 });
 
-
-
-
 use App\Http\Controllers\SellerApplicationController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 
 Route::get('/apply-seller', [SellerApplicationController::class, 'showForm']);
 Route::post('/apply-seller', [SellerApplicationController::class, 'apply']);
 Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
-
-
 
 use App\Http\Controllers\Admin\SellerApprovalController;
 
@@ -242,8 +234,6 @@ Route::prefix('admin')->group(function () {
     Route::post('/seller-applications/{user}/approve', [SellerApprovalController::class, 'approve']);
     Route::post('/seller-applications/{user}/decline', [SellerApprovalController::class, 'decline']);
 });
-
-
 
 Route::prefix('admin')->middleware('auth')->name('admin.')->group(function () {
     Route::get('/marketplace', [\App\Http\Controllers\Admin\AdminMarketplaceController::class, 'index'])->name('marketplace.index');

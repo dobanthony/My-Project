@@ -61,7 +61,14 @@
               </div>
 
               <!-- Product inside message -->
-              <div v-if="msg.product" class="card mt-2 border" style="max-width: 250px;">
+              <div v-if="msg.product" class="card mt-2 border position-relative" style="max-width: 250px;">
+                <!-- ⚠ Report Badge -->
+                <span
+                  v-if="msg.product.is_reported"
+                  class="badge bg-danger position-absolute top-0 start-0 m-1"
+                >
+                  ⚠ Reported
+                </span>
                 <img
                   :src="msg.product.image ? `/storage/${msg.product.image}` : 'https://via.placeholder.com/100x100?text=No+Image'"
                   class="card-img-top"
@@ -82,6 +89,13 @@
       <form @submit.prevent="sendMessage">
         <!-- Pinned Product inside input area (only before first send) -->
         <div v-if="pinnedProduct && !hasSentProduct" class="card mb-2 border bg-light shadow-sm position-relative">
+          <!-- ⚠ Report Badge for pinned product -->
+          <span
+            v-if="pinnedProduct.is_reported"
+            class="badge bg-danger position-absolute top-0 start-0 m-1"
+          >
+            ⚠ Reported
+          </span>
           <div class="row g-0 align-items-center">
             <div class="col-auto">
               <img

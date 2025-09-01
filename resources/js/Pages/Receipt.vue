@@ -237,10 +237,10 @@ const props = defineProps({
   order: Object,
   userId: Number,
   isSeller: Boolean,
-   hasReported: Boolean,
+  hasReported: Boolean,
 })
 
-const hasReported = ref(props.hasReported)
+const hasReported = ref(props.hasReported) // ✅ fixed duplication
 
 const totalAmount = computed(() => {
   return (props.order.product?.price ?? 0) * (props.order.quantity ?? 1)
@@ -251,7 +251,6 @@ const showCancelModal = ref(false)
 const showReportForm = ref(false)
 const reportMessage = ref('')
 const isSubmitting = ref(false)
-// const hasReported = ref(false)
 const showRatingModal = ref(false)
 const hoverProductRating = ref(0)
 const hoverShopRating = ref(0)
@@ -310,9 +309,12 @@ const submitReport = () => {
       showReportForm.value = false
       reportMessage.value = ''
       hasReported.value = true
+      showToast('✅ Report submitted successfully.', 'success')
+    },
+    onError: () => {
+      showToast('❌ Failed to submit report.', 'danger')
     },
     onFinish: () => {
-      showToast('✅ Report submitted successfully.', 'success')
       isSubmitting.value = false
     }
   })

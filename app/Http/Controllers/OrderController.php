@@ -147,19 +147,19 @@ class OrderController extends Controller
         ]);
     }
 
-    public function receipt(Order $order)
-    {
-        $user = auth()->user();
+    // public function receipt(Order $order)
+    // {
+    //     $user = auth()->user();
 
-        $order->load('user', 'product.shop.user', 'receivedOrder');
-        $isSeller = $order->product->shop->user_id === $user->id;
+    //     $order->load('user', 'product.shop.user', 'receivedOrder');
+    //     $isSeller = $order->product->shop->user_id === $user->id;
 
-        return Inertia::render('Receipt', [
-            'order' => $order,
-            'userId' => $user->id,
-            'isSeller' => $isSeller
-        ]);
-    }
+    //     return Inertia::render('Receipt', [
+    //         'order' => $order,
+    //         'userId' => $user->id,
+    //         'isSeller' => $isSeller
+    //     ]);
+    // }
 
     public function sellerReceipt(Order $order)
     {
@@ -232,17 +232,17 @@ class OrderController extends Controller
         return back()->with('success', 'Marked as received. Seller notified.');
     }
 
-    public function reportIssue(Request $request, Order $order)
-    {
-        $request->validate([
-            'message' => 'required|min:5',
-        ]);
+    // public function reportIssue(Request $request, Order $order)
+    // {
+    //     $request->validate([
+    //         'message' => 'required|min:5',
+    //     ]);
 
-        $seller = $order->product->shop->user;
-        $seller->notify(new OrderIssueReported($order, $request->message));
+    //     $seller = $order->product->shop->user;
+    //     $seller->notify(new OrderIssueReported($order, $request->message));
 
-        return back()->with('success', 'Issue reported.');
-    }
+    //     return back()->with('success', 'Issue reported.');
+    // }
 
     public function updateDeliveryStatus(Request $request, Order $order)
     {
@@ -323,5 +323,41 @@ class OrderController extends Controller
         ]);
     }
 
+
+    public function receipt(Order $order)
+{
+    $user = auth()->user();
+
+    $order->load('user', 'product.shop.user', 'receivedOrder');
+    $isSeller = $order->product->shop->user_id === $user->id;
+
+    return Inertia::render('Receipt', [
+        'order' => $order,
+        'userId' => $user->id,
+        'isSeller' => $isSeller,
+        'hasReported' => (bool) $order->reported, // ✅ ensure boolean
+    ]);
+}
+
+public function reportIssue(Request $request, Order $order)
+{
+    $request->validate([
+        'message' => 'required|min:5',
+    ]);
+
+    if ($order->reported) {
+        return back()->with('error', 'You have already reported this order.');
+    }
+
+    $order->update([
+        'reported' => true,
+        'report_message' => $request->message,
+    ]);
+
+    $seller = $order->product->shop->user;
+    $seller->notify(new OrderIssueReported($order, $request->message));
+
+    return back()->with('success', 'Issue reported.');
+}
 
 }

@@ -33,7 +33,7 @@ class OrderRatingController extends Controller
         if ($request->hasFile('image')) {
             // Store image in 'storage/app/public/ratings'
             $imagePath = $request->file('image')->store('ratings', 'public');
-            
+
         }
 
         //Save rating with proper image path

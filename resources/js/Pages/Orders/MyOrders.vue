@@ -80,18 +80,21 @@
                 >
                   {{ capitalize(order.status) }}
                 </span>
+                <span v-if="order.reported" class="badge bg-danger ms-1">Reported</span>
               </td>
               <td>{{ order.product?.shop?.user?.first_name ?? 'Unknown' }}</td>
               <td class="text-nowrap">{{ formatDate(order.created_at) }}</td>
               <td>
                 <button
-                  v-if="!order.received_order && order.status !== 'canceled' && order.status !== 'declined'"
+                  v-if="!order.received_order && order.status !== 'canceled' && order.status !== 'declined' && !order.reported"
                   @click="$inertia.visit(`/receipt/${order.id}`)"
                   class="btn btn-sm btn-outline-success"
                 >
                   View
                 </button>
-                <span v-else class="text-muted small">Not available</span>
+                <span v-else class="text-muted small">
+                  {{ order.reported ? 'Reported – Receipt not available' : 'Not available' }}
+                </span>
               </td>
               <td class="text-nowrap">{{ order.delivery_date ?? 'N/A' }}</td>
             </tr>
@@ -130,19 +133,22 @@
                 >
                   {{ capitalize(order.status) }}
                 </span>
+                <span v-if="order.reported" class="badge bg-danger ms-1">Reported</span>
               </p>
               <p><strong>Seller:</strong> {{ order.product?.shop?.user?.name ?? 'Unknown' }}</p>
               <p><strong>Date:</strong> {{ formatDate(order.created_at) }}</p>
               <p><strong>Delivery:</strong> {{ order.delivery_date ?? 'N/A' }}</p>
 
               <button
-                v-if="!order.received_order && order.status !== 'canceled' && order.status !== 'declined'"
+                v-if="!order.received_order && order.status !== 'canceled' && order.status !== 'declined' && !order.reported"
                 @click="$inertia.visit(`/receipt/${order.id}`)"
                 class="btn btn-sm btn-outline-primary w-100"
               >
                 View Receipt
               </button>
-              <span v-else class="text-muted small">Receipt not available</span>
+              <span v-else class="text-muted small d-block text-center mt-2">
+                {{ order.reported ? 'Reported – Receipt not available' : 'Receipt not available' }}
+              </span>
             </div>
           </div>
         </div>
@@ -271,7 +277,6 @@ const hasPendingOrder = computed(() =>
 const formatDate = date => new Date(date).toLocaleString()
 const capitalize = str => str.charAt(0).toUpperCase() + str.slice(1)
 </script>
-
 
 <style scoped>
 input.form-control:focus {

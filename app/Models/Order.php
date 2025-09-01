@@ -22,6 +22,8 @@ class Order extends Model
         'notes',
         'delivery_status',
         'customization_details', // 👈 make sure this is fillable
+            'reported',
+    'report_message',
     ];
 
     protected $casts = [
