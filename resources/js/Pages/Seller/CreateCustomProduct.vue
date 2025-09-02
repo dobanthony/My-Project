@@ -67,3 +67,25 @@ const submit = () => {
   form.post('/seller/custom-products', { forceFormData: true })
 }
 </script>
+
+<style scoped>
+input.form-control:focus {
+  border-color: #28a745; /* green */
+  box-shadow: 0 0 0 0.25rem rgba(40, 167, 69, 0.5); /* green with 50% opacity */
+}
+textarea.form-control:focus {
+  border-color: #28a745; /* green */
+  box-shadow: 0 0 0 0.25rem rgba(40, 167, 69, 0.5); /* green with 50% opacity */
+}
+.form-check-input:checked {
+  background-color: #28a745 !important; /* Bootstrap success green */
+  border-color: #28a745 !important;
+}
+.form-check-input {
+  cursor: pointer;
+}
+.form-check-input:focus {
+  border-color: #28a745; /* green */
+  box-shadow: 0 0 0 0.25rem rgba(40, 167, 69, 0.5); /* green with 50% opacity */
+}
+</style>

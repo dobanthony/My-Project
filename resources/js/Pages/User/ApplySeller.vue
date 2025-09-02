@@ -1,78 +1,110 @@
 <template>
   <DashboardLayout>
-    <div class="container py-4">
+    <div class="container py-3">
+      <!-- Header -->
+      <div class="row justify-content-center mb-4">
+        <div class="col-12 col-md-10 col-lg-8">
+          <div class="card text-center shadow-sm border-0">
+            <div class="card-body text-success">
+              <h2 class="mb-1">
+                <i class="bi bi-envelope-paper me-2"></i>Apply to Become a Seller
+              </h2>
+              <p class="mb-0">Fill out the form below to start selling on our platform.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Grid Layout -->
       <div class="row justify-content-center">
         <div class="col-12 col-md-10 col-lg-8">
-          <!-- <div class="bg-success text-white p-2 mb-3 rounded-top-4">
-            <h2 class="mb-1 text-center text-md-start"><i class="bi bi-envelope-paper me-2"></i>Apply to Become a Seller</h2>
-          </div> -->
 
           <!-- Already Applied -->
-          <div v-if="user.seller_status === 'pending' || user.seller_status === 'approved'">
-            <div class="bg-light border p-4 rounded mb-3">
-              <p class="text-success mb-1"><strong class="text-dark">Name:</strong> {{ user.first_name }}</p>
-              <p class="text-success mb-1"><strong class="text-dark">Email:</strong> {{ user.email }}</p>
-              <p class="text-success"><strong class="text-dark">Application Reason:</strong><br /> {{ user.application_reason }}</p>
+          <div v-if="user.seller_status === 'pending' || user.seller_status === 'approved'" class="row g-3 mb-3">
+
+            <!-- User Info Card -->
+            <div class="col-12 col-md-6">
+              <div class="card shadow-sm h-100">
+                <div class="card-body">
+                  <p><strong>Name:</strong> {{ user.first_name }} {{ user.last_name }}</p>
+                  <p><strong>Email:</strong> {{ user.email }}</p>
+                  <p><strong>Application Reason:</strong><br /> {{ user.application_reason }}</p>
+                </div>
+              </div>
             </div>
 
-            <div v-if="user.seller_status === 'pending'" class="alert alert-warning">
-              <i class="bi bi-person-lock me-2"></i>Your application is currently <strong>Pending</strong>.
+            <!-- Status Alert Card -->
+            <div class="col-12 col-md-6">
+              <div v-if="user.seller_status === 'pending'" class="alert alert-warning d-flex align-items-center h-100">
+                <i class="bi bi-person-lock me-2 fs-4"></i>
+                <div>Your application is currently <strong>Pending</strong>.</div>
+              </div>
+
+              <div v-else-if="user.seller_status === 'approved'" class="alert alert-success d-flex flex-column h-100 justify-content-center">
+                <div>
+                  <i class="bi bi-unlock me-2 fs-4"></i>
+                  <strong>Your application has been approved!</strong>
+                </div>
+                <div class="mt-2">
+                  <i class="bi bi-box-arrow-right me-2"></i>Please logout and log back in to access the seller dashboard.
+                </div>
+                <button class="btn btn-outline-dark mt-3 w-100 w-md-auto" @click.prevent="logout">
+                  Logout
+                </button>
+              </div>
             </div>
 
-            <div v-else-if="user.seller_status === 'approved'" class="alert alert-success">
-              <strong><i class="bi bi-unlock me-2"></i>Your application has been approved!</strong>
-              <br />
-              <i class="bi bi-box-arrow-right me-2"></i>Please logout and log back in to access the seller dashboard.
-              <br />
-              <button class="btn btn-outline-dark mt-3 w-100 w-md-auto" @click.prevent="logout">
-                Logout
-              </button>
-            </div>
           </div>
 
           <!-- Application Form -->
-          <div v-else>
-            <form @submit.prevent="submitApplication">
-              <!-- Name (read-only) -->
-              <div class="mb-3">
-                <label for="name" class="form-label">Full Name</label>
-                <input
-                  id="name"
-                  type="text"
-                  class="form-control"
-                  :value="user.first_name + ' ' + user.last_name"
-                  readonly
-                />
-              </div>
+          <div v-else class="row g-3">
+            <div class="col-12">
+              <div class="card shadow-sm">
+                <div class="card-body">
+                  <form @submit.prevent="submitApplication">
+                    <div class="row g-3 mb-3">
+                      <div class="col-12 col-md-6">
+                        <label for="name" class="form-label">Full Name</label>
+                        <input
+                          id="name"
+                          type="text"
+                          class="form-control"
+                          :value="user.first_name + ' ' + user.last_name"
+                          readonly
+                        />
+                      </div>
+                      <div class="col-12 col-md-6">
+                        <label for="email" class="form-label">Email Address</label>
+                        <input
+                          id="email"
+                          type="email"
+                          class="form-control"
+                          :value="user.email"
+                          readonly
+                        />
+                      </div>
+                    </div>
 
-              <!-- Email (read-only) -->
-              <div class="mb-3">
-                <label for="email" class="form-label">Email Address</label>
-                <input
-                  id="email"
-                  type="email"
-                  class="form-control"
-                  :value="user.email"
-                  readonly
-                />
-              </div>
+                    <div class="mb-3">
+                      <label for="reason" class="form-label">Why do you want to become a seller?</label>
+                      <textarea
+                        id="reason"
+                        v-model="form.application_reason"
+                        class="form-control"
+                        rows="5"
+                        required
+                      />
+                    </div>
 
-              <!-- Reason Textarea -->
-              <div class="mb-3">
-                <label for="reason" class="form-label">Why do you want to become a seller?</label>
-                <textarea
-                  id="reason"
-                  v-model="form.application_reason"
-                  class="form-control"
-                  rows="5"
-                  required
-                />
+                    <button class="btn btn-success w-100 d-flex align-items-center justify-content-center" :disabled="form.processing">
+                      <span v-if="form.processing" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                      <i class="bi bi-send me-2"></i>
+                      {{ form.processing ? 'Submitting...' : 'Submit Application' }}
+                    </button>
+                  </form>
+                </div>
               </div>
-
-              <button class="btn btn-success w-100" :disabled="form.processing">
-                Submit Application
-              </button>
-            </form>
+            </div>
           </div>
 
           <!-- Success Modal -->
@@ -84,9 +116,11 @@
             aria-hidden="true"
           >
             <div class="modal-dialog modal-dialog-centered">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title" id="successModalLabel">✅ Application Submitted</h5>
+              <div class="modal-content shadow-lg">
+                <div class="modal-header bg-success text-white">
+                  <h5 class="modal-title" id="successModalLabel">
+                    <i class="bi bi-check-circle me-2"></i>Application Submitted
+                  </h5>
                   <button
                     type="button"
                     class="btn-close"
@@ -149,16 +183,21 @@ function logout() {
 </script>
 
 <style scoped>
-input.form-control:focus {
-  border-color: #28a745; /* green */
-  box-shadow: 0 0 0 0.25rem rgba(40, 167, 69, 0.5); /* green with 50% opacity */
+input.form-control:focus, textarea.form-control:focus {
+  border-color: #28a745;
+  box-shadow: 0 0 0 0.25rem rgba(40, 167, 69, 0.25);
 }
 textarea.form-control {
-  border-color: #28a745; /* green */
-  box-shadow: none;
+  border-color: #28a745;
 }
-textarea.form-control:focus {
-  border-color: #28a745; /* green */
-  box-shadow: 0 0 0 0.25rem rgba(40, 167, 69, 0.5); /* green with 50% opacity */
+.btn:hover {
+  transform: translateY(-1px);
+  transition: 0.2s;
+}
+.alert i {
+  font-size: 1.5rem;
+}
+.card-body p {
+  margin-bottom: 0.5rem;
 }
 </style>

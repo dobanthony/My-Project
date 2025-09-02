@@ -1,147 +1,243 @@
 <script setup>
-import InputError from '@/Components/InputError.vue';
-import InputLabel from '@/Components/InputLabel.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
-import TextInput from '@/Components/TextInput.vue';
-import { Link, useForm, usePage } from '@inertiajs/vue3';
-import { ref, watch } from 'vue';
+import { Link, useForm, usePage } from '@inertiajs/vue3'
+import { ref, watch } from 'vue'
 
 defineProps({
-    mustVerifyEmail: {
-        type: Boolean,
-    },
-    status: {
-        type: String,
-    },
-});
+  mustVerifyEmail: {
+    type: Boolean,
+  },
+  status: {
+    type: String,
+  },
+})
 
-const user = usePage().props.auth.user;
+const user = usePage().props.auth.user
 
 const form = useForm({
-    first_name: user.first_name || '',
-    middle_name: user.middle_name || '',
-    last_name: user.last_name || '',
-    email: user.email || '',
-    phone: user.phone || '',
-    address: user.address || '',
-    dob: user.dob || '',
-});
+  first_name: user.first_name || '',
+  middle_name: user.middle_name || '',
+  last_name: user.last_name || '',
+  email: user.email || '',
+  phone: user.phone || '',
+  address: user.address || '',
+  dob: user.dob || '',
+})
 
-// ✅ Toast state
-const showToast = ref(false);
-watch(() => form.recentlySuccessful, (val) => {
+// ✅ Bootstrap toast state
+const showToast = ref(false)
+watch(
+  () => form.recentlySuccessful,
+  (val) => {
     if (val) {
-        showToast.value = true;
-        setTimeout(() => showToast.value = false, 3000);
+      showToast.value = true
+      setTimeout(() => (showToast.value = false), 3000)
     }
-});
+  }
+)
 </script>
 
 <template>
-    <section>
-        <header>
-            <h2 class="text-lg font-medium text-gray-900">Profile Information</h2>
-            <p class="mt-1 text-sm text-gray-600">
-                Update your account's profile information and email address.
-            </p>
-        </header>
+  <section class="card shadow-sm border-0 rounded-3">
+    <div class="card-body p-4">
+      <!-- Header -->
+      <header class="mb-4 text-center">
+        <i class="bi bi-person-circle text-success fs-2"></i>
+        <h2 class="h5 mt-2 mb-1 fw-bold">Profile Information</h2>
+        <p class="text-muted small">
+          Update your account's profile information and email address.
+        </p>
+      </header>
 
-        <form @submit.prevent="form.patch(route('profile.update'))" class="mt-6 space-y-6">
-            <!-- First Name -->
+      <form @submit.prevent="form.patch(route('profile.update'))" class="row g-3">
+        <!-- First Name -->
+        <div class="col-md-4">
+          <label for="first_name" class="form-label fw-semibold text-success">
+            <i class="bi bi-person me-1"></i> First Name
+          </label>
+          <div class="input-group">
+            <span class="input-group-text"><i class="bi bi-person text-success"></i></span>
+            <input
+              id="first_name"
+              v-model="form.first_name"
+              type="text"
+              class="form-control"
+              :class="{ 'is-invalid': form.errors.first_name }"
+              required
+            />
+          </div>
+          <div class="invalid-feedback">{{ form.errors.first_name }}</div>
+        </div>
+
+        <!-- Middle Name -->
+        <div class="col-md-4">
+          <label for="middle_name" class="form-label fw-semibold text-success">
+            <i class="bi bi-person-lines-fill me-1"></i> Middle Name (Optional)
+          </label>
+          <div class="input-group">
+            <span class="input-group-text"><i class="bi bi-person-lines-fill text-success"></i></span>
+            <input
+              id="middle_name"
+              v-model="form.middle_name"
+              type="text"
+              class="form-control"
+              :class="{ 'is-invalid': form.errors.middle_name }"
+            />
+          </div>
+          <div class="invalid-feedback">{{ form.errors.middle_name }}</div>
+        </div>
+
+        <!-- Last Name -->
+        <div class="col-md-4">
+          <label for="last_name" class="form-label fw-semibold text-success">
+            <i class="bi bi-person-badge me-1"></i> Last Name
+          </label>
+          <div class="input-group">
+            <span class="input-group-text"><i class="bi bi-person-badge text-success"></i></span>
+            <input
+              id="last_name"
+              v-model="form.last_name"
+              type="text"
+              class="form-control"
+              :class="{ 'is-invalid': form.errors.last_name }"
+              required
+            />
+          </div>
+          <div class="invalid-feedback">{{ form.errors.last_name }}</div>
+        </div>
+
+        <!-- Email -->
+        <div class="col-md-6">
+          <label for="email" class="form-label fw-semibold text-success">
+            <i class="bi bi-envelope-at me-1"></i> Email
+          </label>
+          <div class="input-group">
+            <span class="input-group-text"><i class="bi bi-envelope-at text-success"></i></span>
+            <input
+              id="email"
+              v-model="form.email"
+              type="email"
+              class="form-control"
+              :class="{ 'is-invalid': form.errors.email }"
+              required
+            />
+          </div>
+          <div class="invalid-feedback">{{ form.errors.email }}</div>
+        </div>
+
+        <!-- Phone -->
+        <div class="col-md-6">
+          <label for="phone" class="form-label fw-semibold text-success">
+            <i class="bi bi-telephone me-1"></i> Phone Number
+          </label>
+          <div class="input-group">
+            <span class="input-group-text"><i class="bi bi-telephone text-success"></i></span>
+            <input
+              id="phone"
+              v-model="form.phone"
+              type="text"
+              class="form-control"
+              :class="{ 'is-invalid': form.errors.phone }"
+            />
+          </div>
+          <div class="invalid-feedback">{{ form.errors.phone }}</div>
+        </div>
+
+        <!-- Address -->
+        <div class="col-12">
+          <label for="address" class="form-label fw-semibold text-success">
+            <i class="bi bi-geo-alt me-1"></i> Address
+          </label>
+          <div class="input-group">
+            <span class="input-group-text"><i class="bi bi-geo-alt text-success"></i></span>
+            <input
+              id="address"
+              v-model="form.address"
+              type="text"
+              class="form-control"
+              :class="{ 'is-invalid': form.errors.address }"
+            />
+          </div>
+          <div class="invalid-feedback">{{ form.errors.address }}</div>
+        </div>
+
+        <!-- Date of Birth -->
+        <div class="col-md-6">
+          <label for="dob" class="form-label fw-semibold text-success">
+            <i class="bi bi-calendar-date me-1"></i> Date of Birth
+          </label>
+          <div class="input-group">
+            <span class="input-group-text"><i class="bi bi-calendar-date text-success"></i></span>
+            <input
+              id="dob"
+              v-model="form.dob"
+              type="date"
+              class="form-control"
+              :class="{ 'is-invalid': form.errors.dob }"
+            />
+          </div>
+          <div class="invalid-feedback">{{ form.errors.dob }}</div>
+        </div>
+
+        <!-- Email Verification -->
+        <div v-if="mustVerifyEmail && user.email_verified_at === null" class="col-12">
+          <div class="alert alert-warning small d-flex align-items-center gap-2">
+            <i class="bi bi-exclamation-triangle-fill"></i>
             <div>
-                <InputLabel for="first_name" value="First Name" />
-                <TextInput id="first_name" v-model="form.first_name" type="text" class="mt-1 block w-full" required />
-                <InputError class="mt-2" :message="form.errors.first_name" />
+              Your email address is unverified.
+              <Link
+                :href="route('verification.send')"
+                method="post"
+                as="button"
+                class="btn btn-link btn-sm p-0 align-baseline"
+              >
+                Click here to re-send the verification email.
+              </Link>
             </div>
+          </div>
+          <div v-show="status === 'verification-link-sent'" class="alert alert-success small mt-2 d-flex align-items-center gap-2">
+            <i class="bi bi-check-circle-fill"></i>
+            <span>A new verification link has been sent to your email address.</span>
+          </div>
+        </div>
 
-            <!-- Middle Name -->
-            <div>
-                <InputLabel for="middle_name" value="Middle Name (Optional)" />
-                <TextInput id="middle_name" v-model="form.middle_name" type="text" class="mt-1 block w-full" />
-                <InputError class="mt-2" :message="form.errors.middle_name" />
-            </div>
+        <!-- Save Button -->
+        <div class="col-12 d-flex align-items-center gap-3 mt-3">
+          <button type="submit" class="btn btn-success d-flex align-items-center gap-2" :disabled="form.processing">
+            <span v-if="form.processing" class="spinner-border spinner-border-sm me-2"></span>
+            <i v-else class="bi bi-save-fill"></i>
+            {{ form.processing ? 'Saving...' : 'Save Changes' }}
+          </button>
+          <span v-if="form.recentlySuccessful" class="text-success small d-flex align-items-center gap-1">
+            <i class="bi bi-check-circle-fill"></i> Saved successfully
+          </span>
+        </div>
+      </form>
+    </div>
 
-            <!-- Last Name -->
-            <div>
-                <InputLabel for="last_name" value="Last Name" />
-                <TextInput id="last_name" v-model="form.last_name" type="text" class="mt-1 block w-full" required />
-                <InputError class="mt-2" :message="form.errors.last_name" />
-            </div>
-
-            <!-- Email -->
-            <div>
-                <InputLabel for="email" value="Email" />
-                <TextInput id="email" type="email" class="mt-1 block w-full" v-model="form.email" required />
-                <InputError class="mt-2" :message="form.errors.email" />
-            </div>
-
-            <!-- Phone Number -->
-            <div>
-                <InputLabel for="phone" value="Phone Number" />
-                <TextInput id="phone" type="text" class="mt-1 block w-full" v-model="form.phone" />
-                <InputError class="mt-2" :message="form.errors.phone" />
-            </div>
-
-            <!-- Address -->
-            <div>
-                <InputLabel for="address" value="Address" />
-                <TextInput id="address" type="text" class="mt-1 block w-full" v-model="form.address" />
-                <InputError class="mt-2" :message="form.errors.address" />
-            </div>
-
-            <!-- Date of Birth -->
-            <div>
-                <InputLabel for="dob" value="Date of Birth" />
-                <TextInput id="dob" type="date" class="mt-1 block w-full" v-model="form.dob" />
-                <InputError class="mt-2" :message="form.errors.dob" />
-            </div>
-
-            <!-- Email verification notice -->
-            <div v-if="mustVerifyEmail && user.email_verified_at === null">
-                <p class="mt-2 text-sm text-gray-800">
-                    Your email address is unverified.
-                    <Link
-                        :href="route('verification.send')"
-                        method="post"
-                        as="button"
-                        class="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                    >
-                        Click here to re-send the verification email.
-                    </Link>
-                </p>
-                <div v-show="status === 'verification-link-sent'" class="mt-2 text-sm font-medium text-green-600">
-                    A new verification link has been sent to your email address.
-                </div>
-            </div>
-
-            <!-- Save Button -->
-            <div class="flex items-center gap-4">
-                <PrimaryButton :disabled="form.processing">Save</PrimaryButton>
-
-                <Transition
-                    enter-active-class="transition ease-in-out"
-                    enter-from-class="opacity-0"
-                    leave-active-class="transition ease-in-out"
-                    leave-to-class="opacity-0"
-                >
-                    <p v-if="form.recentlySuccessful" class="text-sm text-gray-600">Saved.</p>
-                </Transition>
-            </div>
-        </form>
-
-        <!-- Toast Modal -->
-        <transition
-            enter-active-class="transition ease-out duration-300"
-            enter-from-class="opacity-0 -translate-y-4"
-            leave-active-class="transition ease-in duration-300"
-            leave-to-class="opacity-0 -translate-y-4"
-        >
-            <div
-                v-if="showToast"
-                class="fixed top-6 left-1/2 transform -translate-x-1/2 z-50 px-4 py-3 bg-green-600 text-white rounded shadow-lg"
-            >
-                Profile updated successfully!
-            </div>
-        </transition>
-    </section>
+    <!-- ✅ Bootstrap Toast -->
+    <div
+      v-if="showToast"
+      class="toast align-items-center text-white bg-success border-0 show position-fixed top-0 start-50 translate-middle-x mt-3 shadow"
+      role="alert"
+      aria-live="assertive"
+      aria-atomic="true"
+      style="z-index: 1080; min-width: 300px;"
+    >
+      <div class="d-flex">
+        <div class="toast-body d-flex align-items-center gap-2">
+          <i class="bi bi-check-circle-fill"></i> Profile updated successfully!
+        </div>
+      </div>
+    </div>
+  </section>
 </template>
+<style scoped>
+input.form-control:focus {
+  border-color: #28a745; /* green */
+  box-shadow: 0 0 0 0.25rem rgba(40, 167, 69, 0.5); /* green with 50% opacity */
+}
+textarea.form-control:focus {
+  border-color: #28a745; /* green */
+  box-shadow: 0 0 0 0.25rem rgba(40, 167, 69, 0.5); /* green with 50% opacity */
+}
+</style>

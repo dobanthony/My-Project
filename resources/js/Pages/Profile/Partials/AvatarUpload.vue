@@ -1,33 +1,58 @@
 <template>
-  <div class="mb-6">
-    <h2 class="text-lg font-semibold text-gray-800 mb-4">Upload Profile Photo</h2>
+  <div class="card shadow-sm border-0 mb-4">
+    <div class="card-body text-center">
+      <h2 class="h5 mb-3 text-dark">Upload Profile Photo</h2>
 
-    <form @submit.prevent="submitAvatar" enctype="multipart/form-data" class="space-y-4">
-      <div class="flex items-center gap-4">
-        <img
-          :src="previewUrl || avatarUrl"
-          :class="avatarClass"
-          class="w-20 h-20 rounded-full object-cover"
+      <!-- Avatar Container -->
+      <div class="position-relative d-inline-block mb-3">
+        <label for="avatarInput" class="cursor-pointer">
+          <img
+            :src="previewUrl || avatarUrl"
+            :class="avatarClass"
+            class="rounded-circle object-fit-cover shadow-sm"
+            style="width: 120px; height: 120px; cursor: pointer; transition: 0.3s;"
+            title="Click to change photo"
+          />
+          <!-- Camera Icon Overlay -->
+          <div
+            class="position-absolute top-50 start-50 translate-middle bg-dark bg-opacity-50 text-white rounded-circle d-flex justify-content-center align-items-center"
+            style="width: 40px; height: 40px; opacity: 0; transition: opacity 0.3s;"
+          >
+            <i class="bi bi-camera-fill"></i>
+          </div>
+        </label>
+        <!-- Hidden File Input -->
+        <input
+          id="avatarInput"
+          type="file"
+          @change="handleFileChange"
+          accept="image/*"
+          class="d-none"
         />
-
-      <input
-        type="file"
-        @change="handleFileChange"
-        accept="image/*"
-        class="text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:bg-green-700 file:text-white hover:file:bg-green-800"
-      />
       </div>
 
-      <button
-        type="submit"
-        :disabled="isUploading"
-        class="px-4 py-2 text-white rounded hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed"
-        style="background-color: #198754;"
-      >
-        Upload
-      </button>
+      <!-- Buttons -->
+      <div class="d-flex justify-content-center gap-2">
+        <button
+          type="button"
+          class="btn btn-outline-danger"
+          @click="resetAvatar"
+          :disabled="isUploading"
+        >
+          <i class="bi bi-x-circle me-1"></i> Remove
+        </button>
 
-    </form>
+        <button
+          type="button"
+          @click="submitAvatar"
+          :disabled="isUploading || !avatar"
+          class="btn btn-success"
+        >
+          <span v-if="isUploading" class="spinner-border spinner-border-sm me-2"></span>
+          <i class="bi bi-upload me-1"></i> Upload
+        </button>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -36,7 +61,6 @@ import { ref, computed } from 'vue'
 import { usePage } from '@inertiajs/vue3'
 import axios from 'axios'
 
-// Get global user and clone it reactively
 const page = usePage()
 const user = ref({ ...page.props.auth.user })
 
@@ -49,7 +73,7 @@ const avatarUrl = computed(() => {
   return user.value.avatar ? `/storage/${user.value.avatar}` : getDefaultAvatar.value
 })
 
-// When a file is selected, preview it before upload
+// File selection
 const handleFileChange = (e) => {
   const file = e.target.files[0]
   avatar.value = file
@@ -63,7 +87,7 @@ const handleFileChange = (e) => {
   }
 }
 
-// On submit, upload the file via axios and update global + local user
+// Upload to server
 const submitAvatar = async () => {
   if (!avatar.value) return
 
@@ -74,7 +98,6 @@ const submitAvatar = async () => {
   try {
     const response = await axios.post(route('profile.avatar'), formData)
 
-    // Update global and local avatar path
     user.value.avatar = response.data.avatar
     page.props.auth.user.avatar = response.data.avatar
     previewUrl.value = null
@@ -86,31 +109,33 @@ const submitAvatar = async () => {
   }
 }
 
-// Default avatar per role
-const getDefaultAvatar = computed(() => {
-  switch (user.value.role) {
-    case 'admin':
-      return '/images/default-admin.png'
-    case 'seller':
-      return '/images/default-seller.png'
-    case 'user':
-      return '/images/default-avatar.jpg'
-    default:
-      return '/images/default-avatar.jpg'
-  }
-})
+// Reset to default
+const resetAvatar = () => {
+  previewUrl.value = null
+  avatar.value = null
+}
 
-// Avatar ring styling per role
+// Default avatar
+const getDefaultAvatar = computed(() => '/images/default-avatar.jpg')
+
+// Avatar border by role
 const avatarClass = computed(() => {
   switch (user.value.role) {
     case 'admin':
-      return 'ring-4 ring-red-500'
+      return 'border border-4 border-danger'
     case 'seller':
-      return 'ring-4 ring-green-500'
+      return 'border border-4 border-success'
     case 'buyer':
-      return 'ring-4 ring-blue-500'
+      return 'border border-4 border-primary'
     default:
-      return 'ring-2 ring-gray-300'
+      return 'border border-3 border-secondary'
   }
 })
 </script>
+
+<style scoped>
+/* Hover effect for camera overlay */
+label:hover div {
+  opacity: 1 !important;
+}
+</style>

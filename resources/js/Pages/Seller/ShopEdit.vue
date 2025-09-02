@@ -231,6 +231,14 @@ const submit = () => {
 </script>
 
 <style scoped>
+input.form-control:focus {
+  border-color: #28a745; /* green */
+  box-shadow: 0 0 0 0.25rem rgba(40, 167, 69, 0.5); /* green with 50% opacity */
+}
+textarea.form-control:focus {
+  border-color: #28a745; /* green */
+  box-shadow: 0 0 0 0.25rem rgba(40, 167, 69, 0.5); /* green with 50% opacity */
+}
 /* General Card Styling */
 .card {
   border: none;

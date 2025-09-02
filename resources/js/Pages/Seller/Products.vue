@@ -63,7 +63,7 @@
 
           <!-- ✅ Eco-Friendly Checkbox -->
           <div class="form-check mb-2">
-            <input v-model="form.eco_friendly" type="checkbox" class="form-check-input" id="ecoFriendly" />
+            <input v-model="form.eco_friendly" type="checkbox" class="form-check-input eco-checkbox" id="ecoFriendly" />
             <label class="form-check-label" for="ecoFriendly">
               <i class="bi bi-leaf-fill text-success me-1"></i> Eco-Friendly
             </label>
@@ -71,7 +71,7 @@
 
           <input type="file" @change="e => form.image = e.target.files[0]" class="form-control mb-2" />
 
-          <button type="submit" class="btn btn-primary w-100 w-md-auto">
+          <button type="submit" class="btn btn-success w-100 w-md-auto">
             <i class="bi bi-plus-lg me-1"></i> Add Product
           </button>
         </form>
@@ -82,13 +82,13 @@
             <input v-model="search" @keyup.enter="handleSearch" class="form-control" placeholder="Search product name or description" />
           </div>
           <div class="col-6 col-md-3">
-            <button class="btn btn-primary w-100" @click="handleSearch">
+            <button class="btn btn-outline-success w-100" @click="handleSearch">
               <i class="bi bi-search me-1"></i> Search
             </button>
           </div>
         </div>
 
-        <!-- Products Table (Desktop) -->
+        <!-- Products Table - Desktop -->
         <div class="table-responsive d-none d-md-block">
           <table class="table table-bordered table-hover align-middle text-center">
             <thead class="table-success">
@@ -116,15 +116,15 @@
                   <span v-if="product.eco_friendly" class="badge bg-success">
                     <i class="bi bi-check-circle me-1"></i> Yes
                   </span>
-                  <span v-else class="badge bg-secondary">
+                  <span v-else class="badge bg-danger">
                     <i class="bi bi-x-circle me-1"></i> No
                   </span>
                 </td>
                 <td>
-                  <button class="btn btn-sm btn-warning me-1" @click="openEdit(product)">
+                  <button class="btn btn-sm btn-primary me-1" @click="openEdit(product)">
                     <i class="bi bi-pencil-square"></i>
                   </button>
-                  <button class="btn btn-sm btn-danger" @click="confirmDelete(product.id)">
+                  <button class="btn btn-sm btn-outline-danger" @click="confirmDelete(product.id)">
                     <i class="bi bi-trash"></i>
                   </button>
                 </td>
@@ -133,7 +133,7 @@
           </table>
         </div>
 
-        <!-- Card View (Mobile) -->
+        <!-- Card View - Mobile -->
         <div class="d-block d-md-none">
           <div v-for="product in products.data" :key="product.id" class="card mb-3 shadow-sm">
             <div class="card-body">
@@ -153,13 +153,13 @@
               <p><strong><i class="bi bi-card-text me-1"></i>Description:</strong> {{ product.description }}</p>
               <p><strong><i class="bi bi-leaf me-1"></i>Eco-Friendly:</strong>
                 <span v-if="product.eco_friendly" class="text-success"><i class="bi bi-check-circle-fill"></i> Yes</span>
-                <span v-else class="text-muted"><i class="bi bi-x-circle-fill"></i> No</span>
+                <span v-else class="text-danger"><i class="bi bi-x-circle-fill"></i> No</span>
               </p>
               <div class="d-flex gap-2 justify-content-center">
-                <button class="btn btn-sm btn-warning" @click="openEdit(product)">
+                <button class="btn btn-sm btn-success" @click="openEdit(product)">
                   <i class="bi bi-pencil-square"></i>
                 </button>
-                <button class="btn btn-sm btn-danger" @click="confirmDelete(product.id)">
+                <button class="btn btn-sm btn-outline-danger" @click="confirmDelete(product.id)">
                   <i class="bi bi-trash"></i>
                 </button>
               </div>
@@ -382,3 +382,25 @@ function handleSearch() {
   })
 }
 </script>
+
+<style scoped>
+input.form-control:focus {
+  border-color: #28a745; /* green */
+  box-shadow: 0 0 0 0.25rem rgba(40, 167, 69, 0.5); /* green with 50% opacity */
+}
+textarea.form-control:focus {
+  border-color: #28a745; /* green */
+  box-shadow: 0 0 0 0.25rem rgba(40, 167, 69, 0.5); /* green with 50% opacity */
+}
+.eco-checkbox:checked {
+  background-color: #28a745 !important; /* Bootstrap success green */
+  border-color: #28a745 !important;
+}
+.eco-checkbox {
+  cursor: pointer;
+}
+.eco-checkbox:focus {
+  border-color: #28a745; /* green */
+  box-shadow: 0 0 0 0.25rem rgba(40, 167, 69, 0.5); /* green with 50% opacity */
+}
+</style>
