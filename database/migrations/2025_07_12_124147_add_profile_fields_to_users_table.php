@@ -18,7 +18,6 @@ return new class extends Migration
             $table->string('phone')->nullable()->after('last_name');
             $table->string('address')->nullable()->after('phone');
             $table->date('dob')->nullable()->after('address');
-            $table->json('social_links')->nullable()->after('dob'); // store as JSON
         });
     }
 
@@ -35,7 +34,6 @@ return new class extends Migration
                 'phone',
                 'address',
                 'dob',
-                'social_links'
             ]);
         });
     }

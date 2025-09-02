@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
-use App\Models\User; 
+use App\Models\User;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -39,9 +39,6 @@ class ProfileController extends Controller
             'phone'         => ['nullable', 'string', 'max:20'],
             'address'       => ['nullable', 'string', 'max:255'],
             'dob'           => ['nullable', 'date'],
-            'social_links'  => ['nullable', 'array'],
-            'social_links.facebook' => ['nullable', 'string', 'url'],
-            'social_links.twitter'  => ['nullable', 'string', 'url'],
         ]);
 
         $user = $request->user();
@@ -55,7 +52,6 @@ class ProfileController extends Controller
 
         return Redirect::route('profile.edit')->with('status', 'profile-updated');
     }
-
 
     /**
      * Delete the user's account.
@@ -78,53 +74,31 @@ class ProfileController extends Controller
         return Redirect::to('/');
     }
 
-    // public function updateAvatar(Request $request)
-    // {
-    //     $request->validate([
-    //         'avatar' => 'required|image|max:2048',
-    //     ]);
-
-    //     /** @var \App\Models\User $user */
-    //     $user = Auth::user();
-
-    //      // Delete old avatar if it exists
-    //     if ($user->avatar && Storage::exists('public/' . $user->avatar)) {
-    //         Storage::delete('public/' . $user->avatar);
-    //     }
-
-    //     // store avatar in /storage/app/public/avatars
-    //     $path = $request->file('avatar')->store('avatars', 'public');
-
-    //     // save to user
-    //     $user->avatar = $path;
-    //     $user->save();
-
-    //     return back()->with('success', 'Profile photo updated.');
-    // }
+    /**
+     * Update the user's avatar.
+     */
     public function updateAvatar(Request $request)
-{
-    $request->validate([
-        'avatar' => 'required|image|max:2048',
-    ]);
+    {
+        $request->validate([
+            'avatar' => 'required|image|max:2048',
+        ]);
 
-    $user = Auth::user();
+        $user = Auth::user();
 
-    // Delete old avatar if exists
-    if ($user->avatar && Storage::exists('public/' . $user->avatar)) {
-        Storage::delete('public/' . $user->avatar);
+        // Delete old avatar if exists
+        if ($user->avatar && Storage::exists('public/' . $user->avatar)) {
+            Storage::delete('public/' . $user->avatar);
+        }
+
+        // Store new avatar
+        $path = $request->file('avatar')->store('avatars', 'public');
+
+        $user->avatar = $path;
+        $user->save();
+
+        return response()->json([
+            'message' => 'Profile photo updated.',
+            'avatar'  => $path,
+        ]);
     }
-
-    // Store new avatar
-    $path = $request->file('avatar')->store('avatars', 'public');
-
-    $user->avatar = $path;
-    $user->save();
-
-    return response()->json([
-        'message' => 'Profile photo updated.',
-        'avatar' => $path,
-    ]);
-}
-
-
 }

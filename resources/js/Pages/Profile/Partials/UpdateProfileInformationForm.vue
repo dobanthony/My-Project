@@ -25,10 +25,6 @@ const form = useForm({
     phone: user.phone || '',
     address: user.address || '',
     dob: user.dob || '',
-    social_links: {
-        facebook: user.social_links?.facebook || '',
-        twitter: user.social_links?.twitter || '',
-    },
 });
 
 // ✅ Toast state
@@ -98,19 +94,6 @@ watch(() => form.recentlySuccessful, (val) => {
                 <InputLabel for="dob" value="Date of Birth" />
                 <TextInput id="dob" type="date" class="mt-1 block w-full" v-model="form.dob" />
                 <InputError class="mt-2" :message="form.errors.dob" />
-            </div>
-
-            <!-- Social Links -->
-            <div>
-                <InputLabel for="facebook" value="Facebook (Optional)" />
-                <TextInput id="facebook" type="url" class="mt-1 block w-full" v-model="form.social_links.facebook" placeholder="https://facebook.com/yourprofile" />
-                <InputError class="mt-2" :message="form.errors['social_links.facebook']" />
-            </div>
-
-            <div>
-                <InputLabel for="twitter" value="Twitter (Optional)" />
-                <TextInput id="twitter" type="url" class="mt-1 block w-full" v-model="form.social_links.twitter" placeholder="https://twitter.com/yourprofile" />
-                <InputError class="mt-2" :message="form.errors['social_links.twitter']" />
             </div>
 
             <!-- Email verification notice -->
