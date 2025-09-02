@@ -68,7 +68,7 @@ class ProductController extends Controller
             'stock'       => 'required|integer',
             'description' => 'nullable|string',
             'image'       => 'nullable|image|max:2048',
-            'eco_friendly'=> 'boolean', // ✅ validate eco-friendly
+            'eco_friendly'=> 'boolean',
         ]);
 
         $data = $request->only(['name', 'price', 'stock', 'description', 'eco_friendly']);
@@ -95,7 +95,7 @@ class ProductController extends Controller
             'stock'       => 'required|integer',
             'description' => 'nullable|string',
             'image'       => 'nullable|image|max:2048',
-            'eco_friendly'=> 'boolean', // ✅ validate eco-friendly
+            'eco_friendly'=> 'boolean',
         ]);
 
         if ($request->hasFile('image')) {
@@ -155,7 +155,7 @@ class ProductController extends Controller
                 'description'   => $p->description,
                 'price'         => $p->price,
                 'image'         => $p->image,
-                'eco_friendly'  => $p->eco_friendly, // ✅ include in response
+                'eco_friendly'  => $p->eco_friendly,
                 'average_rating'=> $p->product_ratings_avg_product_rating
                                     ? round($p->product_ratings_avg_product_rating, 1)
                                     : 0.0,
