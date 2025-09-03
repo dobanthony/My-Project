@@ -3,17 +3,26 @@ import { Link } from '@inertiajs/vue3';
 </script>
 
 <template>
-    <div
-        class="flex min-h-screen flex-col items-center bg-gray-100 pt-6 sm:justify-center sm:pt-0"
-    >
-        <div>
-            <h1 class="text-3xl font-bold text-green-600">Login</h1>
-        </div>
+    <div class="d-flex justify-content-center align-items-center min-vh-100 bg-light">
+        <div class="w-100" style="max-width: 420px;">
 
-        <div
-            class="mt-6 w-full overflow-hidden bg-white px-6 py-4 shadow-md sm:max-w-md sm:rounded-lg"
-        >
-            <slot />
+            <!-- Card -->
+            <div class="card shadow-sm border-0 rounded-3">
+                <div class="card-body p-4">
+                    <slot />
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="text-center mt-4 small text-muted">
+                <p class="mb-1">
+                    Don’t have an account?
+                    <Link href="/register" class="text-decoration-none text-success fw-semibold">
+                        Register here
+                    </Link>
+                </p>
+                <p>&copy; {{ new Date().getFullYear() }} CraftSmart Artisan Ecommerce System</p>
+            </div>
         </div>
     </div>
 </template>
