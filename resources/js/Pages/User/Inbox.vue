@@ -130,7 +130,7 @@
             placeholder="Type a message..."
             required
           ></textarea>
-          <button class="btn btn-success">Send</button>
+          <button class="btn btn-success"><i class="bi bi-send-fill"></i></button>
         </div>
       </form>
     </div>
