@@ -65,7 +65,7 @@ const goToDashboard = () => {
                         <div class="row g-3 mb-3">
                             <!-- First Name -->
                             <div class="col-md-4">
-                                <label for="first_name" class="form-label fw-semibold">
+                                <label for="first_name" class="form-label fw-semibold text-success">
                                     <i class="bi bi-person me-1"></i> First Name
                                 </label>
                                 <input
@@ -85,7 +85,7 @@ const goToDashboard = () => {
 
                             <!-- Middle Name -->
                             <div class="col-md-4">
-                                <label for="middle_name" class="form-label fw-semibold">
+                                <label for="middle_name" class="form-label fw-semibold text-success">
                                     <i class="bi bi-person-lines-fill me-1"></i> Middle Name
                                 </label>
                                 <input
@@ -103,7 +103,7 @@ const goToDashboard = () => {
 
                             <!-- Last Name -->
                             <div class="col-md-4">
-                                <label for="last_name" class="form-label fw-semibold">
+                                <label for="last_name" class="form-label fw-semibold text-success">
                                     <i class="bi bi-person-badge-fill me-1"></i> Last Name
                                 </label>
                                 <input
@@ -123,7 +123,7 @@ const goToDashboard = () => {
 
                         <!-- Email -->
                         <div class="mb-3">
-                            <label for="email" class="form-label fw-semibold">
+                            <label for="email" class="form-label fw-semibold text-success">
                                 <i class="bi bi-envelope-fill me-1"></i> Email address
                             </label>
                             <input
@@ -144,7 +144,7 @@ const goToDashboard = () => {
                         <div class="row g-3 mb-3">
                             <!-- Password -->
                             <div class="col-md-6">
-                                <label for="password" class="form-label fw-semibold">
+                                <label for="password" class="form-label fw-semibold text-success">
                                     <i class="bi bi-lock-fill me-1"></i> Password
                                 </label>
                                 <div class="input-group">
@@ -172,7 +172,7 @@ const goToDashboard = () => {
 
                             <!-- Confirm Password -->
                             <div class="col-md-6">
-                                <label for="password_confirmation" class="form-label fw-semibold">
+                                <label for="password_confirmation" class="form-label fw-semibold text-success">
                                     <i class="bi bi-shield-lock-fill me-1"></i> Confirm Password
                                 </label>
                                 <div class="input-group">

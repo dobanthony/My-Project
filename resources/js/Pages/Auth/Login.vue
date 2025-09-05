@@ -63,7 +63,7 @@ const submit = () => {
 
                         <!-- Email -->
                         <div class="mb-3">
-                            <label for="email" class="form-label fw-semibold">
+                            <label for="email" class="form-label fw-semibold text-success">
                                 <i class="bi bi-envelope-fill me-1"></i> Email address
                             </label>
                             <input
@@ -83,7 +83,7 @@ const submit = () => {
 
                         <!-- Password -->
                         <div class="mb-3">
-                            <label for="password" class="form-label fw-semibold">
+                            <label for="password" class="form-label fw-semibold text-success">
                                 <i class="bi bi-lock-fill me-1"></i> Password
                             </label>
                             <div class="input-group">
