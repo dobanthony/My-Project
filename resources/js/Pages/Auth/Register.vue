@@ -261,8 +261,17 @@ const goToDashboard = () => {
                     <!-- Body -->
                     <div class="modal-body text-center py-4">
                         <i class="bi bi-person-check display-4 text-success mb-3"></i>
-                        <p class="fw-semibold mb-1">Your account has been created <i class="bi bi-stars text-warning ms-1"></i></p>
-                        <small class="text-muted">You can now access your dashboard.</small>
+                        <p class="fw-semibold mb-1">
+                            Your account has been created
+                            <i class="bi bi-stars text-warning ms-1"></i>
+                        </p>
+                        <small class="text-muted d-block mb-2">
+                            You can now access your dashboard.
+                        </small>
+                        <!-- 👇 Added Note -->
+                        <small class="text-primary fw-semibold">
+                            Tip: Proceed to your Profile to fill in your personal information.
+                        </small>
                     </div>
 
                     <!-- Footer -->

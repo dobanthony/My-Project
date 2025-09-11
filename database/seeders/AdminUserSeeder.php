@@ -17,8 +17,13 @@ class AdminUserSeeder extends Seeder
         User::firstOrCreate(
             ['email' => 'admin@gmail.com'],
             [
-                'first_name' => 'Administrator',
-                'password' => Hash::make('admin12345'), // default password
+                'first_name' => 'Nonito',
+                'middle_name' => 'T.',
+                'last_name' => 'Guirerro',
+                'phone' => '09343234567',
+                'address' => 'Sorsogon City, Sorsogon',
+                'dob' => '1996-11-10',
+                'password' => Hash::make('nonito12345'),
                 'role' => 'admin',
             ]
         );

@@ -18,7 +18,12 @@ class SellerUserSeeder extends Seeder
             ['email' => 'juan@gmail.com'],
             [
                 'first_name' => 'Juan',
-                'password' => Hash::make('juan12345'), // default password
+                'middle_name' => 'Dela',
+                'last_name' => 'Cruz',
+                'phone' => '0923432345432',
+                'address' => 'Bulusan, Sorsogon',
+                'dob' => '1998-09-20',
+                'password' => Hash::make('juan12345'),
                 'role' => 'seller',
             ],
         );
@@ -26,6 +31,11 @@ class SellerUserSeeder extends Seeder
             ['email' => 'maria@gmail.com'],
             [
                 'first_name' => 'Maria',
+                'middle_name' => 'O',
+                'last_name' => 'Navarro',
+                'phone' => '09703427389',
+                'address' => 'Matnog, Sorsogon',
+                'dob' => '1992-11-30',
                 'password' => Hash::make('maria12345'),
                 'role' => 'seller',
             ]
