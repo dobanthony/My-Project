@@ -8,7 +8,7 @@
         <div class="card p-3 h-100 shadow">
           <h5>🛍️ Your Shop</h5>
           <p>No shop yet</p>
-          <Link href="/seller/shop/edit" class="btn btn-sm btn-primary">Create/Edit Shop</Link>
+          <Link href="/seller/shop/" class="btn btn-sm btn-primary">Create/Edit Shop</Link>
         </div>
       </div>
 
