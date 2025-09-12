@@ -69,7 +69,7 @@ class ChatBotController extends Controller
                 - Out of stock products
                 - Product stock for [product name]
                 - Product info for [product name]
-                - 🌱 Eco-friendly products
+                - Eco-friendly products
                 - Is [product name] eco friendly?
                 - How many orders exist / My latest order / pending or completed orders
                 - Order history / Track my past orders
@@ -81,7 +81,6 @@ class ChatBotController extends Controller
                 - Return policy
                 - Shipping / delivery options
                 - Contact support
-                - Recommend me [category]
                 HELP;
             }
             return null;
