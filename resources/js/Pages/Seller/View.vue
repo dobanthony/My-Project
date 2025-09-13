@@ -1,24 +1,30 @@
 <template>
   <SellerDashboardLayout>
-    <div class="container">
-      <h3 class="mb-3 text-success">
-        Order & Delivery Details
-      </h3>
+    <div class="container py-4">
+      <!-- Page Header -->
+      <div class="d-flex align-items-center justify-content-between mb-4">
+        <h3 class="fw-bold text-success mb-0">
+          <i class="bi bi-receipt-cutoff me-2"></i> Order & Delivery Details
+        </h3>
+        <Link href="/seller/orders" class="btn btn-outline-success">
+          <i class="bi bi-arrow-left-circle me-1"></i> Back to Orders
+        </Link>
+      </div>
 
       <div class="row g-4">
         <!-- Delivery Info -->
         <div class="col-12 col-lg-6">
-          <div class="card shadow-sm h-100">
-            <div class="card-header bg-success text-white fw-bold">
-              Delivery Information
+          <div class="card shadow-sm border-0 h-100">
+            <div class="card-header bg-success text-white fw-semibold">
+              <i class="bi bi-truck me-2"></i> Delivery Information
             </div>
             <div class="card-body">
-              <p><strong>Full Name:</strong> {{ order.full_name || 'N/A' }}</p>
-              <p><strong>Phone Number:</strong> {{ order.phone_number || 'N/A' }}</p>
-              <p><strong>Email:</strong> {{ order.email || 'N/A' }}</p>
-              <p><strong>Address:</strong> {{ order.delivery_address || 'N/A' }}</p>
+              <p><i class="bi bi-person-fill me-2 text-success"></i><strong>Full Name:</strong> {{ order.full_name || 'N/A' }}</p>
+              <p><i class="bi bi-telephone-fill me-2 text-success"></i><strong>Phone:</strong> {{ order.phone_number || 'N/A' }}</p>
+              <p><i class="bi bi-envelope-fill me-2 text-success"></i><strong>Email:</strong> {{ order.email || 'N/A' }}</p>
+              <p><i class="bi bi-geo-alt-fill me-2 text-success"></i><strong>Address:</strong> {{ order.delivery_address || 'N/A' }}</p>
               <p v-if="order.notes">
-                <strong>Notes:</strong> {{ order.notes }}
+                <i class="bi bi-chat-dots-fill me-2 text-muted"></i><strong>Notes:</strong> {{ order.notes }}
               </p>
             </div>
           </div>
@@ -26,46 +32,57 @@
 
         <!-- Order Info -->
         <div class="col-12 col-lg-6">
-          <div class="card shadow-sm h-100">
-            <div class="card-header bg-primary text-white fw-bold">
-              Order Information
+          <div class="card shadow-sm border-0 h-100">
+            <div class="card-header bg-primary text-white fw-semibold">
+              <i class="bi bi-box-seam me-2"></i> Order Information
             </div>
             <div class="card-body">
-              <p><strong>Product:</strong> {{ order.product.name }}</p>
-              <p><strong>Quantity:</strong> {{ order.quantity }}</p>
+              <p><i class="bi bi-bag-fill me-2 text-success"></i><strong>Product:</strong> {{ order.product.name }}</p>
+              <p><i class="bi bi-list-ol me-2 text-success"></i><strong>Quantity:</strong> {{ order.quantity }}</p>
 
-              <p><strong>Customizations:</strong></p>
-              <ul v-if="order.customization_details" class="mb-3">
-                <li v-if="order.customization_details.color"><strong>Color:</strong> {{ order.customization_details.color }}</li>
-                <li v-if="order.customization_details.size"><strong>Size:</strong> {{ order.customization_details.size }}</li>
-                <li v-if="order.customization_details.material"><strong>Material:</strong> {{ order.customization_details.material }}</li>
-                <li v-if="order.customization_details.custom_name"><strong>Custom Name:</strong> {{ order.customization_details.custom_name }}</li>
-                <li v-if="order.customization_details.custom_description"><strong>Description:</strong> {{ order.customization_details.custom_description }}</li>
-              </ul>
-              <p v-else class="text-muted">No customization provided.</p>
+              <div>
+                <p><i class="bi bi-sliders me-2 text-success"></i><strong>Customizations:</strong></p>
+                <ul v-if="order.customization_details" class="mb-3 ps-3">
+                  <li v-if="order.customization_details.color"><strong>Color:</strong> {{ order.customization_details.color }}</li>
+                  <li v-if="order.customization_details.size"><strong>Size:</strong> {{ order.customization_details.size }}</li>
+                  <li v-if="order.customization_details.material"><strong>Material:</strong> {{ order.customization_details.material }}</li>
+                  <li v-if="order.customization_details.custom_name"><strong>Custom Name:</strong> {{ order.customization_details.custom_name }}</li>
+                  <li v-if="order.customization_details.custom_description"><strong>Description:</strong> {{ order.customization_details.custom_description }}</li>
+                </ul>
+                <p v-else class="text-muted fst-italic">No customization provided.</p>
+              </div>
 
+              <!-- Status -->
               <p>
+                <i class="bi bi-info-circle-fill me-2 text-success"></i>
                 <strong>Status:</strong>
                 <span
+                  class="badge px-3 py-2"
                   :class="{
-                    'text-warning': order.status === 'pending',
-                    'text-success': order.status === 'approved',
-                    'text-danger': order.status === 'declined',
-                    'text-secondary': order.status === 'canceled'
+                    'bg-warning text-dark': order.status === 'pending',
+                    'bg-success': order.status === 'approved',
+                    'bg-danger': order.status === 'declined',
+                    'bg-secondary': order.status === 'canceled'
                   }"
                 >
                   {{ order.status }}
                 </span>
               </p>
 
-              <p><strong>Delivery Date:</strong> {{ order.delivery_date ?? 'N/A' }}</p>
               <p>
+                <i class="bi bi-calendar-event-fill me-2 text-success"></i>
+                <strong>Delivery Date:</strong> {{ order.delivery_date ?? 'N/A' }}
+              </p>
+
+              <p>
+                <i class="bi bi-clipboard-check-fill me-2 text-success"></i>
                 <strong>Delivery Status:</strong>
                 <span
+                  class="badge px-3 py-2"
                   :class="{
-                    'badge bg-warning': order.delivery_status === 'pending',
-                    'badge bg-success': order.delivery_status === 'delivered',
-                    'badge bg-danger': order.delivery_status === 'failed'
+                    'bg-warning text-dark': order.delivery_status === 'pending',
+                    'bg-success': order.delivery_status === 'delivered',
+                    'bg-danger': order.delivery_status === 'failed'
                   }"
                 >
                   {{ order.delivery_status ?? 'N/A' }}
@@ -74,13 +91,6 @@
             </div>
           </div>
         </div>
-      </div>
-
-      <!-- Back Button -->
-      <div class="mt-4">
-        <Link href="/seller/orders" class="btn btn-outline-success">
-          ⬅ Back to Orders
-        </Link>
       </div>
     </div>
   </SellerDashboardLayout>
