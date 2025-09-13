@@ -11,32 +11,37 @@
         </Link>
       </div>
 
-      <div class="row g-4">
-        <!-- Delivery Info -->
-        <div class="col-12 col-lg-6">
-          <div class="card shadow-sm border-0 h-100">
-            <div class="card-header bg-success text-white fw-semibold">
-              <i class="bi bi-truck me-2"></i> Delivery Information
-            </div>
-            <div class="card-body">
+      <!-- Delivery Info -->
+      <div class="card shadow-sm border-0 mb-5">
+        <div class="card-header bg-success text-white fw-semibold">
+          <i class="bi bi-truck me-2"></i> Delivery Information
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-6 mb-3">
               <p><i class="bi bi-person-fill me-2 text-success"></i><strong>Full Name:</strong> {{ order.full_name || 'N/A' }}</p>
               <p><i class="bi bi-telephone-fill me-2 text-success"></i><strong>Phone:</strong> {{ order.phone_number || 'N/A' }}</p>
+            </div>
+            <div class="col-md-6 mb-3">
               <p><i class="bi bi-envelope-fill me-2 text-success"></i><strong>Email:</strong> {{ order.email || 'N/A' }}</p>
               <p><i class="bi bi-geo-alt-fill me-2 text-success"></i><strong>Address:</strong> {{ order.delivery_address || 'N/A' }}</p>
-              <p v-if="order.notes">
-                <i class="bi bi-chat-dots-fill me-2 text-muted"></i><strong>Notes:</strong> {{ order.notes }}
-              </p>
             </div>
           </div>
+          <p v-if="order.notes" class="mt-2">
+            <i class="bi bi-chat-dots-fill me-2 text-muted"></i><strong>Notes:</strong> {{ order.notes }}
+          </p>
         </div>
+      </div>
 
-        <!-- Order Info -->
-        <div class="col-12 col-lg-6">
-          <div class="card shadow-sm border-0 h-100">
-            <div class="card-header bg-primary text-white fw-semibold">
-              <i class="bi bi-box-seam me-2"></i> Order Information
-            </div>
-            <div class="card-body">
+      <!-- Order Info -->
+      <div class="card shadow-sm border-0">
+        <div class="card-header bg-primary text-white fw-semibold">
+          <i class="bi bi-box-seam me-2"></i> Order Information
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <!-- Left column -->
+            <div class="col-md-6 mb-3">
               <p><i class="bi bi-bag-fill me-2 text-success"></i><strong>Product:</strong> {{ order.product.name }}</p>
               <p><i class="bi bi-list-ol me-2 text-success"></i><strong>Quantity:</strong> {{ order.quantity }}</p>
 
@@ -46,13 +51,18 @@
                   <li v-if="order.customization_details.color"><strong>Color:</strong> {{ order.customization_details.color }}</li>
                   <li v-if="order.customization_details.size"><strong>Size:</strong> {{ order.customization_details.size }}</li>
                   <li v-if="order.customization_details.material"><strong>Material:</strong> {{ order.customization_details.material }}</li>
-                  <li v-if="order.customization_details.custom_name"><strong>Custom Name:</strong> {{ order.customization_details.custom_name }}</li>
-                  <li v-if="order.customization_details.custom_description"><strong>Description:</strong> {{ order.customization_details.custom_description }}</li>
                 </ul>
                 <p v-else class="text-muted fst-italic">No customization provided.</p>
               </div>
+            </div>
 
-              <!-- Status -->
+            <!-- Right column -->
+            <div class="col-md-6 mb-3">
+              <ul v-if="order.customization_details" class="mb-3 ps-3">
+                <li v-if="order.customization_details.custom_name"><strong>Custom Name:</strong> {{ order.customization_details.custom_name }}</li>
+                <li v-if="order.customization_details.custom_description"><strong>Description:</strong> {{ order.customization_details.custom_description }}</li>
+              </ul>
+
               <p>
                 <i class="bi bi-info-circle-fill me-2 text-success"></i>
                 <strong>Status:</strong>
