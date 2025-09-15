@@ -38,11 +38,13 @@ class ChatBotController extends Controller
         if ($reply = $this->handleOrderQueries($message, $user)) return $reply;
         if ($reply = $this->handleShopQueries($message)) return $reply;
         if ($reply = $this->handleFAQ($message)) return $reply;
+        if ($reply = $this->handleEcoFriendly($message)) return $reply;
+        if ($reply = $this->handleSupport($message)) return $reply;
 
         return "🤖 I didn't get that. Try typing 'help' for things you can ask me about!";
     }
 
-     //Handlers
+    // Handlers
     private function handleGreeting(string $msg): ?string
     {
         $greetings = ['hi', 'hello', 'hey'];
@@ -63,27 +65,28 @@ class ChatBotController extends Controller
     {
         if ($msg === 'help' || strpos($msg, 'what can you do') !== false) {
             return <<<HELP
-                You can ask me about products, orders, or shops. For example:
-                - Cheapest product / Most expensive product
+                You can ask me about products, orders, shops, and support. For example:
+                - Cheapest product
+                - Most expensive product
                 - Cheapest eco-friendly product
-                - Out of stock products
-                - Product stock for [product name]
-                - Product info for [product name]
-                - Eco-friendly products
                 - Is [product name] eco friendly?
-                - How many orders exist / My latest order / pending or completed orders
-                - Order history / Track my past orders
+                - How many orders exist
+                - My latest order
+                - Pending or completed orders
+                - Order history
+                - Track my past orders
                 - Order status #1234
                 - Delivery info
                 - Shop info for [shop name]
                 - What shops are available?
                 - Payment methods
                 - Return policy
-                - Shipping / delivery options
+                - Shipping
+                - Delivery options
                 - Contact support
                 HELP;
-            }
-            return null;
+        }
+        return null;
     }
 
     private function handleProductQueries(string $msg): ?string
@@ -100,6 +103,46 @@ class ChatBotController extends Controller
             return $product
                 ? "💎 The most expensive product is **{$product->name}** priced at ₱{$product->price}."
                 : "⚠️ No products found.";
+        }
+
+        return null;
+    }
+
+    private function handleEcoFriendly(string $msg): ?string
+    {
+        // Check if product is eco-friendly
+        if (preg_match('/is (.+) eco friendly/', $msg, $matches)) {
+            $product = Product::where('name', 'like', "%{$matches[1]}%")->first();
+            return $product
+                ? ($product->eco_friendly
+                    ? "🌱 Yes! The product **{$product->name}** is eco-friendly."
+                    : "❌ The product **{$product->name}** is not eco-friendly.")
+                : "⚠️ Sorry, I couldn't find that product.";
+        }
+
+        // Cheapest eco-friendly product
+        if (strpos($msg, 'cheapest eco friendly product') !== false) {
+            $product = Product::where('eco_friendly', true)->orderBy('price', 'asc')->first();
+            return $product
+                ? "🌍 The cheapest eco-friendly product is **{$product->name}** priced at ₱{$product->price}."
+                : "⚠️ No eco-friendly products found.";
+        }
+
+        // List eco-friendly products
+        if (strpos($msg, 'eco friendly products') !== false) {
+            $products = Product::where('eco_friendly', true)->pluck('name');
+            return $products->count()
+                ? "🌱 Eco-Friendly Products:\n- " . $products->implode("\n- ")
+                : "⚠️ No eco-friendly products available.";
+        }
+
+        return null;
+    }
+
+    private function handleSupport(string $msg): ?string
+    {
+        if (strpos($msg, 'contact support') !== false || strpos($msg, 'help support') !== false) {
+            return "☎️ You can contact our support team at **support@example.com** or call 📞 +63 912 345 6789.";
         }
 
         return null;
