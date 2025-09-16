@@ -13,7 +13,7 @@ const toastRef = ref(null)
 const successMessage = usePage().props.flash?.success || ''
 onMounted(() => {
   if (successMessage && toastRef.value) {
-    const toast = new bootstrap.Toast(toastRef.value, { delay: 2000 })
+    const toast = new bootstrap.Toast(toastRef.value, { delay: 2500 })
     toast.show()
   }
 })
@@ -63,46 +63,74 @@ function confirmDelete() {
 
 <template>
   <AdminDashboardLayout>
-    <div class="container">
-      <h2 class="mb-3"><i class="bi bi-people me-1 text-success"></i> User Management</h2>
+    <div class="container py-4">
+      <!-- Page Title -->
+      <h2 class="mb-4 fw-bold d-flex align-items-center">
+        <i class="bi bi-people-fill me-2 text-success"></i>
+        User Management
+      </h2>
 
-      <div v-if="users.length === 0" class="alert alert-info">No users found.</div>
+      <!-- No users -->
+      <div v-if="users.length === 0" class="alert alert-info shadow-sm">
+        <i class="bi bi-info-circle me-2"></i> No users found.
+      </div>
 
-      <table class="table table-hover table-bordered align-middle">
-        <thead class="table-light">
-          <tr>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Role</th>
-            <th>Registered</th>
-            <th class="text-center">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="user in users" :key="user.id">
-            <td>{{ user.first_name }} {{ user.last_name }}</td>
-            <td>{{ user.email }}</td>
-            <td>
-              <span :class="['badge', roleBadgeClass(user.role)]">
-                {{ user.role }}
-              </span>
-            </td>
-            <td>{{ formatDate(user.created_at) }}</td>
-            <td class="text-center">
-              <Link :href="`/admin/users/${user.id}`" class="btn btn-sm btn-success me-1"><i class="bi bi-eye me-1 text-white"></i>View</Link>
-              <Link :href="`/admin/users/${user.id}/edit`" class="btn btn-sm btn-primary me-1"><i class="bi bi-pencil-square me-1"></i>Edit</Link>
-              <button @click="openDeleteModal(user)" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash3 me-1"></i>Delete</button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      <!-- Responsive Table -->
+      <div class="table-responsive shadow-sm rounded">
+        <table class="table table-hover align-middle mb-0">
+          <thead class="table-success">
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Role</th>
+              <th>Registered</th>
+              <th class="text-center">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="user in users" :key="user.id">
+              <td>
+                <i class="bi bi-person-circle me-1 text-muted"></i>
+                {{ user.first_name }} {{ user.last_name }}
+              </td>
+              <td>{{ user.email }}</td>
+              <td>
+                <span :class="['badge px-3 py-2 text-capitalize', roleBadgeClass(user.role)]">
+                  {{ user.role }}
+                </span>
+              </td>
+              <td>{{ formatDate(user.created_at) }}</td>
+              <td class="text-center">
+                <Link
+                  :href="`/admin/users/${user.id}`"
+                  class="btn btn-sm btn-success me-1"
+                >
+                  <i class="bi bi-eye text-white"></i>
+                </Link>
+                <Link
+                  :href="`/admin/users/${user.id}/edit`"
+                  class="btn btn-sm btn-primary me-1"
+                >
+                  <i class="bi bi-pencil-square"></i>
+                </Link>
+                <button
+                  @click="openDeleteModal(user)"
+                  class="btn btn-sm btn-outline-danger"
+                >
+                  <i class="bi bi-trash3"></i>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
 
     <!-- ✅ Toast -->
     <div
       v-if="successMessage"
       ref="toastRef"
-      class="toast align-items-center text-white bg-success position-fixed top-0 start-50 translate-middle-x mt-3 px-3 py-2 rounded"
+      class="toast align-items-center text-white bg-success shadow-lg position-fixed top-0 start-50 translate-middle-x mt-3 px-3 py-2 rounded"
       role="alert"
       aria-live="assertive"
       aria-atomic="true"
@@ -110,9 +138,14 @@ function confirmDelete() {
     >
       <div class="d-flex">
         <div class="toast-body">
-          {{ successMessage }}
+          <i class="bi bi-check-circle me-2"></i> {{ successMessage }}
         </div>
-        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+        <button
+          type="button"
+          class="btn-close btn-close-white me-2 m-auto"
+          data-bs-dismiss="toast"
+          aria-label="Close"
+        ></button>
       </div>
     </div>
 
@@ -126,18 +159,38 @@ function confirmDelete() {
       ref="deleteModal"
     >
       <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
+        <div class="modal-content shadow-lg">
           <div class="modal-header bg-danger text-white">
-            <h5 class="modal-title" id="deleteUserModalLabel">Confirm Delete</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <h5 class="modal-title" id="deleteUserModalLabel">
+              <i class="bi bi-exclamation-triangle me-2"></i> Confirm Delete
+            </h5>
+            <button
+              type="button"
+              class="btn-close btn-close-white"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
           </div>
           <div class="modal-body">
             Are you sure you want to delete
-            <strong>{{ selectedUser?.first_name }} {{ selectedUser?.last_name }}</strong>?
+            <strong>{{ selectedUser?.first_name }} {{ selectedUser?.last_name }}</strong>
+            (<small>{{ selectedUser?.email }}</small>)?
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-            <button type="button" class="btn btn-danger" @click="confirmDelete">Yes, Delete</button>
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Cancel
+            </button>
+            <button
+              type="button"
+              class="btn btn-danger"
+              @click="confirmDelete"
+            >
+              <i class="bi bi-trash me-1"></i> Yes, Delete
+            </button>
           </div>
         </div>
       </div>

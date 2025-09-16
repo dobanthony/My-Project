@@ -32,14 +32,14 @@
 
       <!-- Chart Filter -->
       <div class="d-flex justify-content-between align-items-center mb-3">
-        <h5 class="mb-0">
-          <i class="bi bi-graph-up-arrow me-1 text-success"></i> Chart Filters
-        </h5>
-        <select v-model="selectedFilter" class="form-select w-auto" @change="applyFilter">
-          <option value="month">This Month</option>
-          <option value="week">This Week</option>
-          <option value="year">This Year</option>
-        </select>
+            <h5 class="mb-0">
+                <i class="bi bi-graph-up-arrow me-1 text-success"></i> Chart Filters
+            </h5>
+            <select v-model="selectedFilter" class="form-select w-auto" @change="applyFilter">
+                <option value="week">This Week</option>
+                <option value="month">This Month</option>
+                <option value="year">This Year</option>
+            </select>
       </div>
 
       <!-- Charts -->
@@ -142,7 +142,7 @@ const props = defineProps({
   },
   filter: {
     type: String,
-    default: 'month'
+    default: 'week'
   }
 })
 

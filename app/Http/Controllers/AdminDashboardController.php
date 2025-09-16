@@ -22,11 +22,12 @@ class AdminDashboardController extends Controller
             abort(403, 'Unauthorized');
         }
 
-        $filter = $request->input('filter', 'month');
+        // $filter = $request->input('filter', 'month');
+        $filter = $request->input('filter', 'week');
         $now = Carbon::now()->timezone('Asia/Manila');
         $stats = collect();
 
-        // 📊 Dynamic Chart Data
+        // Dynamic Chart Data
         if ($filter === 'week') {
             $stats = collect(range(0, 6))->map(function ($daysAgo) use ($now) {
                 $date = $now->copy()->subDays($daysAgo)->startOfDay();
@@ -101,7 +102,8 @@ class AdminDashboardController extends Controller
             'filter' => $filter,
             'metrics' => [
                 'totalOrders' => Order::count(),
-                'totalUsers' => User::where('role', 'user')->count(),
+                // 'totalUsers' => User::whereIn('role', ['user', 'seller', 'admin'])->count(),
+                'totalUsers' => User::count(),
                 'totalSellers' => User::where('role', 'seller')->count(),
                 'totalAnnouncements' => Announcement::count(),
                 'totalProducts' => Product::count(),
