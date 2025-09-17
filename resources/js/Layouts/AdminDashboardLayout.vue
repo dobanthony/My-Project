@@ -6,33 +6,38 @@
       <hr class="bg-secondary" />
 
       <ul class="nav flex-column mb-3">
-        <Link href="/admin/dashboard" class="nav-link">
-          <i class="bi bi-speedometer2 me-1"></i> Dashboard
-        </Link>
+        <li class="nav-item">
+          <Link href="/admin/dashboard" class="nav-link">
+            <i class="bi bi-speedometer2 me-1"></i> Dashboard
+          </Link>
+        </li>
 
+        <li class="nav-item">
+            <Link href="/admin/announcements"
+                class="nav-link">
+                <i class="bi bi-megaphone me-1"></i> Announcements
+            </Link>
+        </li>
 
-<li class="nav-item">
-  <Link href="/admin/announcements"
-     class="nav-link">
-    <i class="bi bi-megaphone me-1"></i>Announcements
-  </Link>
-</li>
+        <li class="nav-item">
+            <Link href="/admin/users" class="nav-link">
+            <i class="bi bi-people me-1"></i> User Management
+            </Link>
+        </li>
 
-<li class="nav-item">
-    <Link href="/admin/users" class="nav-link">
-      <i class="bi bi-people me-1"></i> User Management
-    </Link>
-</li>
+        <li class="nav-item">
+            <Link class="nav-link d-flex align-items-center gap-2" href="/admin/seller-applications">
+                <i class="bi bi-person-badge"></i>
+                Seller Applications
+            </Link>
+        </li>
 
-<Link class="nav-link" href="/admin/seller-applications">Seller Applications</Link>
-
-
-
-<li class="nav-item">
-  <Link class="nav-link" href="/admin/marketplace">
-     Manage Marketplace
-  </Link>
-</li>
+        <li class="nav-item">
+            <Link class="nav-link d-flex align-items-center gap-2" href="/admin/marketplace">
+                <i class="bi bi-shop"></i>
+                Manage Marketplace
+            </Link>
+        </li>
 
       </ul>
       <hr class="bg-secondary" />
