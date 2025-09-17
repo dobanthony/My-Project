@@ -23,14 +23,14 @@ class ProductController extends Controller
                     'links' => [],
                 ],
                 'search' => $request->input('search', ''),
-                'limit' => (int) $request->input('limit', 30),
+                'limit' => (int) $request->input('limit', 10),
                 'shop' => null,
             ]);
         }
 
         $shopId = $user->shop->id;
         $search = $request->input('search');
-        $limit = $request->input('limit', 30);
+        $limit = $request->input('limit', 10);
 
         $query = Product::where('shop_id', $shopId);
 
@@ -129,7 +129,7 @@ class ProductController extends Controller
     public function showPublic(Request $request)
     {
         $search = $request->input('search');
-        $perPage = $request->input('perPage', 12);
+        $perPage = $request->input('perPage', 10);
 
         $query = Product::with(['shop.user'])
             ->withAvg('productRatings', 'product_rating')

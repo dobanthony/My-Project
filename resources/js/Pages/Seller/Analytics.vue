@@ -137,7 +137,7 @@
         </div>
 
         <!-- Reports Summary -->
-        <div class="card shadow">
+        <!-- <div class="card shadow">
           <div class="card-header bg-secondary text-white">📋 Receipt / Reports Summary</div>
           <div class="card-body">
             <ul class="list-group">
@@ -152,7 +152,7 @@
               </li>
             </ul>
           </div>
-        </div>
+        </div> -->
       </div>
     </div>
   </SellerDashboardLayout>

@@ -70,7 +70,7 @@ class OrderController extends Controller
         }
 
         return Inertia::render('Seller/Orders', [
-            'orders' => $query->latest()->paginate(100)->withQueryString(),
+            'orders' => $query->latest()->paginate(10)->withQueryString(),
             'filters' => $request->only('search', 'status'),
         ]);
     }
@@ -125,7 +125,7 @@ class OrderController extends Controller
     public function myOrders(Request $request)
     {
         $search = $request->input('search');
-        $limit = (int) $request->input('limit', 100);
+        $limit = (int) $request->input('limit', 10);
 
         $query = Order::with(['product.shop.user', 'receivedOrder'])
             ->where('user_id', auth()->id());
@@ -325,39 +325,39 @@ class OrderController extends Controller
 
 
     public function receipt(Order $order)
-{
-    $user = auth()->user();
+    {
+        $user = auth()->user();
 
-    $order->load('user', 'product.shop.user', 'receivedOrder');
-    $isSeller = $order->product->shop->user_id === $user->id;
+        $order->load('user', 'product.shop.user', 'receivedOrder');
+        $isSeller = $order->product->shop->user_id === $user->id;
 
-    return Inertia::render('Receipt', [
-        'order' => $order,
-        'userId' => $user->id,
-        'isSeller' => $isSeller,
-        'hasReported' => (bool) $order->reported, // ✅ ensure boolean
-    ]);
-}
-
-public function reportIssue(Request $request, Order $order)
-{
-    $request->validate([
-        'message' => 'required|min:5',
-    ]);
-
-    if ($order->reported) {
-        return back()->with('error', 'You have already reported this order.');
+        return Inertia::render('Receipt', [
+            'order' => $order,
+            'userId' => $user->id,
+            'isSeller' => $isSeller,
+            'hasReported' => (bool) $order->reported, // ✅ ensure boolean
+        ]);
     }
 
-    $order->update([
-        'reported' => true,
-        'report_message' => $request->message,
-    ]);
+    public function reportIssue(Request $request, Order $order)
+    {
+        $request->validate([
+            'message' => 'required|min:5',
+        ]);
 
-    $seller = $order->product->shop->user;
-    $seller->notify(new OrderIssueReported($order, $request->message));
+        if ($order->reported) {
+            return back()->with('error', 'You have already reported this order.');
+        }
 
-    return back()->with('success', 'Issue reported.');
-}
+        $order->update([
+            'reported' => true,
+            'report_message' => $request->message,
+        ]);
+
+        $seller = $order->product->shop->user;
+        $seller->notify(new OrderIssueReported($order, $request->message));
+
+        return back()->with('success', 'Issue reported.');
+    }
 
 }
