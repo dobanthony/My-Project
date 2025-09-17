@@ -118,7 +118,7 @@
           </span>
         </Link>
 
-        <!-- 👤 Profile Avatar -->
+        <!-- Profile Avatar -->
         <div class="position-relative">
           <img
             :src="user?.avatar ? `/storage/${user.avatar}` : getDefaultAvatar"
