@@ -113,8 +113,8 @@
                           id="phone"
                           type="text"
                           class="form-control"
-                          v-model="form.phone"
-                          required
+                          :value="user.phone || 'N/A'"
+                          readonly
                         />
                       </div>
 
@@ -125,8 +125,8 @@
                           id="address"
                           type="text"
                           class="form-control"
-                          v-model="form.address"
-                          required
+                          :value="user.address || 'N/A'"
+                          readonly
                         />
                       </div>
                     </div>
@@ -138,8 +138,8 @@
                         id="dob"
                         type="date"
                         class="form-control"
-                        v-model="form.dob"
-                        required
+                        :value="user.dob || 'N/A'"
+                        readonly
                       />
                     </div>
 
