@@ -157,7 +157,7 @@ const submit = () => {
                             Register here
                         </Link>
                     </p>
-                    © {{ new Date().getFullYear() }} Veterinary Record Management System ·
+                    © {{ new Date().getFullYear() }} CraftSmart·
                     <Link href="/" class="text-decoration-none text-success fw-semibold">Home</Link>
                 </small>
             </footer>

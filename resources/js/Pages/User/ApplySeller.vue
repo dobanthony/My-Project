@@ -19,27 +19,31 @@
       <div class="row justify-content-center">
         <div class="col-12 col-md-10 col-lg-8">
 
-          <!-- Already Applied -->
-          <div v-if="user.seller_status === 'pending' || user.seller_status === 'approved'" class="row g-3 mb-3">
-
+          <!-- Already Applied (Pending / Approved / Declined) -->
+          <div v-if="user.seller_status === 'pending' || user.seller_status === 'approved' || user.seller_status === 'declined'" class="row g-3 mb-3">
             <!-- User Info Card -->
             <div class="col-12 col-md-6">
               <div class="card shadow-sm h-100">
-                <div class="card-body">
-                  <p><strong>Name:</strong> {{ user.first_name }} {{ user.last_name }}</p>
-                  <p><strong>Email:</strong> {{ user.email }}</p>
-                  <p><strong>Application Reason:</strong><br /> {{ user.application_reason }}</p>
+                <div class="card-body text-center">
+                  <p class="text-start"><strong>Name:</strong> {{ user.first_name }} {{ user.last_name }}</p>
+                  <p class="text-start"><strong>Email:</strong> {{ user.email }}</p>
+                  <p class="text-start"><strong>Phone:</strong> {{ user.phone || 'N/A' }}</p>
+                  <p class="text-start"><strong>Address:</strong> {{ user.address || 'N/A' }}</p>
+                  <p class="text-start"><strong>Date of Birth:</strong> {{ user.dob || 'N/A' }}</p>
+                  <p class="text-start"><strong>Application Reason:</strong><br /> {{ user.application_reason }}</p>
                 </div>
               </div>
             </div>
 
             <!-- Status Alert Card -->
             <div class="col-12 col-md-6">
+              <!-- Pending -->
               <div v-if="user.seller_status === 'pending'" class="alert alert-warning d-flex align-items-center h-100">
                 <i class="bi bi-person-lock me-2 fs-4"></i>
                 <div>Your application is currently <strong>Pending</strong>.</div>
               </div>
 
+              <!-- Approved -->
               <div v-else-if="user.seller_status === 'approved'" class="alert alert-success d-flex flex-column h-100 justify-content-center">
                 <div>
                   <i class="bi bi-unlock me-2 fs-4"></i>
@@ -52,17 +56,31 @@
                   Logout
                 </button>
               </div>
-            </div>
 
+              <!-- Declined -->
+              <div v-else-if="user.seller_status === 'declined'" class="alert alert-danger d-flex flex-column h-100 justify-content-center">
+                <div>
+                  <i class="bi bi-x-circle me-2 fs-4"></i>
+                  <strong>Your application has been declined.</strong>
+                </div>
+                <div class="mt-2">
+                  <i class="bi bi-arrow-repeat me-2"></i>You can try again by submitting a new application.
+                </div>
+                <button class="btn btn-danger mt-3 w-100 w-md-auto" @click="tryAgain">
+                  Try Again
+                </button>
+              </div>
+            </div>
           </div>
 
-          <!-- Application Form -->
+          <!-- Application Form (only shows if not pending/approved and not declined yet or after retry) -->
           <div v-else class="row g-3">
             <div class="col-12">
               <div class="card shadow-sm">
                 <div class="card-body">
                   <form @submit.prevent="submitApplication">
                     <div class="row g-3 mb-3">
+                      <!-- Full Name -->
                       <div class="col-12 col-md-6">
                         <label for="name" class="form-label">Full Name</label>
                         <input
@@ -73,6 +91,8 @@
                           readonly
                         />
                       </div>
+
+                      <!-- Email -->
                       <div class="col-12 col-md-6">
                         <label for="email" class="form-label">Email Address</label>
                         <input
@@ -85,6 +105,45 @@
                       </div>
                     </div>
 
+                    <div class="row g-3 mb-3">
+                      <!-- Phone -->
+                      <div class="col-12 col-md-6">
+                        <label for="phone" class="form-label">Phone Number</label>
+                        <input
+                          id="phone"
+                          type="text"
+                          class="form-control"
+                          v-model="form.phone"
+                          required
+                        />
+                      </div>
+
+                      <!-- Address -->
+                      <div class="col-12 col-md-6">
+                        <label for="address" class="form-label">Address</label>
+                        <input
+                          id="address"
+                          type="text"
+                          class="form-control"
+                          v-model="form.address"
+                          required
+                        />
+                      </div>
+                    </div>
+
+                    <!-- DOB -->
+                    <div class="mb-3">
+                      <label for="dob" class="form-label">Date of Birth</label>
+                      <input
+                        id="dob"
+                        type="date"
+                        class="form-control"
+                        v-model="form.dob"
+                        required
+                      />
+                    </div>
+
+                    <!-- Application Reason -->
                     <div class="mb-3">
                       <label for="reason" class="form-label">Why do you want to become a seller?</label>
                       <textarea
@@ -96,6 +155,7 @@
                       />
                     </div>
 
+                    <!-- Submit Button -->
                     <button class="btn btn-success w-100 d-flex align-items-center justify-content-center" :disabled="form.processing">
                       <span v-if="form.processing" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
                       <i class="bi bi-send me-2"></i>
@@ -153,8 +213,12 @@ import { onMounted } from 'vue'
 
 const user = usePage().props.user
 
+// Pre-fill with user data
 const form = useForm({
-  application_reason: ''
+  application_reason: '',
+  phone: user.phone || '',
+  address: user.address || '',
+  dob: user.dob || ''
 })
 
 let bootstrapModal = null
@@ -179,6 +243,11 @@ function refreshPage() {
 
 function logout() {
   router.post('/logout')
+}
+
+function tryAgain() {
+  // Reset seller status so form shows again
+  user.seller_status = null
 }
 </script>
 
