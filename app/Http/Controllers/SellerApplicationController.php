@@ -10,9 +10,10 @@ class SellerApplicationController extends Controller
 {
     public function showForm()
     {
+        // $user = Auth::user()->id;
         // return Inertia::render('User/ApplySeller');
         return Inertia::render('User/ApplySeller', [
-            'user' => auth()->user(),
+            'user' => Auth::user(),
         ]);
     }
 
