@@ -13,7 +13,9 @@
         class="card mb-3 shadow-sm"
       >
         <div class="card-body">
-          <h5 class="card-title text-success">{{ user.first_name }} {{ user.middle_name }} {{ user.last_name }} ({{ user.email }})</h5>
+          <h5 class="card-title text-success">
+            {{ user.first_name }} {{ user.middle_name }} {{ user.last_name }} ({{ user.email }})
+          </h5>
           <p class="card-text">
             <strong>Reason:</strong> {{ user.application_reason }}
           </p>
