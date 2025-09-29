@@ -13,12 +13,12 @@
       <form @submit.prevent="submit">
         <!-- Personal Info -->
         <h5 class="mb-3 text-success fw-semibold">
-          <i class="bi bi-person-vcard-fill me-2"></i> Personal Information
+          <i class="bi bi-person-vcard-fill me-2 text-secondary"></i> Personal Information
         </h5>
         <div class="row">
           <div class="col-md-6 mb-3">
-            <label class="form-label fw-semibold small">
-              <i class="bi bi-person-fill me-1 text-primary"></i> Full Name
+            <label class="form-label fw-semibold small text-success">
+              <i class="bi bi-person-fill me-1 text-secondary"></i> Full Name
             </label>
             <input
               v-model="form.full_name"
@@ -33,8 +33,8 @@
           </div>
 
           <div class="col-md-6 mb-3">
-            <label class="form-label fw-semibold small">
-              <i class="bi bi-telephone-fill me-1 text-primary"></i> Phone Number
+            <label class="form-label fw-semibold small text-success">
+              <i class="bi bi-telephone-fill me-1 text-secondary"></i> Phone Number
             </label>
             <input
               v-model="form.phone_number"
@@ -50,8 +50,8 @@
         </div>
 
         <div class="mb-3">
-          <label class="form-label fw-semibold small">
-            <i class="bi bi-envelope-fill me-1 text-primary"></i> Email
+          <label class="form-label fw-semibold small text-success">
+            <i class="bi bi-envelope-fill me-1 text-secondary"></i> Email
           </label>
           <input
             v-model="form.email"
@@ -66,8 +66,8 @@
         </div>
 
         <div class="mb-3">
-          <label class="form-label fw-semibold small">
-            <i class="bi bi-geo-alt-fill me-1 text-primary"></i> Delivery Address
+          <label class="form-label fw-semibold small text-success">
+            <i class="bi bi-geo-alt-fill me-1 text-secondary"></i> Delivery Address
           </label>
           <textarea
             v-model="form.delivery_address"
@@ -82,7 +82,7 @@
         </div>
 
         <div class="mb-4">
-          <label class="form-label fw-semibold small">
+          <label class="form-label fw-semibold small text-success">
             <i class="bi bi-sticky-fill me-1 text-secondary"></i> Notes (Optional)
           </label>
           <textarea
@@ -163,8 +163,8 @@
 
         <!-- Quantity -->
         <div class="mb-4">
-          <label class="form-label fw-semibold small">
-            <i class="bi bi-stack me-1 text-primary"></i> Quantity
+          <label class="form-label fw-semibold small text-success">
+            <i class="bi bi-stack me-1 text-secondary"></i> Quantity
           </label>
           <input
             v-model.number="form.quantity"
@@ -238,3 +238,13 @@ const submit = () => {
   form.post("/checkout");
 };
 </script>
+
+<style>
+input.form-control:focus, textarea.form-control:focus {
+  border-color: #28a745;
+  box-shadow: 0 0 0 0.25rem rgba(40, 167, 69, 0.25);
+}
+textarea.form-control {
+  border-color: #28a745;
+}
+</style>

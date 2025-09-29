@@ -300,7 +300,7 @@
       >
         <div class="modal-dialog modal-lg modal-dialog-centered">
           <div class="modal-content shadow-lg">
-            <div class="modal-header bg-primary text-white">
+            <div class="modal-header bg-success text-white">
               <h5 class="modal-title">
                 <i class="bi bi-star-fill me-2"></i> Rate Your Order
               </h5>
