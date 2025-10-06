@@ -48,9 +48,9 @@
               <div>
                 <p><i class="bi bi-sliders me-2 text-success"></i><strong>Customizations:</strong></p>
                 <ul v-if="order.customization_details" class="mb-3 ps-3">
+                  <li v-if="order.customization_details.material"><strong>Material:</strong> {{ order.customization_details.material }}</li>
                   <li v-if="order.customization_details.color"><strong>Color:</strong> {{ order.customization_details.color }}</li>
                   <li v-if="order.customization_details.size"><strong>Size:</strong> {{ order.customization_details.size }}</li>
-                  <li v-if="order.customization_details.material"><strong>Material:</strong> {{ order.customization_details.material }}</li>
                 </ul>
                 <p v-else class="text-muted fst-italic">No customization provided.</p>
               </div>

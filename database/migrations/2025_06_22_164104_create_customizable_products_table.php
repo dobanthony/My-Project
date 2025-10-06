@@ -14,10 +14,24 @@ return new class extends Migration
         Schema::create('customizable_products', function (Blueprint $table) {
             $table->id();
             $table->foreignId('product_id')->constrained()->onDelete('cascade');
-            $table->boolean('allow_color')->nullable();
-            $table->boolean('allow_name')->nullable();
-            $table->boolean('allow_size')->nullable();
-            $table->boolean('allow_material')->nullable();
+
+            $table->boolean('allow_color')->default(false);
+            $table->boolean('allow_size')->default(false);
+            $table->boolean('allow_material')->default(false);
+            $table->boolean('allow_pattern')->default(false);
+
+            $table->json('custom_options')->nullable();
+            // Example JSON structure:
+            // [
+            //   { 
+            //     "material": "Bamboo",
+            //     "image": "bamboo.jpg",
+            //     "colors": [{"name": "Blue", "image": "blue.jpg"}],
+            //     "patterns": [{"name": "Polka Dots", "image": "dots.jpg"}],
+            //     "sizes": [{"name": "Large", "image": "large.jpg"}]
+            //   }
+            // ]
+
             $table->timestamps();
         });
     }

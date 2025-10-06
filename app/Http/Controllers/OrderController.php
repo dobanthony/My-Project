@@ -16,34 +16,77 @@ use Inertia\Inertia;
 
 class OrderController extends Controller
 {
+    // public function store(Request $request)
+    // {
+    //     $validated = $request->validate([
+    //         'product_id' => 'required|exists:products,id',
+    //         'quantity' => 'required|integer|min:1'
+    //     ]);
+
+    //     $product = Product::findOrFail($validated['product_id']);
+
+    //     // Stock check
+    //     if ($product->stock < $validated['quantity']) {
+    //         return back()->withErrors(['quantity' => 'Not enough stock available.']);
+    //     }
+
+    //     // Place order
+    //     Order::create([
+    //         'user_id' => auth()->id(),
+    //         'product_id' => $product->id,
+    //         'quantity' => $validated['quantity'],
+    //         'status' => 'pending',
+    //     ]);
+
+    //     // Update stock and sold
+    //     $product->decrement('stock', $validated['quantity']);
+    //     $product->increment('total_sold', $validated['quantity']);
+
+    //     return back()->with('success', 'Order placed. Waiting for seller approval.');
+    // }
     public function store(Request $request)
-    {
-        $validated = $request->validate([
-            'product_id' => 'required|exists:products,id',
-            'quantity' => 'required|integer|min:1'
-        ]);
+{
+    $validated = $request->validate([
+        'product_id' => 'required|exists:products,id',
+        'quantity' => 'required|integer|min:1',
+        // Optional: customization fields
+        'color' => 'nullable|string',
+        'size' => 'nullable|string',
+        'material' => 'nullable|string',
+        'pattern' => 'nullable|string',
+        'custom_name' => 'nullable|string',
+        'custom_description' => 'nullable|string',
+        'selected_image' => 'nullable|string',
+    ]);
 
-        $product = Product::findOrFail($validated['product_id']);
+    $product = Product::findOrFail($validated['product_id']);
 
-        // Stock check
-        if ($product->stock < $validated['quantity']) {
-            return back()->withErrors(['quantity' => 'Not enough stock available.']);
-        }
-
-        // Place order
-        Order::create([
-            'user_id' => auth()->id(),
-            'product_id' => $product->id,
-            'quantity' => $validated['quantity'],
-            'status' => 'pending',
-        ]);
-
-        // Update stock and sold
-        $product->decrement('stock', $validated['quantity']);
-        $product->increment('total_sold', $validated['quantity']);
-
-        return back()->with('success', 'Order placed. Waiting for seller approval.');
+    if ($product->stock < $validated['quantity']) {
+        return back()->withErrors(['quantity' => 'Not enough stock available.']);
     }
+
+    Order::create([
+        'user_id' => auth()->id(),
+        'product_id' => $product->id,
+        'quantity' => $validated['quantity'],
+        'status' => 'pending',
+        'customization_details' => [
+            'color' => $validated['color'] ?? null,
+            'size' => $validated['size'] ?? null,
+            'material' => $validated['material'] ?? null,
+            'pattern' => $validated['pattern'] ?? null,
+            'custom_name' => $validated['custom_name'] ?? null,
+            'custom_description' => $validated['custom_description'] ?? null,
+            'selected_image' => $validated['selected_image'] ?? null,
+        ],
+    ]);
+
+    $product->decrement('stock', $validated['quantity']);
+    $product->increment('total_sold', $validated['quantity']);
+
+    return back()->with('success', 'Order placed. Waiting for seller approval.');
+}
+
 
     public function sellerOrders(Request $request)
     {

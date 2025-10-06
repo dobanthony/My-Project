@@ -1,5 +1,3 @@
-in this code
-
 <template>
   <SellerDashboardLayout>
     <div class="container py-3">
