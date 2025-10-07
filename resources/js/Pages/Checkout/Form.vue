@@ -3,17 +3,19 @@
     <!-- Header -->
     <div class="text-center mb-4">
       <h2 class="fw-bold">
-        <i class="bi bi-receipt-cutoff me-2 text-success"></i> Checkout for
-        <span class="text-primary">{{ product.name }}</span>
+        <i class="bi bi-receipt-cutoff me-2 text-success"></i>
+        Checkout for <span class="text-primary">{{ product.name }}</span>
       </h2>
       <p class="text-muted">Fill in your details to complete the order.</p>
     </div>
 
     <div class="card p-4 shadow-sm border-0 rounded-4">
       <form @submit.prevent="submit">
+        
         <!-- Personal Info -->
         <h5 class="mb-3 text-success fw-semibold">
-          <i class="bi bi-person-vcard-fill me-2 text-secondary"></i> Personal Information
+          <i class="bi bi-person-vcard-fill me-2 text-secondary"></i>
+          Personal Information
         </h5>
         <div class="row">
           <div class="col-md-6 mb-3">
@@ -85,80 +87,7 @@
           <label class="form-label fw-semibold small text-success">
             <i class="bi bi-sticky-fill me-1 text-secondary"></i> Notes (Optional)
           </label>
-          <textarea
-            v-model="form.notes"
-            class="form-control"
-            rows="2"
-          ></textarea>
-        </div>
-
-        <!-- Customization -->
-        <div v-if="product.customization" class="border rounded-3 p-3 bg-light mb-4">
-          <h6 class="fw-bold text-success mb-3">
-            <i class="bi bi-sliders me-2"></i> Product Customization
-          </h6>
-
-          <div class="row g-3">
-            <div v-if="product.customization.allow_color" class="col-md-4">
-              <label class="form-label small">
-                <i class="bi bi-palette-fill me-1"></i> Color
-              </label>
-              <select v-model="form.color" class="form-select">
-                <option disabled value="">Choose color</option>
-                <option>Red</option>
-                <option>Blue</option>
-                <option>Black</option>
-              </select>
-            </div>
-
-            <div v-if="product.customization.allow_size" class="col-md-4">
-              <label class="form-label small">
-                <i class="bi bi-aspect-ratio-fill me-1"></i> Size
-              </label>
-              <select v-model="form.size" class="form-select">
-                <option disabled value="">Choose size</option>
-                <option>Small</option>
-                <option>Medium</option>
-                <option>Large</option>
-              </select>
-            </div>
-
-            <div v-if="product.customization.allow_material" class="col-md-4">
-              <label class="form-label small">
-                <i class="bi bi-gem me-1"></i> Material
-              </label>
-              <select v-model="form.material" class="form-select">
-                <option disabled value="">Choose material</option>
-                <option>Beads</option>
-                <option>Leather</option>
-                <option>Metal</option>
-              </select>
-            </div>
-
-            <div v-if="product.customization.allow_name" class="col-md-6">
-              <label class="form-label small">
-                <i class="bi bi-pencil-fill me-1"></i> Custom Name
-              </label>
-              <input
-                v-model="form.custom_name"
-                type="text"
-                class="form-control"
-                placeholder="e.g. John or initials"
-              />
-            </div>
-
-            <div v-if="product.customization.allow_description" class="col-md-6">
-              <label class="form-label small">
-                <i class="bi bi-card-text me-1"></i> Custom Description
-              </label>
-              <textarea
-                v-model="form.custom_description"
-                class="form-control"
-                rows="1"
-                placeholder="Describe your request..."
-              ></textarea>
-            </div>
-          </div>
+          <textarea v-model="form.notes" class="form-control" rows="2"></textarea>
         </div>
 
         <!-- Quantity -->
@@ -197,7 +126,7 @@
 
 <script setup>
 import { useForm, Link } from "@inertiajs/vue3";
-import { defineProps, onMounted } from "vue";
+import { defineProps, computed, onMounted } from "vue";
 
 const props = defineProps({
   product: Object,
@@ -213,15 +142,28 @@ const form = useForm({
   email: props.lastDeliveryInfo?.email || "",
   delivery_address: props.lastDeliveryInfo?.delivery_address || "",
   notes: props.lastDeliveryInfo?.notes || "",
-
   quantity: props.quantity || 1,
 
-  // Prefilled customization values
+  // Customization details
   color: props.customizations?.color || "",
   size: props.customizations?.size || "",
   material: props.customizations?.material || "",
+  pattern: props.customizations?.pattern || "",
   custom_name: props.customizations?.custom_name || "",
   custom_description: props.customizations?.custom_description || "",
+  selected_image: props.customizations?.selected_image || "",
+});
+
+// ✅ detect if there’s any customization
+const hasCustomization = computed(() => {
+  return (
+    form.color ||
+    form.size ||
+    form.material ||
+    form.pattern ||
+    form.custom_name ||
+    form.custom_description
+  );
 });
 
 onMounted(() => {
@@ -240,7 +182,8 @@ const submit = () => {
 </script>
 
 <style>
-input.form-control:focus, textarea.form-control:focus {
+input.form-control:focus,
+textarea.form-control:focus {
   border-color: #28a745;
   box-shadow: 0 0 0 0.25rem rgba(40, 167, 69, 0.25);
 }

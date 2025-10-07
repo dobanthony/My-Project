@@ -21,7 +21,7 @@
               <i class="bi bi-truck display-4 text-success"></i>
               <h5 class="fw-bold mt-3 text-dark">Fast & Reliable Delivery</h5>
               <p class="text-muted">
-                Receive your orders quickly with nationwide delivery services.
+                Receive your orders quickly with our delivery services.
               </p>
             </div>
             <div class="col-md-4 mb-4 feature-card">

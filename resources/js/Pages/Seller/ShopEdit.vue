@@ -28,11 +28,11 @@
     <div class="container">
       <!-- Header -->
       <div
-        class="d-flex flex-column flex-md-row justify-content-between align-items-start mb-4 gap-3"
+        class="d-flex flex-column flex-md-row justify-content-between align-items-start mb-6 gap-3"
       >
         <div>
           <h2 class="mb-1">
-            <i class="bi bi-shop-window me-2 text-success"></i>
+            <i class="bi bi-shop-window me-2 text-secondary"></i>
             Hello, {{ user.first_name }} {{ user.last_name }}
           </h2>
           <p class="text-muted mb-0">
@@ -44,7 +44,7 @@
       <div class="row gy-4">
         <!-- Top: Existing shop preview -->
         <div class="col-12">
-          <div class="card shadow-sm rounded-4 p-4 h-100 text-center">
+          <div class="card shadow-lg rounded-4 p-4 h-100 text-center">
             <!-- Avatar -->
             <div class="mb-4">
               <div
@@ -66,7 +66,7 @@
             </div>
 
             <!-- Shop Name & Description -->
-            <h4 class="mb-2 text-success">
+            <h4 class="mb-2 text-secondary">
               {{ shop?.shop_name ?? 'No Shop Yet' }}
             </h4>
             <p class="text-muted fs-6">
@@ -77,19 +77,19 @@
             <div v-if="shop" class="mt-4">
               <div class="row text-start g-3 fs-6 fw-medium">
                 <div class="col-12 col-md-6">
-                  <i class="bi bi-telephone me-2 text-success"></i>
+                  <i class="bi bi-telephone me-2 text-secondary"></i>
                   {{ shop.phone_number ?? '-' }}
                 </div>
                 <div class="col-12 col-md-6">
-                  <i class="bi bi-envelope me-2 text-success"></i>
+                  <i class="bi bi-envelope me-2 text-secondary"></i>
                   {{ shop.email_address ?? '-' }}
                 </div>
                 <div class="col-12 col-md-6">
-                  <i class="bi bi-geo-alt-fill me-2 text-success"></i>
+                  <i class="bi bi-geo-alt-fill me-2 text-secondary"></i>
                   {{ shop.address ?? '-' }}
                 </div>
                 <div class="col-12 col-md-6">
-                  <i class="bi bi-calendar-event me-2 text-success"></i>
+                  <i class="bi bi-calendar-event me-2 text-secondary"></i>
                   {{ new Date().toLocaleDateString() }}
                 </div>
               </div>
@@ -103,14 +103,14 @@
 
         <!-- Bottom: Form -->
         <div class="col-12">
-          <div class="card shadow-sm rounded-4 p-4">
+          <div class="card shadow-lg rounded-4 p-4">
             <div class="d-flex justify-content-between align-items-center mb-3">
-              <h5 class="text-success mb-0">
+              <h5 class="text-black mb-0">
                 {{ shop ? 'Update Your Shop' : 'Create Your Shop' }}
               </h5>
               <span
                 v-if="shop"
-                class="badge bg-success d-none d-md-inline"
+                class="badge bg-primary d-none d-md-inline"
                 >Editing</span
               >
             </div>
@@ -185,7 +185,7 @@
               </div>
 
               <div class="col-12">
-                <button type="submit" class="btn btn-success btn-lg w-100">
+                <button type="submit" class="btn btn-secondary btn-lg w-100">
                   {{ shop ? 'Update Shop' : 'Create Shop' }}
                 </button>
               </div>
@@ -256,11 +256,11 @@ const submit = () => {
 
 <style scoped>
 /* Focus states */
-input.form-control:focus,
+/* input.form-control:focus,
 textarea.form-control:focus {
   border-color: #28a745;
   box-shadow: 0 0 0 0.25rem rgba(40, 167, 69, 0.5);
-}
+} */
 
 /* Card styling */
 .card {

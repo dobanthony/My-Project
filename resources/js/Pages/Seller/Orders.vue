@@ -13,7 +13,7 @@
           />
         </div>
         <div class="col-6 col-sm-3 col-md-2">
-          <button class="btn btn-success w-100" @click="handleSearch">
+          <button class="btn btn-secondary w-100" @click="handleSearch">
             Search
           </button>
         </div>
@@ -268,10 +268,10 @@ onBeforeUnmount(() => {
 </script>
 
 <style scoped>
-input.form-control:focus {
+/* input.form-control:focus {
   border-color: #28a745;
   box-shadow: 0 0 0 0.25rem rgba(40, 167, 69, 0.5);
-}
+} */
 
 .pagination .page-link {
   color: #28a745;

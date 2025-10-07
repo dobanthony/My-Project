@@ -59,11 +59,12 @@
           <tbody>
             <tr v-for="order in filteredOrders" :key="order.id">
               <td>
-                <img
-                  :src="order.product?.image ? `/storage/${order.product.image}` : 'https://via.placeholder.com/50'"
-                  width="50"
-                  class="rounded"
-                />
+<img
+  :src="order.display_image"
+  alt="Product Image"
+  class="rounded"
+  style="width: 80px; height: 80px; object-fit: cover;"
+/>
               </td>
               <td class="text-wrap">{{ order.product?.name }}</td>
               <td>₱{{ parseFloat(order.product?.price).toFixed(2) }}</td>

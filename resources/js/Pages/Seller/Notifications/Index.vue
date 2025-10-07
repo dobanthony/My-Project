@@ -1,11 +1,11 @@
 <template>
   <SellerDashboardLayout>
     <div class="container">
-      <h2 class="mb-4"><i class="bi bi-bell me-2"></i> Notifications</h2>
+      <h2 class="mb-4"><i class="bi bi-bell me-2 text-secondary"></i> Notifications</h2>
 
       <!-- ✅ Mark All as Read Button -->
       <div class="mb-3 text-end" v-if="hasUnread">
-        <button class="btn btn-success btn-sm" @click="markAllAsRead">
+        <button class="btn btn-outline-success btn-sm" @click="markAllAsRead">
           <i class="bi bi-check2-all me-2"></i>Mark All as Read
         </button>
       </div>

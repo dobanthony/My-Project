@@ -39,7 +39,7 @@ const updatePassword = () => {
     <div class="card-body p-4">
       <!-- Header -->
       <header class="mb-4 text-center">
-        <i class="bi bi-shield-lock-fill text-success fs-2"></i>
+        <i class="bi bi-shield-lock-fill text-secondary fs-2"></i>
         <h2 class="h5 mt-2 mb-1 fw-bold">Update Password</h2>
         <p class="text-muted small">
           Ensure your account is using a strong, unique password to stay secure.
@@ -50,7 +50,7 @@ const updatePassword = () => {
       <form @submit.prevent="updatePassword" class="needs-validation">
         <!-- Current Password -->
         <div class="mb-3 position-relative">
-          <label for="current_password" class="form-label fw-semibold text-success">
+          <label for="current_password" class="form-label fw-semibold text-secondary">
             <i class="bi bi-key-fill me-1"></i> Current Password
           </label>
           <div class="input-group">
@@ -65,7 +65,7 @@ const updatePassword = () => {
             />
             <button
               type="button"
-              class="btn btn-outline-success"
+              class="btn btn-outline-secondary"
               @click="showCurrentPassword = !showCurrentPassword"
               tabindex="-1"
             >
@@ -79,7 +79,7 @@ const updatePassword = () => {
 
         <!-- New Password -->
         <div class="mb-3 position-relative">
-          <label for="password" class="form-label fw-semibold text-success">
+          <label for="password" class="form-label fw-semibold text-secondary">
             <i class="bi bi-lock-fill me-1"></i> New Password
           </label>
           <div class="input-group">
@@ -94,7 +94,7 @@ const updatePassword = () => {
             />
             <button
               type="button"
-              class="btn btn-outline-success"
+              class="btn btn-outline-secondary"
               @click="showPassword = !showPassword"
               tabindex="-1"
             >
@@ -108,7 +108,7 @@ const updatePassword = () => {
 
         <!-- Confirm Password -->
         <div class="mb-3 position-relative">
-          <label for="password_confirmation" class="form-label fw-semibold text-success">
+          <label for="password_confirmation" class="form-label fw-semibold text-secondary">
             <i class="bi bi-check2-circle me-1"></i> Confirm Password
           </label>
           <div class="input-group">
@@ -122,7 +122,7 @@ const updatePassword = () => {
             />
             <button
               type="button"
-              class="btn btn-outline-success"
+              class="btn btn-outline-secondary"
               @click="showConfirmPassword = !showConfirmPassword"
               tabindex="-1"
             >
@@ -138,7 +138,7 @@ const updatePassword = () => {
         <div class="d-flex align-items-center gap-3">
           <button
             type="submit"
-            class="btn btn-success d-flex align-items-center gap-2"
+            class="btn btn-primary d-flex align-items-center gap-2"
             :disabled="form.processing"
           >
             <span v-if="form.processing" class="spinner-border spinner-border-sm me-2"></span>
@@ -156,7 +156,7 @@ const updatePassword = () => {
     </div>
   </section>
 </template>
-<style scoped>
+<!-- <style scoped>
 input.form-control:focus {
   border-color: #28a745; /* green */
   box-shadow: 0 0 0 0.25rem rgba(40, 167, 69, 0.5); /* green with 50% opacity */
@@ -165,4 +165,4 @@ textarea.form-control:focus {
   border-color: #28a745; /* green */
   box-shadow: 0 0 0 0.25rem rgba(40, 167, 69, 0.5); /* green with 50% opacity */
 }
-</style>
+</style> -->

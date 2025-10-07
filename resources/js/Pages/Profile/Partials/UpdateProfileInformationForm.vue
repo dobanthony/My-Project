@@ -41,7 +41,7 @@ watch(
     <div class="card-body p-4">
       <!-- Header -->
       <header class="mb-4 text-center">
-        <i class="bi bi-person-circle text-success fs-2"></i>
+        <i class="bi bi-person-circle text-secondary fs-2"></i>
         <h2 class="h5 mt-2 mb-1 fw-bold">Profile Information</h2>
         <p class="text-muted small">
           Update your account's profile information and email address.
@@ -51,11 +51,11 @@ watch(
       <form @submit.prevent="form.patch(route('profile.update'))" class="row g-3">
         <!-- First Name -->
         <div class="col-md-4">
-          <label for="first_name" class="form-label fw-semibold text-success">
-            <i class="bi bi-person me-1"></i> First Name
+          <label for="first_name" class="form-label fw-semibold text-secondary">
+            <i class="bi bi-person me-1 text-black"></i> First Name
           </label>
           <div class="input-group">
-            <span class="input-group-text"><i class="bi bi-person text-success"></i></span>
+            <span class="input-group-text"><i class="bi bi-person text-black"></i></span>
             <input
               id="first_name"
               v-model="form.first_name"
@@ -70,11 +70,11 @@ watch(
 
         <!-- Middle Name -->
         <div class="col-md-4">
-          <label for="middle_name" class="form-label fw-semibold text-success">
+          <label for="middle_name" class="form-label fw-semibold text-secondary">
             <i class="bi bi-person-lines-fill me-1"></i> Middle Name (Optional)
           </label>
           <div class="input-group">
-            <span class="input-group-text"><i class="bi bi-person-lines-fill text-success"></i></span>
+            <span class="input-group-text"><i class="bi bi-person-lines-fill text-black"></i></span>
             <input
               id="middle_name"
               v-model="form.middle_name"
@@ -88,11 +88,11 @@ watch(
 
         <!-- Last Name -->
         <div class="col-md-4">
-          <label for="last_name" class="form-label fw-semibold text-success">
+          <label for="last_name" class="form-label fw-semibold text-secondary">
             <i class="bi bi-person-badge me-1"></i> Last Name
           </label>
           <div class="input-group">
-            <span class="input-group-text"><i class="bi bi-person-badge text-success"></i></span>
+            <span class="input-group-text"><i class="bi bi-person-badge text-black"></i></span>
             <input
               id="last_name"
               v-model="form.last_name"
@@ -107,11 +107,11 @@ watch(
 
         <!-- Email -->
         <div class="col-md-6">
-          <label for="email" class="form-label fw-semibold text-success">
+          <label for="email" class="form-label fw-semibold text-secondary">
             <i class="bi bi-envelope-at me-1"></i> Email
           </label>
           <div class="input-group">
-            <span class="input-group-text"><i class="bi bi-envelope-at text-success"></i></span>
+            <span class="input-group-text"><i class="bi bi-envelope-at text-black"></i></span>
             <input
               id="email"
               v-model="form.email"
@@ -126,11 +126,11 @@ watch(
 
         <!-- Phone -->
         <div class="col-md-6">
-          <label for="phone" class="form-label fw-semibold text-success">
+          <label for="phone" class="form-label fw-semibold text-secondary">
             <i class="bi bi-telephone me-1"></i> Phone Number
           </label>
           <div class="input-group">
-            <span class="input-group-text"><i class="bi bi-telephone text-success"></i></span>
+            <span class="input-group-text"><i class="bi bi-telephone text-black"></i></span>
             <input
               id="phone"
               v-model="form.phone"
@@ -144,11 +144,11 @@ watch(
 
         <!-- Address -->
         <div class="col-12">
-          <label for="address" class="form-label fw-semibold text-success">
+          <label for="address" class="form-label fw-semibold text-secondary">
             <i class="bi bi-geo-alt me-1"></i> Address
           </label>
           <div class="input-group">
-            <span class="input-group-text"><i class="bi bi-geo-alt text-success"></i></span>
+            <span class="input-group-text"><i class="bi bi-geo-alt text-black"></i></span>
             <input
               id="address"
               v-model="form.address"
@@ -162,11 +162,11 @@ watch(
 
         <!-- Date of Birth -->
         <div class="col-md-6">
-          <label for="dob" class="form-label fw-semibold text-success">
+          <label for="dob" class="form-label fw-semibold text-secondary">
             <i class="bi bi-calendar-date me-1"></i> Date of Birth
           </label>
           <div class="input-group">
-            <span class="input-group-text"><i class="bi bi-calendar-date text-success"></i></span>
+            <span class="input-group-text"><i class="bi bi-calendar-date text-black"></i></span>
             <input
               id="dob"
               v-model="form.dob"
@@ -202,7 +202,7 @@ watch(
 
         <!-- Save Button -->
         <div class="col-12 d-flex align-items-center gap-3 mt-3">
-          <button type="submit" class="btn btn-success d-flex align-items-center gap-2" :disabled="form.processing">
+          <button type="submit" class="btn btn-primary d-flex align-items-center gap-2" :disabled="form.processing">
             <span v-if="form.processing" class="spinner-border spinner-border-sm me-2"></span>
             <i v-else class="bi bi-save-fill"></i>
             {{ form.processing ? 'Saving...' : 'Save Changes' }}
@@ -231,7 +231,7 @@ watch(
     </div>
   </section>
 </template>
-<style scoped>
+<!-- <style scoped>
 input.form-control:focus {
   border-color: #28a745; /* green */
   box-shadow: 0 0 0 0.25rem rgba(40, 167, 69, 0.5); /* green with 50% opacity */
@@ -240,4 +240,4 @@ textarea.form-control:focus {
   border-color: #28a745; /* green */
   box-shadow: 0 0 0 0.25rem rgba(40, 167, 69, 0.5); /* green with 50% opacity */
 }
-</style>
+</style> -->

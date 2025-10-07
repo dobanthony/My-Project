@@ -7,7 +7,7 @@
     <div class="d-flex justify-content-between align-items-center mb-2">
       <button
         v-if="notifications.length > 0"
-        class="btn btn-sm btn-success"
+        class="btn btn-sm btn-outline-success"
         @click="markAllAsRead"
       >
         Mark All as Read

@@ -28,7 +28,7 @@
 
       <!-- ➕ Create Custom Product -->
       <div class="mb-3 text-center text-md-start">
-        <Link href="/seller/custom-products/create" class="btn btn-success">
+        <Link href="/seller/custom-products/create" class="btn btn-outline-success">
           <i class="bi bi-plus-circle me-1"></i> Custom Product
         </Link>
       </div>
@@ -71,7 +71,7 @@
 
           <input type="file" @change="e => form.image = e.target.files[0]" class="form-control mb-2" />
 
-          <button type="submit" class="btn btn-success w-100 w-md-auto">
+          <button type="submit" class="btn btn-primary w-100 w-md-auto">
             <i class="bi bi-plus-lg me-1"></i> Add Product
           </button>
         </form>
@@ -82,7 +82,7 @@
             <input v-model="search" @keyup.enter="handleSearch" class="form-control" placeholder="Search product name or description" />
           </div>
           <div class="col-6 col-md-3">
-            <button class="btn btn-outline-success w-100" @click="handleSearch">
+            <button class="btn btn-secondary w-100" @click="handleSearch">
               <i class="bi bi-search me-1"></i> Search
             </button>
           </div>
@@ -383,7 +383,7 @@ function handleSearch() {
 }
 </script>
 
-<style scoped>
+<!-- <style scoped>
 input.form-control:focus {
   border-color: #28a745; /* green */
   box-shadow: 0 0 0 0.25rem rgba(40, 167, 69, 0.5); /* green with 50% opacity */
@@ -403,4 +403,4 @@ textarea.form-control:focus {
   border-color: #28a745; /* green */
   box-shadow: 0 0 0 0.25rem rgba(40, 167, 69, 0.5); /* green with 50% opacity */
 }
-</style>
+</style> -->

@@ -121,34 +121,67 @@
               </div>
               <small class="text-muted">Order ID: #{{ order.id }}</small>
             </div>
-            <div class="d-flex">
-              <img
-                :src="
-                  order.product?.image
-                    ? `/storage/${order.product.image}`
-                    : 'https://via.placeholder.com/60'
-                "
-                class="me-3 rounded border"
-                width="70"
-              />
-              <div class="flex-grow-1">
-                <h6 class="mb-1">{{ order.product?.name }}</h6>
-                <p class="text-muted mb-1">
-                  {{ order.product?.description ?? "No description" }}
-                </p>
-                <div
-                  class="d-flex justify-content-between align-items-center"
-                >
-                  <div>
-                    <span class="text-muted"
-                      >₱{{ order.product?.price }}</span
-                    >
-                    × {{ order.quantity }}
+              <div class="d-flex">
+                <!-- ✅ Use custom image if available -->
+                <img
+                  :src="
+                    order.customization_details?.selected_image
+                      ? order.customization_details.selected_image
+                      : order.product?.image
+                      ? `/storage/${order.product.image}`
+                      : 'https://via.placeholder.com/150'
+                  "
+                  class="me-3 rounded border bg-light"
+                  width="150"
+                  height="120"
+                  style="object-fit: contain; padding: 5px;"
+                />
+
+                <div class="flex-grow-1">
+                  <h6 class="mb-1">
+                    {{ order.product?.name }}
+                    <span v-if="order.customization_details" class="badge bg-info text-dark ms-2">
+                      Customized
+                    </span>
+                  </h6>
+
+                  <!-- ✅ Product description -->
+                  <p class="text-muted mb-2">
+                    {{ order.product?.description ?? "No description" }}
+                  </p>
+
+                  <!-- ✅ Show customization details if available -->
+                  <div v-if="order.customization_details" class="mb-2">
+                    <p class="mb-1" v-if="order.customization_details.material">
+                      <strong>Material:</strong> {{ order.customization_details.material }}
+                    </p>
+                    <p class="mb-1" v-if="order.customization_details.color">
+                      <strong>Color:</strong> {{ order.customization_details.color }}
+                    </p>
+                    <p class="mb-1" v-if="order.customization_details.size">
+                      <strong>Size:</strong> {{ order.customization_details.size }}
+                    </p>
+                    <p class="mb-1" v-if="order.customization_details.pattern">
+                      <strong>Pattern:</strong> {{ order.customization_details.pattern }}
+                    </p>
+                    <p class="mb-1" v-if="order.customization_details.custom_name">
+                      <strong>Custom Name:</strong> {{ order.customization_details.custom_name }}
+                    </p>
+                    <p class="mb-1" v-if="order.customization_details.custom_description">
+                      <strong>Description:</strong> {{ order.customization_details.custom_description }}
+                    </p>
                   </div>
-                  <strong class="text-dark">₱{{ totalAmount }}</strong>
+
+                  <!-- ✅ Price and quantity -->
+                  <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                      <span class="text-muted">₱{{ order.product?.price }}</span>
+                      × {{ order.quantity }}
+                    </div>
+                    <strong class="text-dark">₱{{ totalAmount }}</strong>
+                  </div>
                 </div>
               </div>
-            </div>
           </div>
         </div>
 

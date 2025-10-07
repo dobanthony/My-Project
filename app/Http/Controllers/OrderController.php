@@ -49,38 +49,44 @@ class OrderController extends Controller
     $validated = $request->validate([
         'product_id' => 'required|exists:products,id',
         'quantity' => 'required|integer|min:1',
-        // Optional: customization fields
-        'color' => 'nullable|string',
-        'size' => 'nullable|string',
-        'material' => 'nullable|string',
-        'pattern' => 'nullable|string',
-        'custom_name' => 'nullable|string',
-        'custom_description' => 'nullable|string',
-        'selected_image' => 'nullable|string',
+        'customization_details' => 'nullable|array',
+        'customization_details.color' => 'nullable|string|max:100',
+        'customization_details.size' => 'nullable|string|max:100',
+        'customization_details.material' => 'nullable|string|max:100',
+        'customization_details.custom_name' => 'nullable|string|max:255',
+        'customization_details.custom_description' => 'nullable|string|max:500',
+        'customization_details.custom_image' => 'nullable|image|max:5120', // 5MB
     ]);
 
     $product = Product::findOrFail($validated['product_id']);
 
+    // ✅ Stock check
     if ($product->stock < $validated['quantity']) {
         return back()->withErrors(['quantity' => 'Not enough stock available.']);
     }
 
-    Order::create([
+    // ✅ Handle custom uploaded image
+    $customImagePath = null;
+    if ($request->hasFile('customization_details.custom_image')) {
+        $customImagePath = $request->file('customization_details.custom_image')->store('customizations', 'public');
+    }
+
+    // ✅ Merge image into customization details
+    $customization = $validated['customization_details'] ?? [];
+    if ($customImagePath) {
+        $customization['custom_image'] = $customImagePath;
+    }
+
+    // ✅ Place order
+    $order = Order::create([
         'user_id' => auth()->id(),
         'product_id' => $product->id,
         'quantity' => $validated['quantity'],
         'status' => 'pending',
-        'customization_details' => [
-            'color' => $validated['color'] ?? null,
-            'size' => $validated['size'] ?? null,
-            'material' => $validated['material'] ?? null,
-            'pattern' => $validated['pattern'] ?? null,
-            'custom_name' => $validated['custom_name'] ?? null,
-            'custom_description' => $validated['custom_description'] ?? null,
-            'selected_image' => $validated['selected_image'] ?? null,
-        ],
+        'customization_details' => $customization,
     ]);
 
+    // ✅ Update stock and sold
     $product->decrement('stock', $validated['quantity']);
     $product->increment('total_sold', $validated['quantity']);
 
@@ -165,44 +171,49 @@ class OrderController extends Controller
         ]);
     }
 
-    public function myOrders(Request $request)
-    {
-        $search = $request->input('search');
-        $limit = (int) $request->input('limit', 10);
+public function myOrders(Request $request)
+{
+    $search = $request->input('search');
+    $limit = (int) $request->input('limit', 10);
 
-        $query = Order::with(['product.shop.user', 'receivedOrder'])
-            ->where('user_id', auth()->id());
+    $query = Order::with(['product.shop.user', 'receivedOrder'])
+        ->where('user_id', auth()->id());
 
-        if ($search) {
-            $query->where(function ($q) use ($search) {
-                $q->whereHas('product', fn($sub) =>
-                    $sub->where('name', 'like', "%{$search}%")
-                )->orWhere('status', 'like', "%{$search}%")
-                 ->orWhereHas('product.shop.user', fn($sub) =>
-                    $sub->where('name', 'like', "%{$search}%")
-                );
-            });
-        }
-
-        return Inertia::render('Orders/MyOrders', [
-            'orders' => $query->latest()->paginate($limit)->withQueryString(),
-            'search' => $search,
-        ]);
+    if ($search) {
+        $query->where(function ($q) use ($search) {
+            $q->whereHas('product', fn($sub) =>
+                $sub->where('name', 'like', "%{$search}%")
+            )->orWhere('status', 'like', "%{$search}%")
+            ->orWhereHas('product.shop.user', fn($sub) =>
+                $sub->where('name', 'like', "%{$search}%")
+            );
+        });
     }
 
-    // public function receipt(Order $order)
-    // {
-    //     $user = auth()->user();
+    // 🧠 Transform orders to include full image path for customization
+    $orders = $query->latest()->paginate($limit)->through(function ($order) {
+        $custom = $order->customization_details ?? [];
 
-    //     $order->load('user', 'product.shop.user', 'receivedOrder');
-    //     $isSeller = $order->product->shop->user_id === $user->id;
+        // ✅ Add full URL for custom image if exists
+        if (isset($custom['custom_image'])) {
+            $custom['custom_image_url'] = asset('storage/' . $custom['custom_image']);
+        }
 
-    //     return Inertia::render('Receipt', [
-    //         'order' => $order,
-    //         'userId' => $user->id,
-    //         'isSeller' => $isSeller
-    //     ]);
-    // }
+        // ✅ Add fallback product image
+        $order->customization_details = $custom;
+        $order->display_image = $custom['custom_image_url'] ?? 
+                                ($order->product && $order->product->image 
+                                    ? asset('storage/' . $order->product->image) 
+                                    : 'https://via.placeholder.com/150');
+
+        return $order;
+    });
+
+    return Inertia::render('Orders/MyOrders', [
+        'orders' => $orders,
+        'search' => $search,
+    ]);
+}
 
     public function sellerReceipt(Order $order)
     {
@@ -274,18 +285,6 @@ class OrderController extends Controller
 
         return back()->with('success', 'Marked as received. Seller notified.');
     }
-
-    // public function reportIssue(Request $request, Order $order)
-    // {
-    //     $request->validate([
-    //         'message' => 'required|min:5',
-    //     ]);
-
-    //     $seller = $order->product->shop->user;
-    //     $seller->notify(new OrderIssueReported($order, $request->message));
-
-    //     return back()->with('success', 'Issue reported.');
-    // }
 
     public function updateDeliveryStatus(Request $request, Order $order)
     {
