@@ -1,6 +1,6 @@
 <template>
   <DashboardLayout>
-    <!-- Toast Notification -->
+    <!-- ✅ Toast Notification -->
     <div class="toast-container position-fixed top-0 start-50 translate-middle-x p-3" style="z-index: 2000;">
       <div
         class="toast align-items-center text-bg-success border-0"
@@ -15,9 +15,10 @@
       </div>
     </div>
 
+    <!-- ✅ Main Section -->
     <div class="bg-light py-5 px-2 px-md-0">
       <div class="container bg-white rounded shadow p-4" style="max-width: 1000px;">
-        <!-- Breadcrumb -->
+        <!-- ✅ Breadcrumb -->
         <nav class="mb-4">
           <ol class="breadcrumb bg-light p-2 rounded mb-0">
             <li class="breadcrumb-item">
@@ -36,9 +37,9 @@
           </ol>
         </nav>
 
-        <!-- Product Info -->
+        <!-- ✅ Product Info -->
         <div class="row gy-4">
-          <!-- Main Product Image -->
+          <!-- Product Image -->
           <div class="col-12 col-lg-6 text-center">
             <img
               :src="mainImage"
@@ -48,6 +49,7 @@
             />
           </div>
 
+          <!-- Product Details -->
           <div class="col-12 col-lg-6">
             <h2 class="text-dark fw-bold mb-2 d-flex align-items-center gap-2">
               {{ product.name }}
@@ -56,7 +58,7 @@
               </span>
             </h2>
 
-            <!-- Rating & Stats -->
+            <!-- Ratings -->
             <div class="d-flex flex-wrap gap-3 mb-3">
               <div>
                 <span class="fw-bold me-1 text-success">{{ averageRating }}</span>
@@ -123,7 +125,7 @@
               <small class="text-danger">*Stock will be deducted after seller approval.</small>
             </div>
 
-            <!-- Customize / Add to Cart -->
+            <!-- Buttons -->
             <div class="d-grid gap-2 d-md-flex mt-4">
               <button
                 v-if="product.customization"
@@ -143,9 +145,9 @@
               </template>
             </div>
 
-            <!-- Customization Form -->
+            <!-- ✅ Customization Form -->
             <div v-if="showCustomizeForm && product.customization" class="mt-4 p-3 border rounded bg-light">
-              <h5> Customize Your Product</h5>
+              <h5>Customize Your Product</h5>
 
               <!-- Material -->
               <div v-if="product.customization.allow_material" class="mb-3">
@@ -161,7 +163,6 @@
                   </option>
                 </select>
 
-                <!-- Material Images -->
                 <div v-if="customForm.material" class="mt-2 d-flex flex-wrap">
                   <template v-for="mat in product.customization.custom_options" :key="mat.material + '-img'">
                     <img
@@ -193,7 +194,6 @@
                   </template>
                 </select>
 
-                <!-- Color Images -->
                 <div v-if="customForm.color" class="mt-2 d-flex flex-wrap">
                   <template v-for="mat in product.customization.custom_options" :key="mat.material + '-color-img'">
                     <template v-if="mat.material === customForm.material">
@@ -247,7 +247,6 @@
                   </template>
                 </select>
 
-                <!-- Pattern Images -->
                 <div v-if="customForm.pattern" class="mt-2 d-flex flex-wrap">
                   <template v-for="mat in product.customization.custom_options" :key="mat.material + '-pattern-img'">
                     <template v-if="mat.material === customForm.material">
@@ -278,10 +277,116 @@
                 />
               </div>
 
-              <!-- Buttons -->
               <div class="d-flex gap-2 mt-3 flex-wrap">
                 <button @click="buyNowCustom" class="btn btn-success">Buy Customized Now</button>
               </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ✅ Seller Info -->
+        <div class="card mt-5 p-4 border-0 shadow rounded-4">
+          <h5 class="mb-4 text-success fw-bold">🛍 About the Seller</h5>
+
+          <div class="row g-4 align-items-start">
+            <div class="col-md-3 d-flex flex-column align-items-center text-center">
+              <img
+                :src="product.shop?.shop_logo ? `/storage/${product.shop.shop_logo}` : 'https://via.placeholder.com/100?text=No+Logo'"
+                alt="Shop Logo"
+                class="rounded-circle border shadow-sm mb-3"
+                style="width: 120px; height: 120px; object-fit: cover;"
+              />
+              <h6 class="fw-bold text-success mb-3">
+                {{ product.shop?.shop_name ?? 'N/A' }}
+              </h6>
+              <div class="d-flex flex-column flex-md-row gap-2 w-100 justify-content-center px-2">
+                <button class="btn btn-danger" @click="goToChat">
+                  <i class="bi bi-chat-dots-fill me-1"></i> Chat
+                </button>
+                <button class="btn btn-outline-dark" @click="goToShop">
+                  <i class="bi bi-shop-window me-1"></i> View
+                </button>
+              </div>
+            </div>
+
+            <div class="col-md-9">
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <p class="mb-2">
+                    <i class="bi bi-info-circle me-2"></i>
+                    <strong class="text-success">Description:</strong><br>
+                    <span class="text-muted">{{ product.shop?.shop_description ?? 'N/A' }}</span>
+                  </p>
+                  <p class="mb-2">
+                    <i class="bi bi-telephone me-2"></i>
+                    <strong class="text-success">Phone:</strong>
+                    <span class="text-muted">{{ product.shop?.phone_number ?? 'N/A' }}</span>
+                  </p>
+                  <p class="mb-2">
+                    <i class="bi bi-envelope me-2"></i>
+                    <strong class="text-success">Email:</strong>
+                    <span class="text-muted">{{ product.shop?.email_address ?? 'N/A' }}</span>
+                  </p>
+                </div>
+                <div class="col-md-6">
+                  <p class="mb-2">
+                    <strong class="text-success me-2">⭐ Ratings:</strong>
+                    <span class="text-muted">{{ product.shop?.shop_rating ?? 0 }} ({{ product.shop?.shop_rating_count ?? 0 }} reviews)</span>
+                  </p>
+                  <p class="mb-2">
+                    <i class="bi bi-plus-circle me-2"></i>
+                    <strong class="text-success me-2">Followers:</strong>
+                    <span class="text-muted">{{ followerCount }}</span>
+                  </p>
+                  <p class="mb-2">
+                    <i class="bi bi-shop me-2"></i>
+                    <strong class="text-success me-2">Shop Open Since:</strong>
+                    <span class="text-muted">
+                      {{ product.shop?.created_at ? new Date(product.shop.created_at).toLocaleDateString() : 'N/A' }}
+                    </span>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ✅ Ratings -->
+        <div v-if="ratings.length" class="mt-5">
+          <h4 class="text-dark mb-3">⭐ Customer Ratings & Reviews</h4>
+          <div v-for="rating in ratings" :key="rating.id" class="card my-3 p-3 border">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <div class="d-flex align-items-center gap-2">
+                <img
+                  :src="rating.user?.avatar
+                    ? `/storage/${rating.user.avatar}`
+                    : `https://ui-avatars.com/api/?name=${encodeURIComponent(rating.user?.name ?? 'User')}`"
+                  alt="User Avatar"
+                  class="rounded-circle border"
+                  style="width: 40px; height: 40px; object-fit: cover;"
+                />
+                <strong class="text-dark">
+                  {{ (rating.user?.first_name ?? 'Anonymous') + (rating.user?.last_name ? ' ' + rating.user.last_name : '') }}
+                </strong>
+              </div>
+              <small class="text-muted">{{ new Date(rating.created_at).toLocaleString() }}</small>
+            </div>
+
+            <div class="mb-2">
+              <strong class="text-success">Product:</strong>
+              <span v-for="i in 5" :key="'p-star-' + i" class="text-warning">
+                <i :class="i <= rating.product_rating ? 'bi bi-star-fill' : 'bi bi-star'"></i>
+              </span>
+              <br />
+              <strong class="text-success">Shop:</strong>
+              <span v-for="i in 5" :key="'s-star-' + i" class="text-info">
+                <i :class="i <= rating.shop_rating ? 'bi bi-star-fill' : 'bi bi-star'"></i>
+              </span>
+            </div>
+
+            <p class="mb-2">{{ rating.comment }}</p>
+            <div v-if="rating.image" class="mt-2">
+              <img :src="`/storage/${rating.image}`" class="img-thumbnail" style="max-width: 200px;" />
             </div>
           </div>
         </div>
@@ -346,7 +451,7 @@ const customForm = useForm({
   custom_name: '',
   custom_description: '',
   quantity: 1,
-  selected_image: mainImage.value, // <-- store clicked image here
+  selected_image: mainImage.value,
 })
 
 // Add normal product to cart
@@ -377,7 +482,7 @@ const buyNowCustom = () => {
     pattern: customForm.pattern,
     custom_name: customForm.custom_name,
     custom_description: customForm.custom_description,
-    selected_image: customForm.selected_image, // include clicked image
+    selected_image: customForm.selected_image,
   }).toString()
 
   router.visit(`/checkout/${props.product.id}?${query}`)
