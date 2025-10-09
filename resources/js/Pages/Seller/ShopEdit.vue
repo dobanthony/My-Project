@@ -66,7 +66,7 @@
             </div>
 
             <!-- Shop Name & Description -->
-            <h4 class="mb-2 text-secondary">
+            <h4 class="mb-2 text-dark">
               {{ shop?.shop_name ?? 'No Shop Yet' }}
             </h4>
             <p class="text-muted fs-6">
@@ -185,9 +185,9 @@
               </div>
 
               <div class="col-12">
-                <button type="submit" class="btn btn-secondary btn-lg w-100">
-                  {{ shop ? 'Update Shop' : 'Create Shop' }}
-                </button>
+                  <button type="submit" class="btn btn-primary w-100 btn-shop">
+                    {{ shop ? 'Update Shop' : 'Create Shop' }}
+                  </button>
               </div>
             </form>
           </div>
@@ -290,10 +290,17 @@ h5 {
   transform: scale(1.05);
 }
 
-/* Buttons */
-button {
-  font-weight: 500;
-  padding: 0.75rem;
-  border-radius: 0.75rem;
+.btn-shop {
+  padding: 0.35rem 0.75rem;   /* smaller height */
+  font-size: 0.9rem;          /* smaller text */
+  border-radius: 0.3rem;      /* slightly rounded */
+  transition: all 0.3s ease;  /* smooth hover */
 }
+
+/* Optional: subtle hover glow */
+.btn-shop:hover {
+  background-color: #0b5ed7; /* darker Bootstrap primary */
+  box-shadow: 0 0 10px rgba(13, 110, 253, 0.25);
+}
+
 </style>

@@ -15,7 +15,7 @@
           </div>
         </div>
         <div class="col-3 col-sm-2">
-          <button type="submit" class="btn btn-success w-100">Search</button>
+          <button type="submit" class="btn btn-primary w-100">Search</button>
         </div>
       </form>
 
@@ -48,8 +48,8 @@
                 </span>
               </div>
 
-              <div class="card-body d-flex flex-column px-2 py-2">
-                <h6 class="card-title text-dark mb-1 ellipsis-two">
+              <div class="card-body d-flex flex-column fw-bold px-2 py-2">
+                <h6 class="card-title text-success mb-1 ellipsis-two">
                   {{ product.name }}
                 </h6>
                 <p class="card-text small text-muted mb-1 ellipsis-three">
@@ -59,7 +59,7 @@
                 <!-- Rating / Sold row -->
                 <div class="d-flex align-items-center mb-1 gap-2 flex-wrap">
                   <div class="rating d-flex align-items-center">
-                    <span class="me-1 fw-bold small text-success">
+                    <span class="me-1 fw-bold small text-secondary">
                       {{ (product.average_rating ?? 0).toFixed(1) }}
                     </span>
                     <div class="stars me-1">
@@ -79,7 +79,7 @@
                   </div>
                 </div>
 
-                <div class="price mb-1 fw-bold text-success">
+                <div class="price mb-1 fw-bold text-dark">
                   ₱{{ product.price ?? '0.00' }}
                 </div>
 
@@ -93,14 +93,14 @@
                   <div class="mb-1 ellipsis-one">
                     Sold by: <strong>{{ product.shop?.user?.first_name ?? 'Unknown' }} {{ product.shop?.user?.last_name ?? 'Unknown' }}</strong>
                   </div>
-                  <div v-if="product.shop?.address" class="ellipsis-one">
+                  <span v-if="product.shop?.address" class="ellipsis-one text-dark">
                     <i class="bi bi-geo-alt-fill me-1"></i>
                     {{ product.shop.address }}
-                  </div>
+                  </span>
                 </div>
 
                 <div class="mt-auto">
-                  <span class="badge bg-success w-100 text-center small">
+                  <span class="badge bg-primary w-100 text-center small">
                     View details
                   </span>
                 </div>
@@ -176,10 +176,12 @@ const searchProducts = () => {
   border: 1px solid transparent;
 }
 .product-card:hover {
-  box-shadow: 0 8px 20px rgba(40, 167, 69, 0.25); /* green glow shadow */
+  box-shadow: 0 8px 22px rgba(11, 132, 255, 0.3); /* brighter, cooler blue glow */
   transform: translateY(-4px);
-  border-color: #28a745; /* green border on hover */
+  border-color: #0d6efd; /* standard Bootstrap primary */
+  transition: all 0.3s ease;
 }
+
 .image-wrapper {
   width: 100%;
   padding-top: 75%;
@@ -273,30 +275,29 @@ const searchProducts = () => {
   }
 }
 
-/* Input focus */
-input.form-control:focus {
-  border-color: #28a745;
-  box-shadow: 0 0 0 0.25rem rgba(40, 167, 69, 0.25);
+.pagination .page-link {
+  color: #0b84ff;
+  background-color: #fff;
+  border-color: #0b84ff;
+  transition: all 0.25s ease;
 }
 
-/* Pagination styling */
-.pagination .page-link {
-  color: #28a745;
-  background-color: #fff;
-  border-color: #28a745;
-}
 .pagination .page-link:hover {
   color: #fff;
-  background-color: #28a745;
-  border-color: #fff;
+  background-color: #0b5ed7;
+  border-color: #0b5ed7;
 }
+
 .pagination .page-link:focus {
-  border-color: #28a745;
-  box-shadow: 0 0 0 0.25rem rgba(40, 167, 69, 0.25);
+  border-color: #0b84ff;
+  box-shadow: 0 0 0 0.25rem rgba(11, 132, 255, 0.25);
 }
+
 .page-item.active .page-link {
-  background-color: #28a745;
-  border-color: #28a745;
   color: #fff;
+  background-color: #0b84ff;
+  border-color: #0b84ff;
+  box-shadow: 0 4px 12px rgba(11, 132, 255, 0.3);
 }
+
 </style>

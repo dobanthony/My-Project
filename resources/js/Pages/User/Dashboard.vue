@@ -11,14 +11,14 @@
           <p class="mb-3">
             Keep your account information up-to-date. You can edit your name, email, and password here.
           </p>
-          <Link href="/profile" class="btn btn-outline-success">
+          <Link href="/profile" class="btn btn-outline-primary">
             Go to Profile Settings
           </Link>
         </div>
       </div>
 
       <!-- Announcements Header -->
-      <div class="d-flex justify-content-between align-items-center bg-success text-white p-2 rounded mb-4">
+      <div class="d-flex justify-content-between align-items-center bg-primary text-white p-2 rounded mb-4">
         <strong class="ms-2"><i class="bi bi-megaphone me-2"></i> Latest Announcements</strong>
       </div>
 
@@ -109,9 +109,9 @@ function truncateContent(content, maxLength = 120) {
   line-height: 1.5;
 }
 
-.announcement-title:hover {
-  background-color: #d1e7dd !important;
-  color: #0f5132 !important;
+.announcement-title:hover { 
+  background-color: #d1e7dd !important; 
+  color: #0f5132 !important; 
   cursor: default;
 }
 </style>

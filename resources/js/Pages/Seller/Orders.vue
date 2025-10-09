@@ -13,7 +13,7 @@
           />
         </div>
         <div class="col-6 col-sm-3 col-md-2">
-          <button class="btn btn-secondary w-100" @click="handleSearch">
+          <button class="btn btn-primary w-100" @click="handleSearch">
             Search
           </button>
         </div>

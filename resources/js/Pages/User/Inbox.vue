@@ -2,7 +2,7 @@
   <DashboardLayout>
     <div class="container">
       <h4 class="mb-4 text-dark">
-        <i class="bi bi-envelope me-2"></i>{{ shop.shop_name }}
+        <i class="bi bi-envelope me-2 text-secondary"></i>{{ shop.shop_name }}
       </h4>
 
       <!-- Chat Messages -->
@@ -35,7 +35,7 @@
               <!-- Message Bubble -->
               <div
                 class="p-2 rounded"
-                :class="msg.sender.id === shop.user_id ? 'bg-white' : 'bg-success text-white'"
+                :class="msg.sender.id === shop.user_id ? 'bg-white' : 'bg-primary text-white'"
                 style="max-width: 70%; min-width: 80px;"
               >
                 <div class="fw-bold small mb-1">
@@ -130,7 +130,7 @@
             placeholder="Type a message..."
             required
           ></textarea>
-          <button class="btn btn-success"><i class="bi bi-send-fill"></i></button>
+          <button class="btn btn-primary"><i class="bi bi-send-fill"></i></button>
         </div>
       </form>
     </div>
@@ -217,14 +217,14 @@ onBeforeUnmount(() => {
 </script>
 
 <style scoped>
-textarea.form-control {
+/* textarea.form-control {
   border-color: #28a745;
   box-shadow: none;
 }
 textarea.form-control:focus {
   border-color: #28a745;
   box-shadow: 0 0 0 0.25rem rgba(40, 167, 69, 0.5);
-}
+} */
 .chat-box {
   max-height: 500px;
   overflow-y: auto;

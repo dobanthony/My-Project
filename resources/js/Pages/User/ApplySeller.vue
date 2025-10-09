@@ -7,9 +7,9 @@
           <div class="card text-center shadow-sm border-0">
             <div class="card-body text-success">
               <h2 class="mb-1">
-                <i class="bi bi-envelope-paper me-2"></i>Apply to Become a Seller
+                <i class="bi bi-envelope-paper me-2 text-secondary"></i>Apply to Become a Seller
               </h2>
-              <p class="mb-0">Fill out the form below to start selling on our platform.</p>
+              <p class="mb-0 text-secondary">Fill out the form below to start selling on our platform.</p>
             </div>
           </div>
         </div>

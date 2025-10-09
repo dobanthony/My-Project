@@ -46,7 +46,7 @@
           type="button"
           @click="submitAvatar"
           :disabled="isUploading || !avatar"
-          class="btn btn-success"
+          class="btn btn-primary"
         >
           <span v-if="isUploading" class="spinner-border spinner-border-sm me-2"></span>
           <i class="bi bi-upload me-1"></i> Upload

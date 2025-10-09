@@ -1,7 +1,7 @@
 <template>
   <SellerDashboardLayout>
     <div class="container py-4">
-      <div class="bg-success text-white p-2 mb-1 rounded-top-2">
+      <div class="bg-primary text-white p-2 mb-1 rounded-top-2">
         <h3>Conversations with Customers</h3>
       </div>
 
@@ -26,7 +26,7 @@
 
             <!-- 👤 User Details -->
             <div class="flex-grow-1">
-              <strong class="text-success">{{ user.first_name }}</strong>
+              <strong class="text-dark fw-bold">{{ user.first_name }}</strong>
 
               <!-- 💬 Latest message preview -->
               <p

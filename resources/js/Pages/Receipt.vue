@@ -140,7 +140,10 @@
                 <div class="flex-grow-1">
                   <h6 class="mb-1">
                     {{ order.product?.name }}
-                    <span v-if="order.customization_details" class="badge bg-info text-dark ms-2">
+                    <span
+                      v-if="hasCustomization"
+                      class="badge bg-info text-dark ms-2 align-middle"
+                    >
                       Customized
                     </span>
                   </h6>
@@ -333,7 +336,7 @@
       >
         <div class="modal-dialog modal-lg modal-dialog-centered">
           <div class="modal-content shadow-lg">
-            <div class="modal-header bg-success text-white">
+            <div class="modal-header bg-primary text-white">
               <h5 class="modal-title">
                 <i class="bi bi-star-fill me-2"></i> Rate Your Order
               </h5>
@@ -497,6 +500,17 @@ const ratingLabels = {
   4: "Good",
   5: "Excellent"
 };
+
+const hasCustomization = computed(() => {
+  const details = props.order.customization_details;
+  // Return true only if customization_details exists AND has at least one key with a value
+  return (
+    details &&
+    typeof details === "object" &&
+    Object.values(details).some((value) => value !== null && value !== "")
+  );
+});
+
 
 const showToast = (message, type = "success") => {
   toast.value = { message, type };

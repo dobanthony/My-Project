@@ -13,7 +13,7 @@
           />
         </div>
         <div class="col-md-2">
-          <button class="btn btn-success w-100" @click="handleSearch">Search</button>
+          <button class="btn btn-primary w-100" @click="handleSearch">Search</button>
         </div>
       </div>
 
@@ -59,12 +59,12 @@
           <tbody>
             <tr v-for="order in filteredOrders" :key="order.id">
               <td>
-<img
-  :src="order.display_image"
-  alt="Product Image"
-  class="rounded"
-  style="width: 80px; height: 80px; object-fit: cover;"
-/>
+                <img
+                  :src="order.display_image"
+                  alt="Product Image"
+                  class="rounded"
+                  style="width: 80px; height: 80px; object-fit: cover;"
+                />
               </td>
               <td class="text-wrap">{{ order.product?.name }}</td>
               <td>₱{{ parseFloat(order.product?.price).toFixed(2) }}</td>

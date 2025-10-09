@@ -2,8 +2,8 @@
   <div class="container py-5">
     <!-- Header -->
     <div class="text-center mb-4">
-      <h2 class="fw-bold">
-        <i class="bi bi-truck me-2 text-success"></i> Delivery Information
+      <h2 class="fw-bold text-success">
+        <i class="bi bi-truck me-2 text-secondary"></i> Delivery Information
       </h2>
       <p class="text-muted">Fill in your details to complete the checkout process.</p>
     </div>
@@ -14,7 +14,7 @@
         <div class="row g-3">
           <div class="col-md-6">
             <label class="form-label fw-semibold">
-              <i class="bi bi-person-fill me-1 text-primary"></i> Full Name
+              <i class="bi bi-person-fill me-1 text-secondary"></i> Full Name
             </label>
             <input
               v-model="form.full_name"
@@ -27,7 +27,7 @@
 
           <div class="col-md-6">
             <label class="form-label fw-semibold">
-              <i class="bi bi-telephone-fill me-1 text-primary"></i> Phone Number
+              <i class="bi bi-telephone-fill me-1 text-secondary"></i> Phone Number
             </label>
             <input
               v-model="form.phone_number"
@@ -40,7 +40,7 @@
 
           <div class="col-md-6">
             <label class="form-label fw-semibold">
-              <i class="bi bi-envelope-fill me-1 text-primary"></i> Email
+              <i class="bi bi-envelope-fill me-1 text-secondary"></i> Email
             </label>
             <input
               v-model="form.email"
@@ -53,7 +53,7 @@
 
           <div class="col-md-6">
             <label class="form-label fw-semibold">
-              <i class="bi bi-geo-alt-fill me-1 text-primary"></i> Delivery Address
+              <i class="bi bi-geo-alt-fill me-1 text-secondary"></i> Delivery Address
             </label>
             <textarea
               v-model="form.delivery_address"
@@ -81,7 +81,7 @@
 
         <!-- Orders & Customizations -->
         <h4 class="mb-3">
-          <i class="bi bi-basket-fill me-2 text-success"></i> Your Orders
+          <i class="bi bi-basket-fill me-2 text-secondary"></i> Your Orders
         </h4>
 
         <div class="row g-4">
@@ -166,7 +166,7 @@
 
         <!-- Submit -->
         <div class="d-flex align-items-center mt-4">
-          <button type="submit" class="btn btn-success px-4" :disabled="form.processing">
+          <button type="submit" class="btn btn-primary px-4" :disabled="form.processing">
             <span v-if="form.processing" class="spinner-border spinner-border-sm me-2"></span>
             <i v-else class="bi bi-cart-check-fill me-1"></i> Place Orders
           </button>

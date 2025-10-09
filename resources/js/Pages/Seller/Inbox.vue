@@ -60,7 +60,7 @@
                 <!-- Message Bubble -->
                 <div
                   class="message-bubble"
-                  :class="message.sender.id === shop.user_id ? 'bg-success text-white' : 'bg-white border text-dark'"
+                  :class="message.sender.id === shop.user_id ? 'bg-primary text-white' : 'bg-white border text-dark'"
                 >
                   <div class="fw-bold small mb-1">
                     {{ message.sender.id === shop.user_id ? 'You' : message.sender.first_name }}
@@ -117,7 +117,7 @@
                 class="form-control me-2"
                 placeholder="Type your reply..."
               />
-              <button class="btn btn-success">Send</button>
+              <button class="btn btn-primary">Send</button>
             </div>
           </form>
         </div>

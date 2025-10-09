@@ -82,7 +82,7 @@
             <input v-model="search" @keyup.enter="handleSearch" class="form-control" placeholder="Search product name or description" />
           </div>
           <div class="col-6 col-md-3">
-            <button class="btn btn-secondary w-100" @click="handleSearch">
+            <button class="btn btn-outline-primary w-100" @click="handleSearch">
               <i class="bi bi-search me-1"></i> Search
             </button>
           </div>

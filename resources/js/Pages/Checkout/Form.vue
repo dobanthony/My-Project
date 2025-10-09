@@ -3,8 +3,8 @@
     <!-- Header -->
     <div class="text-center mb-4">
       <h2 class="fw-bold">
-        <i class="bi bi-receipt-cutoff me-2 text-success"></i>
-        Checkout for <span class="text-primary">{{ product.name }}</span>
+        <i class="bi bi-receipt-cutoff me-2 text-secondary"></i>
+        Checkout for <span class="text-success">{{ product.name }}</span>
       </h2>
       <p class="text-muted">Fill in your details to complete the order.</p>
     </div>
@@ -13,13 +13,13 @@
       <form @submit.prevent="submit">
         
         <!-- Personal Info -->
-        <h5 class="mb-3 text-success fw-semibold">
+        <h5 class="mb-3 text-dark fw-semibold">
           <i class="bi bi-person-vcard-fill me-2 text-secondary"></i>
           Personal Information
         </h5>
         <div class="row">
           <div class="col-md-6 mb-3">
-            <label class="form-label fw-semibold small text-success">
+            <label class="form-label fw-semibold small text-dark">
               <i class="bi bi-person-fill me-1 text-secondary"></i> Full Name
             </label>
             <input
@@ -35,7 +35,7 @@
           </div>
 
           <div class="col-md-6 mb-3">
-            <label class="form-label fw-semibold small text-success">
+            <label class="form-label fw-semibold small text-dark">
               <i class="bi bi-telephone-fill me-1 text-secondary"></i> Phone Number
             </label>
             <input
@@ -52,7 +52,7 @@
         </div>
 
         <div class="mb-3">
-          <label class="form-label fw-semibold small text-success">
+          <label class="form-label fw-semibold small text-black">
             <i class="bi bi-envelope-fill me-1 text-secondary"></i> Email
           </label>
           <input
@@ -68,7 +68,7 @@
         </div>
 
         <div class="mb-3">
-          <label class="form-label fw-semibold small text-success">
+          <label class="form-label fw-semibold small text-dark">
             <i class="bi bi-geo-alt-fill me-1 text-secondary"></i> Delivery Address
           </label>
           <textarea
@@ -84,7 +84,7 @@
         </div>
 
         <div class="mb-4">
-          <label class="form-label fw-semibold small text-success">
+          <label class="form-label fw-semibold small text-dark">
             <i class="bi bi-sticky-fill me-1 text-secondary"></i> Notes (Optional)
           </label>
           <textarea v-model="form.notes" class="form-control" rows="2"></textarea>
@@ -92,7 +92,7 @@
 
         <!-- Quantity -->
         <div class="mb-4">
-          <label class="form-label fw-semibold small text-success">
+          <label class="form-label fw-semibold small text-dark">
             <i class="bi bi-stack me-1 text-secondary"></i> Quantity
           </label>
           <input
@@ -111,7 +111,7 @@
 
         <!-- Buttons -->
         <div class="d-flex align-items-center">
-          <button type="submit" class="btn btn-success px-4" :disabled="form.processing">
+          <button type="submit" class="btn btn-primary px-4" :disabled="form.processing">
             <span v-if="form.processing" class="spinner-border spinner-border-sm me-2"></span>
             <i v-else class="bi bi-cart-check-fill me-1"></i> Place Order
           </button>
@@ -181,7 +181,7 @@ const submit = () => {
 };
 </script>
 
-<style>
+<!-- <style>
 input.form-control:focus,
 textarea.form-control:focus {
   border-color: #28a745;
@@ -190,4 +190,4 @@ textarea.form-control:focus {
 textarea.form-control {
   border-color: #28a745;
 }
-</style>
+</style> -->
