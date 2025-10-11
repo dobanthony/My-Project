@@ -32,7 +32,8 @@ const submit = () => {
 <template>
     <Head title="Log in" />
 
-    <div class="d-flex flex-column justify-content-center align-items-center min-vh-100 bg-gradient">
+    <!-- ✅ Updated background to Bootstrap success green -->
+    <div class="d-flex flex-column justify-content-center align-items-center min-vh-100 bg-success-gradient">
         <div class="w-100" style="max-width: 500px;">
             <!-- Status Alert -->
             <transition name="fade">
@@ -51,7 +52,7 @@ const submit = () => {
                 <form
                     v-if="showCard"
                     @submit.prevent="submit"
-                    class="card login-card border-0 animate-card"
+                    class="card login-card border-0 animate-card bg-white shadow-lg"
                 >
                     <div class="card-body p-4">
                         <!-- Header -->
@@ -63,8 +64,8 @@ const submit = () => {
 
                         <!-- Email -->
                         <div class="mb-3">
-                            <label for="email" class="form-label fw-semibold text-success">
-                                <i class="bi bi-envelope-fill me-1"></i> Email address
+                            <label for="email" class="form-label fw-semibold text-dark">
+                                <i class="bi bi-envelope-fill me-1 text-secondary"></i> Email address
                             </label>
                             <input
                                 id="email"
@@ -83,8 +84,8 @@ const submit = () => {
 
                         <!-- Password -->
                         <div class="mb-3">
-                            <label for="password" class="form-label fw-semibold text-success">
-                                <i class="bi bi-lock-fill me-1"></i> Password
+                            <label for="password" class="form-label fw-semibold text-dark">
+                                <i class="bi bi-lock-fill me-1 text-secondary"></i> Password
                             </label>
                             <div class="input-group">
                                 <input
@@ -98,7 +99,7 @@ const submit = () => {
                                 />
                                 <button
                                     type="button"
-                                    class="btn btn-outline-success rounded-end-pill"
+                                    class="btn btn-outline-secondary rounded-end-pill"
                                     @click="togglePassword"
                                     tabindex="-1"
                                 >
@@ -125,7 +126,7 @@ const submit = () => {
                         <div class="d-flex flex-column gap-2">
                             <button
                                 type="submit"
-                                class="btn btn-success rounded-pill btn-animate"
+                                class="btn btn-primary rounded-pill btn-animate"
                                 :disabled="form.processing"
                             >
                                 <span
@@ -139,7 +140,7 @@ const submit = () => {
                             <Link
                                 v-if="canResetPassword"
                                 :href="route('password.request')"
-                                class="btn btn-link text-decoration-none small text-primary"
+                                class="btn btn-link text-decoration-none small text-muted"
                             >
                                 <i class="bi bi-question-circle me-1"></i> Forgot your password?
                             </Link>
@@ -149,16 +150,16 @@ const submit = () => {
             </transition>
 
             <!-- Footer -->
-            <footer class="text-center mt-4">
-                <small class="text-muted">
+            <footer class="text-center mt-4 text-light">
+                <small>
                     <p class="mb-1">
                         Don’t have an account?
-                        <Link href="/register" class="text-decoration-none text-success fw-semibold">
+                        <Link href="/register" class="text-decoration-none text-white fw-semibold">
                             Register here
                         </Link>
                     </p>
-                    © {{ new Date().getFullYear() }} CraftSmart·
-                    <Link href="/" class="text-decoration-none text-success fw-semibold">Home</Link>
+                    © {{ new Date().getFullYear() }} CraftSmart ·
+                    <Link href="/" class="text-decoration-none text-white fw-semibold">Home</Link>
                 </small>
             </footer>
         </div>
@@ -166,24 +167,31 @@ const submit = () => {
 </template>
 
 <style scoped>
-.bg-gradient {
-    background: linear-gradient(135deg, #f8f9fa, #e9f7ef);
+/* ✅ Green gradient background */
+.bg-success-gradient {
+    background: linear-gradient(135deg, #198754, #157347, #25a86b);
+    background-size: 200% 200%;
+    animation: gradientMove 6s ease infinite;
+}
+
+@keyframes gradientMove {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
 }
 
 .login-card {
     border-radius: 1rem;
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
     transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
 }
 .login-card:hover {
     transform: translateY(-4px);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-}
-
-/* Input focus */
-.form-control:focus {
-    border-color: #198754;
-    box-shadow: 0 0 0 0.25rem rgba(25, 135, 84, 0.25);
 }
 
 /* Fade animation */
@@ -209,6 +217,6 @@ const submit = () => {
 }
 .btn-animate:hover {
     transform: scale(1.05);
-    box-shadow: 0 4px 12px rgba(25, 135, 84, 0.3);
+    box-shadow: 0 4px 12px rgba(255, 255, 255, 0.4);
 }
 </style>

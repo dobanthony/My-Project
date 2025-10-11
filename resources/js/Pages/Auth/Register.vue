@@ -42,7 +42,8 @@ const goToDashboard = () => {
 <template>
     <Head title="Register" />
 
-    <div class="d-flex flex-column justify-content-center align-items-center min-vh-100 bg-gradient">
+    <!-- ✅ Updated background to Bootstrap green gradient -->
+    <div class="d-flex flex-column justify-content-center align-items-center min-vh-100 bg-success-gradient">
         <div class="w-100" style="max-width: 650px; position: relative;">
 
             <!-- Loading Overlay -->
@@ -51,7 +52,7 @@ const goToDashboard = () => {
             </div>
 
             <!-- Card -->
-            <div class="card border-0 rounded-4 animate-card shadow-elevated">
+            <div class="card border-0 rounded-4 animate-card shadow-elevated bg-white">
                 <div class="card-body p-4 fade-in">
                     <!-- Header -->
                     <div class="text-center mb-4">
@@ -65,8 +66,8 @@ const goToDashboard = () => {
                         <div class="row g-3 mb-3">
                             <!-- First Name -->
                             <div class="col-md-4">
-                                <label for="first_name" class="form-label fw-semibold text-success">
-                                    <i class="bi bi-person me-1"></i> First Name
+                                <label for="first_name" class="form-label fw-semibold text-dark">
+                                    <i class="bi bi-person me-1 text-secondary"></i> First Name
                                 </label>
                                 <input
                                     id="first_name"
@@ -85,8 +86,8 @@ const goToDashboard = () => {
 
                             <!-- Middle Name -->
                             <div class="col-md-4">
-                                <label for="middle_name" class="form-label fw-semibold text-success">
-                                    <i class="bi bi-person-lines-fill me-1"></i> Middle Name
+                                <label for="middle_name" class="form-label fw-semibold text-dark">
+                                    <i class="bi bi-person-lines-fill me-1 text-secondary"></i> Middle Name
                                 </label>
                                 <input
                                     id="middle_name"
@@ -103,8 +104,8 @@ const goToDashboard = () => {
 
                             <!-- Last Name -->
                             <div class="col-md-4">
-                                <label for="last_name" class="form-label fw-semibold text-success">
-                                    <i class="bi bi-person-badge-fill me-1"></i> Last Name
+                                <label for="last_name" class="form-label fw-semibold text-dark">
+                                    <i class="bi bi-person-badge-fill me-1 text-secondary"></i> Last Name
                                 </label>
                                 <input
                                     id="last_name"
@@ -123,8 +124,8 @@ const goToDashboard = () => {
 
                         <!-- Email -->
                         <div class="mb-3">
-                            <label for="email" class="form-label fw-semibold text-success">
-                                <i class="bi bi-envelope-fill me-1"></i> Email address
+                            <label for="email" class="form-label fw-semibold text-dark">
+                                <i class="bi bi-envelope-fill me-1 text-secondary"></i> Email address
                             </label>
                             <input
                                 id="email"
@@ -144,8 +145,8 @@ const goToDashboard = () => {
                         <div class="row g-3 mb-3">
                             <!-- Password -->
                             <div class="col-md-6">
-                                <label for="password" class="form-label fw-semibold text-success">
-                                    <i class="bi bi-lock-fill me-1"></i> Password
+                                <label for="password" class="form-label fw-semibold text-dark">
+                                    <i class="bi bi-lock-fill me-1 text-secondary"></i> Password
                                 </label>
                                 <div class="input-group">
                                     <input
@@ -159,7 +160,7 @@ const goToDashboard = () => {
                                     />
                                     <button
                                         type="button"
-                                        class="btn btn-outline-success rounded-end-pill"
+                                        class="btn btn-outline-secondary rounded-end-pill"
                                         @click="showPassword = !showPassword"
                                     >
                                         <i :class="showPassword ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
@@ -172,8 +173,8 @@ const goToDashboard = () => {
 
                             <!-- Confirm Password -->
                             <div class="col-md-6">
-                                <label for="password_confirmation" class="form-label fw-semibold text-success">
-                                    <i class="bi bi-shield-lock-fill me-1"></i> Confirm Password
+                                <label for="password_confirmation" class="form-label fw-semibold text-dark">
+                                    <i class="bi bi-shield-lock-fill me-1 text-secondary"></i> Confirm Password
                                 </label>
                                 <div class="input-group">
                                     <input
@@ -187,7 +188,7 @@ const goToDashboard = () => {
                                     />
                                     <button
                                         type="button"
-                                        class="btn btn-outline-success rounded-end-pill"
+                                        class="btn btn-outline-secondary rounded-end-pill"
                                         @click="showConfirmPassword = !showConfirmPassword"
                                     >
                                         <i :class="showConfirmPassword ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
@@ -201,23 +202,19 @@ const goToDashboard = () => {
 
                         <!-- Actions -->
                         <div class="d-flex flex-column align-items-center gap-3 mt-3">
-
                             <button
                                 type="submit"
-                                class="btn btn-success rounded-pill btn-animate px-4 w-100"
+                                class="btn btn-primary rounded-pill btn-animate px-4 w-100"
                                 :disabled="form.processing"
                             >
-                                <span
-                                    v-if="form.processing"
-                                    class="spinner-border spinner-border-sm me-2"
-                                ></span>
+                                <span v-if="form.processing" class="spinner-border spinner-border-sm me-2"></span>
                                 <i v-else class="bi bi-person-check me-1"></i>
                                 Register
                             </button>
 
                             <Link
                                 :href="route('login')"
-                                class="text-decoration-none small text-success fw-semibold"
+                                class="text-decoration-none small text-muted fw-semibold"
                             >
                                 Already registered?
                             </Link>
@@ -228,9 +225,9 @@ const goToDashboard = () => {
 
             <!-- Footer -->
             <footer class="text-center mt-4 fade-in-delayed">
-                <small class="text-muted">
+                <small class="text-light">
                     © {{ new Date().getFullYear() }} CraftSmart Artisan Ecommerce System ·
-                    <Link href="/" class="text-decoration-none text-success fw-semibold">Home</Link>
+                    <Link href="/" class="text-decoration-none text-white fw-semibold">Home</Link>
                 </small>
             </footer>
         </div>
@@ -268,7 +265,6 @@ const goToDashboard = () => {
                         <small class="text-muted d-block mb-2">
                             You can now access your dashboard.
                         </small>
-                        <!-- 👇 Added Note -->
                         <small class="text-primary fw-semibold">
                             Tip: Proceed to your Profile to fill in your personal information.
                         </small>
@@ -290,8 +286,17 @@ const goToDashboard = () => {
 </template>
 
 <style scoped>
-.bg-gradient {
-    background: linear-gradient(135deg, #f8f9fa, #e9f7ef);
+/* ✅ Success gradient background */
+.bg-success-gradient {
+    background: linear-gradient(135deg, #198754, #157347, #25a86b);
+    background-size: 200% 200%;
+    animation: gradientMove 6s ease infinite;
+}
+
+@keyframes gradientMove {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
 }
 
 /* Loading overlay */
@@ -306,69 +311,34 @@ const goToDashboard = () => {
     border-radius: 1rem;
 }
 
-/* Card shadow upgrade */
-.shadow-elevated {
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-}
+/* Shadows & animations */
+.shadow-elevated { box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15); }
 
-/* Card animation */
-.animate-card {
-    transition: transform 0.4s ease, box-shadow 0.4s ease;
-}
+.animate-card { transition: transform 0.4s ease, box-shadow 0.4s ease; }
 .animate-card:hover {
     transform: translateY(-8px);
     box-shadow: 0 12px 28px rgba(0, 0, 0, 0.2);
 }
 
-/* Fade-in effect */
-.fade-in {
-    animation: fadeIn 0.6s ease-in-out;
-}
-.fade-in-delayed {
-    animation: fadeIn 1s ease-in-out;
-}
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(15px); }
-    to { opacity: 1; transform: translateY(0); }
-}
+/* Fade & button effects */
+.fade-in { animation: fadeIn 0.6s ease-in-out; }
+.fade-in-delayed { animation: fadeIn 1s ease-in-out; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
 
-/* Button animation */
-.btn-animate {
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
+.btn-animate { transition: transform 0.2s ease, box-shadow 0.2s ease; }
 .btn-animate:hover {
     transform: scale(1.05);
-    box-shadow: 0 4px 16px rgba(25, 135, 84, 0.4);
+    box-shadow: 0 4px 16px rgba(255, 255, 255, 0.4);
 }
 
-/* Smooth modal scale-in animation */
-.animate-modal {
-    animation: scaleIn 0.3s ease-out;
-}
-@keyframes scaleIn {
-    from {
-        transform: scale(0.9);
-        opacity: 0;
-    }
-    to {
-        transform: scale(1);
-        opacity: 1;
-    }
-}
+/* Modal animations */
+.animate-modal { animation: scaleIn 0.3s ease-out; }
+@keyframes scaleIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 
-/* Success glow animation */
-.success-glow {
-    animation: successPulse 1.5s ease-out;
-}
+.success-glow { animation: successPulse 1.5s ease-out; }
 @keyframes successPulse {
-    0% {
-        box-shadow: 0 0 0 rgba(25, 135, 84, 0);
-    }
-    50% {
-        box-shadow: 0 0 25px rgba(25, 135, 84, 0.6);
-    }
-    100% {
-        box-shadow: 0 0 0 rgba(25, 135, 84, 0);
-    }
+    0% { box-shadow: 0 0 0 rgba(25, 135, 84, 0); }
+    50% { box-shadow: 0 0 25px rgba(25, 135, 84, 0.6); }
+    100% { box-shadow: 0 0 0 rgba(25, 135, 84, 0); }
 }
 </style>

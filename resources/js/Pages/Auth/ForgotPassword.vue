@@ -19,23 +19,24 @@ const submit = () => {
 <template>
     <Head title="Forgot Password" />
 
-    <div class="d-flex justify-content-center align-items-center min-vh-100 bg-light">
+    <!-- ✅ Changed bg-light → bg-success-bg -->
+    <div class="d-flex justify-content-center align-items-center min-vh-100 bg-success-bg">
         <div
-            class="card shadow-lg rounded-4 p-4 animate-card"
+            class="card shadow-lg rounded-4 p-4 animate-card border-0"
             style="max-width: 500px; width: 100%;"
             :class="{ 'shake': form.errors.email }"
         >
             <!-- Header -->
             <div class="text-center mb-3">
                 <i class="bi bi-envelope-lock-fill text-success display-5"></i>
-                <h4 class="fw-bold mt-2">Forgot Password</h4>
+                <h4 class="fw-bold mt-2 text-success">Forgot Password</h4>
                 <p class="text-muted small">
                     No problem! Enter your email address and we’ll send you a reset link.
                 </p>
             </div>
 
             <!-- Status Message -->
-            <div v-if="status" class="alert alert-success py-2 animate-fade">
+            <div v-if="status" class="alert alert-success py-2 animate-fade shadow-sm">
                 {{ status }}
             </div>
 
@@ -43,8 +44,8 @@ const submit = () => {
             <form @submit.prevent="submit">
                 <!-- Email -->
                 <div class="mb-3">
-                    <label for="email" class="form-label fw-semibold">
-                        <i class="bi bi-envelope-fill me-1"></i> Email Address
+                    <label for="email" class="form-label fw-semibold text-dark">
+                        <i class="bi bi-envelope-fill me-1 text-secondary"></i> Email Address
                     </label>
                     <input
                         id="email"
@@ -65,7 +66,7 @@ const submit = () => {
                 <div class="d-grid mt-4">
                     <button
                         type="submit"
-                        class="btn btn-success rounded-pill fw-semibold btn-animate"
+                        class="btn btn-primary rounded-pill fw-semibold btn-animate"
                         :disabled="form.processing"
                     >
                         <span
@@ -81,8 +82,11 @@ const submit = () => {
 </template>
 
 <style scoped>
-.bg-light {
-    background: linear-gradient(135deg, #f8f9fa, #e9f7ef);
+
+.bg-success-bg {
+    background: linear-gradient(135deg, #198754, #157347, #25a86b);
+    background-size: 200% 200%;
+    animation: gradientMove 6s ease infinite;
 }
 
 /* Card entrance animation */

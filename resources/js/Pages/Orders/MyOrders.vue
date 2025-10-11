@@ -280,9 +280,10 @@ const capitalize = str => str.charAt(0).toUpperCase() + str.slice(1)
 </script>
 
 <style scoped>
+/* 
 input.form-control:focus {
-  border-color: #28a745; /* green */
-  box-shadow: 0 0 0 0.25rem rgba(40, 167, 69, 0.5); /* green with 50% opacity */
+  border-color: #28a745; 
+  box-shadow: 0 0 0 0.25rem rgba(40, 167, 69, 0.5); 
 }
 .pagination .page-link {
   color: rgb(0, 0, 0);
@@ -291,11 +292,37 @@ input.form-control:focus {
 }
 .pagination .page-link:hover {
   color: white;
-  background-color: #28a745; /* green */
+  background-color: #28a745;
   border-color: #ffffff;
 }
 .pagination .page-link:focus {
   border-color: #28a745;
-  box-shadow: 0 0 0 0.25rem rgba(0, 0, 0, 0.5); /* black with 50% opacity */
+  box-shadow: 0 0 0 0.25rem rgba(0, 0, 0, 0.5); 
+} */
+
+.pagination .page-link {
+  color: #0b84ff;
+  background-color: #fff;
+  border-color: #0b84ff;
+  transition: all 0.25s ease;
 }
+
+.pagination .page-link:hover {
+  color: #fff;
+  background-color: #0b5ed7;
+  border-color: #0b5ed7;
+}
+
+.pagination .page-link:focus {
+  border-color: #0b84ff;
+  box-shadow: 0 0 0 0.25rem rgba(11, 132, 255, 0.25);
+}
+
+.page-item.active .page-link {
+  color: #fff;
+  background-color: #0b84ff;
+  border-color: #0b84ff;
+  box-shadow: 0 4px 12px rgba(11, 132, 255, 0.3);
+}
+
 </style>

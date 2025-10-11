@@ -19,12 +19,12 @@
         <div class="card-body">
           <div class="row">
             <div class="col-md-6 mb-3">
-              <p><i class="bi bi-person-fill me-2 text-success"></i><strong>Full Name:</strong> {{ order.full_name || 'N/A' }}</p>
-              <p><i class="bi bi-telephone-fill me-2 text-success"></i><strong>Phone:</strong> {{ order.phone_number || 'N/A' }}</p>
+              <p><i class="bi bi-person-fill me-2 text-secondary"></i><strong>Full Name:</strong> {{ order.full_name || 'N/A' }}</p>
+              <p><i class="bi bi-telephone-fill me-2 text-secondary"></i><strong>Phone:</strong> {{ order.phone_number || 'N/A' }}</p>
             </div>
             <div class="col-md-6 mb-3">
-              <p><i class="bi bi-envelope-fill me-2 text-success"></i><strong>Email:</strong> {{ order.email || 'N/A' }}</p>
-              <p><i class="bi bi-geo-alt-fill me-2 text-success"></i><strong>Address:</strong> {{ order.delivery_address || 'N/A' }}</p>
+              <p><i class="bi bi-envelope-fill me-2 text-secondary"></i><strong>Email:</strong> {{ order.email || 'N/A' }}</p>
+              <p><i class="bi bi-geo-alt-fill me-2 text-secondary"></i><strong>Address:</strong> {{ order.delivery_address || 'N/A' }}</p>
             </div>
           </div>
           <p v-if="order.notes" class="mt-2">
@@ -66,11 +66,11 @@
               <div class="row">
                 <!-- Left column -->
                 <div class="col-md-6 mb-3">
-                  <p><i class="bi bi-bag-fill me-2 text-success"></i><strong>Product:</strong> {{ order.product.name }}</p>
-                  <p><i class="bi bi-list-ol me-2 text-success"></i><strong>Quantity:</strong> {{ order.quantity }}</p>
+                  <p><i class="bi bi-bag-fill me-2 text-secondary"></i><strong>Product:</strong> {{ order.product.name }}</p>
+                  <p><i class="bi bi-list-ol me-2 text-secondary"></i><strong>Quantity:</strong> {{ order.quantity }}</p>
 
                   <div>
-                    <p><i class="bi bi-sliders me-2 text-success"></i><strong>Customizations:</strong></p>
+                    <p><i class="bi bi-sliders me-2 text-secondary"></i><strong>Customizations:</strong></p>
                     <ul v-if="order.customization_details" class="mb-3 ps-3">
                       <li v-if="order.customization_details.material"><strong>Material:</strong> {{ order.customization_details.material }}</li>
                       <li v-if="order.customization_details.color"><strong>Color:</strong> {{ order.customization_details.color }}</li>
@@ -89,7 +89,7 @@
                   </ul>
 
                   <p>
-                    <i class="bi bi-info-circle-fill me-2 text-success"></i>
+                    <i class="bi bi-info-circle-fill me-2 text-secondary"></i>
                     <strong>Status:</strong>
                     <span
                       class="badge px-3 py-2"
@@ -105,12 +105,12 @@
                   </p>
 
                   <p>
-                    <i class="bi bi-calendar-event-fill me-2 text-success"></i>
+                    <i class="bi bi-calendar-event-fill me-2 text-secondary"></i>
                     <strong>Delivery Date:</strong> {{ order.delivery_date ?? 'N/A' }}
                   </p>
 
                   <p>
-                    <i class="bi bi-clipboard-check-fill me-2 text-success"></i>
+                    <i class="bi bi-clipboard-check-fill me-2 text-secondary"></i>
                     <strong>Delivery Status:</strong>
                     <span
                       class="badge px-3 py-2"

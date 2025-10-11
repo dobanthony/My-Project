@@ -272,7 +272,7 @@ onBeforeUnmount(() => {
   border-color: #28a745;
   box-shadow: 0 0 0 0.25rem rgba(40, 167, 69, 0.5);
 } */
-
+/* 
 .pagination .page-link {
   color: #28a745;
   background-color: #fff;
@@ -304,6 +304,31 @@ onBeforeUnmount(() => {
 .pagination .page-link:focus {
   border-color: black;
   box-shadow: 0 0 0 0.25rem rgba(0, 0, 0, 0.5);
+} */
+
+.pagination .page-link {
+  color: #0b84ff;
+  background-color: #fff;
+  border-color: #0b84ff;
+  transition: all 0.25s ease;
+}
+
+.pagination .page-link:hover {
+  color: #fff;
+  background-color: #0b5ed7;
+  border-color: #0b5ed7;
+}
+
+.pagination .page-link:focus {
+  border-color: #0b84ff;
+  box-shadow: 0 0 0 0.25rem rgba(11, 132, 255, 0.25);
+}
+
+.page-item.active .page-link {
+  color: #fff;
+  background-color: #0b84ff;
+  border-color: #0b84ff;
+  box-shadow: 0 4px 12px rgba(11, 132, 255, 0.3);
 }
 
 /* Mobile adjustments */

@@ -38,7 +38,7 @@ const submit = () => {
             <!-- Header -->
             <div class="text-center mb-3">
                 <i class="bi bi-shield-lock-fill text-success display-5"></i>
-                <h4 class="fw-bold mt-2">Reset Password</h4>
+                <h4 class="fw-bold mt-2 text-success">Reset Password</h4>
                 <p class="text-muted small">
                     Enter your new password below to regain access.
                 </p>
@@ -49,7 +49,7 @@ const submit = () => {
                 <!-- Email -->
                 <div class="mb-3">
                     <label for="email" class="form-label fw-semibold">
-                        <i class="bi bi-envelope-fill me-1"></i> Email Address
+                        <i class="bi bi-envelope-fill me-1 text-secondary"></i> Email Address
                     </label>
                     <input
                         id="email"
@@ -69,7 +69,7 @@ const submit = () => {
                 <!-- Password -->
                 <div class="mb-3">
                     <label for="password" class="form-label fw-semibold">
-                        <i class="bi bi-lock-fill me-1"></i> New Password
+                        <i class="bi bi-lock-fill me-1 text-secondary"></i> New Password
                     </label>
                     <input
                         id="password"
@@ -88,7 +88,7 @@ const submit = () => {
                 <!-- Confirm Password -->
                 <div class="mb-3">
                     <label for="password_confirmation" class="form-label fw-semibold">
-                        <i class="bi bi-lock-fill me-1"></i> Confirm Password
+                        <i class="bi bi-lock-fill me-1 text-secondary"></i> Confirm Password
                     </label>
                     <input
                         id="password_confirmation"
@@ -108,7 +108,7 @@ const submit = () => {
                 <div class="d-grid mt-4">
                     <button
                         type="submit"
-                        class="btn btn-success rounded-pill fw-semibold btn-animate"
+                        class="btn btn-primary rounded-pill fw-semibold btn-animate"
                         :disabled="form.processing"
                     >
                         <span
@@ -125,7 +125,9 @@ const submit = () => {
 
 <style scoped>
 .bg-light {
-    background: linear-gradient(135deg, #f8f9fa, #e9f7ef);
+    background: linear-gradient(135deg, #198754, #157347, #25a86b);
+    background-size: 200% 200%;
+    animation: gradientMove 6s ease infinite;
 }
 
 /* Card entrance animation */

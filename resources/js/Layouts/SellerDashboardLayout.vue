@@ -104,7 +104,7 @@
         href="/seller/notifications"
         class="text-decoration-none position-relative"
     >
-        <i class="bi bi-bell fs-5 text-success"></i>
+        <i class="bi bi-bell fs-5 text-secondary"></i>
 
         <span
         v-if="store.unreadCount > 0"

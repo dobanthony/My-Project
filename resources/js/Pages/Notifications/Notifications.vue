@@ -1,13 +1,13 @@
 <template>
   <DashboardLayout>
   <div class="container">
-    <div class="bg-success text-white p-2 mb-1 rounded-top-2">
+    <div class="bg-primary text-white p-2 mb-1 rounded-top-2">
       <h4><i class="bi bi-bell me-2"></i>Notifications</h4>
     </div>
     <div class="d-flex justify-content-between align-items-center mb-2">
       <button
         v-if="notifications.length > 0"
-        class="btn btn-sm btn-outline-success"
+        class="btn btn-sm btn-outline-secondary"
         @click="markAllAsRead"
       >
         Mark All as Read
