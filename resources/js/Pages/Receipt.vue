@@ -265,7 +265,7 @@
               class="mt-4 text-end"
             >
               <button
-                class="btn btn-success me-2"
+                class="btn btn-primary me-2"
                 @click="markAsReceived"
                 :disabled="isLoading"
               >

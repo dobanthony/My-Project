@@ -7,7 +7,7 @@
     <div class="d-flex justify-content-between align-items-center mb-2">
       <button
         v-if="notifications.length > 0"
-        class="btn btn-sm btn-outline-secondary"
+        class="btn btn-sm btn-outline-primary"
         @click="markAllAsRead"
       >
         Mark All as Read
@@ -50,16 +50,6 @@ import { router } from '@inertiajs/vue3'
 const props = defineProps({
   notifications: Array,
 })
-
-// function markAllAsRead() {
-//   router.post('/user/notifications/mark-all-as-read', {}, {
-//     preserveScroll: true,
-//     onSuccess: () => {
-//       store.markAllAsRead()
-//       router.visit('/user/notifications')
-//     }
-//   })
-// }
 
 function markAllAsRead() {
   //Locally mark all as read (instant UI change)

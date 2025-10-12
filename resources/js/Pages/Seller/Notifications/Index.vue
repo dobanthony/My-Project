@@ -5,7 +5,7 @@
 
       <!-- ✅ Mark All as Read Button -->
       <div class="mb-3 text-end" v-if="hasUnread">
-        <button class="btn btn-outline-success btn-sm" @click="markAllAsRead">
+        <button class="btn btn-outline-primary btn-sm" @click="markAllAsRead">
           <i class="bi bi-check2-all me-2"></i>Mark All as Read
         </button>
       </div>
