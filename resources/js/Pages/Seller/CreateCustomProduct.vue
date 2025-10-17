@@ -1,7 +1,7 @@
 <template>
   <SellerDashboardLayout>
     <div class="container">
-      <h2 class="mb-4">➕ Create Custom Product</h2>
+      <h2 class="mb-4 text-success"><i class="bi bi-box-seam me-2"></i>Create Custom Product</h2>
 
       <form @submit.prevent="submit">
         <!-- Basic Info -->
@@ -31,7 +31,7 @@
                 <input type="file" @change="e => material.image = e.target.files[0]" class="form-control" />
               </div>
               <div class="col-md-2">
-                <button type="button" class="btn btn-danger" @click="removeMaterial(mIndex)">Remove Material</button>
+                <button type="button" class="btn btn-danger" @click="removeMaterial(mIndex)">Remove</button>
               </div>
             </div>
 
@@ -46,7 +46,7 @@
                   <input type="file" @change="e => color.image = e.target.files[0]" class="form-control" />
                 </div>
                 <div class="col-md-2">
-                  <button type="button" class="btn btn-danger" @click="removeColor(mIndex, cIndex)">Remove Color</button>
+                  <button type="button" class="btn btn-danger" @click="removeColor(mIndex, cIndex)">Remove</button>
                 </div>
               </div>
               <button type="button" class="btn btn-primary" @click="addColor(mIndex)">Add Color</button>
@@ -63,7 +63,7 @@
                   <input type="file" @change="e => pattern.image = e.target.files[0]" class="form-control" />
                 </div>
                 <div class="col-md-2">
-                  <button type="button" class="btn btn-danger" @click="removePattern(mIndex, pIndex)">Remove Pattern</button>
+                  <button type="button" class="btn btn-danger" @click="removePattern(mIndex, pIndex)">Remove</button>
                 </div>
               </div>
               <button type="button" class="btn btn-primary" @click="addPattern(mIndex)">Add Pattern</button>
@@ -80,7 +80,7 @@
                   <input type="file" @change="e => size.image = e.target.files[0]" class="form-control" />
                 </div>
                 <div class="col-md-2">
-                  <button type="button" class="btn btn-danger" @click="removeSize(mIndex, sIndex)">Remove Size</button>
+                  <button type="button" class="btn btn-danger" @click="removeSize(mIndex, sIndex)">Remove</button>
                 </div>
               </div>
               <button type="button" class="btn btn-primary" @click="addSize(mIndex)">Add Size</button>
@@ -90,7 +90,7 @@
           <button type="button" class="btn btn-success" @click="addMaterial">Add Material</button>
         </div>
 
-        <button class="btn btn-success mt-3">Create Custom Product</button>
+        <button class="btn btn-primary mt-3"><i class="bi bi-plus-circle me-2"></i>Create Custom Product</button>
       </form>
     </div>
   </SellerDashboardLayout>
@@ -153,7 +153,7 @@ const submit = () => {
 </script>
 
 <style scoped>
-input.form-control:focus,
+/* input.form-control:focus,
 textarea.form-control:focus {
   border-color: #28a745;
   box-shadow: 0 0 0 0.25rem rgba(40, 167, 69, 0.5);
@@ -161,5 +161,15 @@ textarea.form-control:focus {
 .form-check-input:checked {
   background-color: #28a745 !important;
   border-color: #28a745 !important;
+} */
+input.form-control:focus,
+textarea.form-control:focus {
+  border-color: #0d6efd; /* Bootstrap primary color */
+  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.5); /* Lighter primary glow */
+}
+
+.form-check-input:checked {
+  background-color: #0d6efd !important;
+  border-color: #0d6efd !important;
 }
 </style>

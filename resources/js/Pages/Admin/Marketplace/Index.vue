@@ -1,6 +1,6 @@
 <template>
   <AdminDashboardLayout>
-    <div class="container py-4">
+    <div class="container py-1">
       <!-- Page Header -->
       <div
         class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3"

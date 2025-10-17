@@ -17,12 +17,12 @@ export default defineConfig({
             },
         }),
     ],
-    // server: {
-    //     host: '0.0.0.0',         // Accept requests from any device
-    //     port: 5173,              // Vite port
-    //     strictPort: true,
-    //     hmr: {
-    //         host: '192.168.43.229', // Your laptop IP again
-    //     },
-    // },
+    server: {
+        host: '0.0.0.0',         // Accept requests from any device
+        port: 5173,              // Vite port
+        strictPort: true,
+        hmr: {
+            host: '192.168.43.229', // Your laptop IP again
+        },
+    },
 });

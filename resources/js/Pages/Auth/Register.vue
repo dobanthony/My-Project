@@ -160,7 +160,7 @@ const goToDashboard = () => {
                                     />
                                     <button
                                         type="button"
-                                        class="btn btn-outline-secondary rounded-end-pill"
+                                        class="btn btn-outline-primary rounded-end-pill"
                                         @click="showPassword = !showPassword"
                                     >
                                         <i :class="showPassword ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
@@ -188,7 +188,7 @@ const goToDashboard = () => {
                                     />
                                     <button
                                         type="button"
-                                        class="btn btn-outline-secondary rounded-end-pill"
+                                        class="btn btn-outline-primary rounded-end-pill"
                                         @click="showConfirmPassword = !showConfirmPassword"
                                     >
                                         <i :class="showConfirmPassword ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>

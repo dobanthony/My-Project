@@ -56,12 +56,12 @@
 
           <!-- ✅ Order Received -->
           <div v-else-if="n.message.includes('was marked as received')" class="mt-2">
-            <span class="badge bg-success me-2">✅ Order Received</span>
+            <span class="badge bg-success me-2"><i class="bi bi-check2-circle"></i> Order Received</span>
           </div>
 
           <!-- ❌ Order Canceled -->
           <div v-else-if="n.message.includes('was canceled')" class="mt-2">
-            <span class="badge bg-danger me-2">❌ Order Canceled</span>
+            <span class="badge bg-danger me-2"><i class="bi bi-x-circle me-2"></i> Order Canceled</span>
           </div>
 
           <!-- Timestamp -->

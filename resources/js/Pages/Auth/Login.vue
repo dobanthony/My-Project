@@ -99,7 +99,7 @@ const submit = () => {
                                 />
                                 <button
                                     type="button"
-                                    class="btn btn-outline-secondary rounded-end-pill"
+                                    class="btn btn-outline-primary rounded-end-pill"
                                     @click="togglePassword"
                                     tabindex="-1"
                                 >
