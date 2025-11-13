@@ -549,7 +549,7 @@ const confirmCancelOrder = () => {
     {
       onSuccess: () => {
         showToast(
-          "❌ Order has been canceled. Redirecting to My Orders...",
+          "Order has been canceled. Redirecting to My Orders...",
           "danger"
         );
         router.visit("/my-orders", { replace: true, preserveScroll: true });
@@ -569,7 +569,7 @@ const markAsReceived = () => {
     {},
     {
       onSuccess: () => {
-        showToast("✅ Order marked as received.", "success");
+        showToast("Order marked as received.", "success");
         showRatingModal.value = true;
       },
       onFinish: () => {
@@ -581,7 +581,7 @@ const markAsReceived = () => {
 
 const submitReport = () => {
   if (!reportMessage.value.trim()) {
-    showToast("⚠️ Please enter a report message.", "warning");
+    showToast("Please enter a report message.", "warning");
     return;
   }
 
@@ -594,10 +594,10 @@ const submitReport = () => {
         showReportForm.value = false;
         reportMessage.value = "";
         hasReported.value = true;
-        showToast("✅ Report submitted successfully.", "success");
+        showToast("Report submitted successfully.", "success");
       },
       onError: () => {
-        showToast("❌ Failed to submit report.", "danger");
+        showToast("Failed to submit report.", "danger");
       },
       onFinish: () => {
         isSubmitting.value = false;
@@ -621,7 +621,7 @@ const removeImage = () => {
 
 const submitRating = () => {
   if (!ratingForm.value.product_rating || !ratingForm.value.shop_rating) {
-    showToast("⚠️ Please rate both the product and the shop.", "warning");
+    showToast("Please rate both the product and the shop.", "warning");
     return;
   }
 
@@ -635,7 +635,7 @@ const submitRating = () => {
   router.post(`/orders/${props.order.id}/rate-shop`, formData, {
     forceFormData: true,
     onSuccess: () => {
-      showToast("✅ Thank you for your rating!", "success");
+      showToast("Thank you for your rating!", "success");
       showRatingModal.value = false;
       router.visit("/my-orders", { replace: true, preserveScroll: true });
     },

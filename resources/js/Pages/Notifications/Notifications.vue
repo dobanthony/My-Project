@@ -1,7 +1,7 @@
 <template>
   <DashboardLayout>
     <div class="container py-4">
-      <!-- 🧾 Page Header -->
+      <!-- Page Header -->
       <div class="text-center mb-4">
         <h3 class="fw-bold text-primary">
           <i class="bi bi-bell-fill me-2"></i> Notifications
@@ -11,7 +11,7 @@
         </p>
       </div>
 
-      <!-- 📢 Header Bar -->
+      <!-- Header Bar -->
       <div
         class="d-flex justify-content-between align-items-center bg-light p-3 rounded-3 shadow-sm mb-3"
       >
@@ -28,7 +28,7 @@
         </button>
       </div>
 
-      <!-- 🚫 Empty State -->
+      <!-- Empty State -->
       <div
         v-if="notifications.length === 0"
         class="alert alert-info text-center py-5 shadow-sm rounded-3"
@@ -38,7 +38,7 @@
         <p class="text-muted mb-0">You're all caught up! Check back later for updates.</p>
       </div>
 
-      <!-- 📨 Notifications List -->
+      <!-- Notifications List -->
       <div v-else class="d-flex flex-column gap-3">
         <div
           v-for="notification in notifications"

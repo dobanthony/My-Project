@@ -29,29 +29,29 @@ class OrderController extends Controller
         'customization_details.material' => 'nullable|string|max:100',
         'customization_details.custom_name' => 'nullable|string|max:255',
         'customization_details.custom_description' => 'nullable|string|max:500',
-        'customization_details.custom_image' => 'nullable|image|max:5120', // 5MB
+        'customization_details.custom_image' => 'nullable|image|max:5120',
     ]);
 
     $product = Product::findOrFail($validated['product_id']);
 
-    // ✅ Stock check — just check, don’t deduct yet
+    // Stock check — just check, don’t deduct yet
     if ($product->stock < $validated['quantity']) {
         return back()->withErrors(['quantity' => 'Not enough stock available.']);
     }
 
-    // ✅ Handle custom uploaded image
+    // Handle custom uploaded image
     $customImagePath = null;
     if ($request->hasFile('customization_details.custom_image')) {
         $customImagePath = $request->file('customization_details.custom_image')->store('customizations', 'public');
     }
 
-    // ✅ Merge image into customization details
+    // Merge image into customization details
     $customization = $validated['customization_details'] ?? [];
     if ($customImagePath) {
         $customization['custom_image'] = $customImagePath;
     }
 
-    // ✅ Create order without affecting stock
+    // Create order without affecting stock
     $order = Order::create([
         'user_id' => auth()->id(),
         'product_id' => $product->id,
@@ -68,7 +68,7 @@ class OrderController extends Controller
 {
     $search = $request->input('search');
     $status = $request->input('status');
-    $categoryId = $request->input('category_id'); // 🆕 add category filter
+    $categoryId = $request->input('category_id'); // add category filter
 
     $query = Order::with(['product.category', 'user'])
         ->whereHas('product.shop', fn($q) =>
@@ -99,12 +99,12 @@ class OrderController extends Controller
 
     $orders = $query->latest()->paginate(25)->withQueryString();
 
-    // 🆕 Get all categories for dropdown
+    // Get all categories for dropdown
     $categories = \App\Models\Category::orderBy('name')->get(['id', 'name']);
 
     return Inertia::render('Seller/Orders', [
         'orders' => $orders,
-        'categories' => $categories, // 🆕 send to Vue
+        'categories' => $categories, // send to Vue
         'filters' => $request->only('search', 'status', 'category_id'),
     ]);
 }
@@ -119,7 +119,7 @@ public function approve(Request $request, Order $order)
             throw new \Exception('Not enough stock to approve this order.');
         }
 
-        // ✅ Deduct stock only upon approval
+        // Deduct stock only upon approval
         $product->decrement('stock', $order->quantity);
         $product->increment('total_sold', $order->quantity);
 
@@ -169,16 +169,16 @@ public function myOrders(Request $request)
         });
     }
 
-    // 🧠 Transform orders to include full image path for customization
+    // Transform orders to include full image path for customization
     $orders = $query->latest()->paginate($limit)->through(function ($order) {
         $custom = $order->customization_details ?? [];
 
-        // ✅ Add full URL for custom image if exists
+        // Add full URL for custom image if exists
         if (isset($custom['custom_image'])) {
             $custom['custom_image_url'] = asset('storage/' . $custom['custom_image']);
         }
 
-        // ✅ Add fallback product image
+        // Add fallback product image
         $order->customization_details = $custom;
         $order->display_image = $custom['custom_image_url'] ?? 
                                 ($order->product && $order->product->image 
@@ -336,7 +336,7 @@ public function myOrders(Request $request)
 
         $order->load([
             'user',
-            'product.category', // ✅ include category
+            'product.category', // include category
             'product.shop.user',
             'deliveryInfo.province',
             'deliveryInfo.municipality',

@@ -20,7 +20,7 @@
         </button>
       </div>
 
-      <!-- ℹ️ No Notifications -->
+      <!-- No Notifications -->
       <div
         v-if="Array.isArray(notifications) && notifications.length === 0"
         class="alert alert-info text-center shadow-sm rounded-3"
