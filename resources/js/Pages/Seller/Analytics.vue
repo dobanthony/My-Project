@@ -4,7 +4,10 @@
       <!-- IF SELLER HAS A SHOP -->
       <div v-if="shop && shop.id">
         <!-- Header -->
-         <h2 class="fw-bold mb-2 text-dark"><i class="bi bi-bar-chart-line me-2"></i>Analytics</h2>
+        <h2 class="fw-bold mb-2 text-dark">
+          <i class="bi bi-bar-chart-line me-2"></i>Analytics
+        </h2>
+
         <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-3 gap-2">
           <select class="form-select w-100 w-md-auto" v-model="selectedRange" @change="applyFilter">
             <option value="week">This Week</option>
@@ -14,12 +17,19 @@
         </div>
 
         <!-- Stat Cards -->
-        <div class="row mb-4">
-          <div class="col-12 col-sm-6 col-md-3 mb-3" v-for="(value, key) in stats" :key="key">
-            <div class="card shadow border-success h-100">
-              <div class="card-body text-center">
-                <h6 class="text-muted text-capitalize">{{ key.replace(/([A-Z])/g, ' $1') }}</h6>
-                <h4 class="text-success">₱ {{ value }}</h4>
+        <div class="row mb-4 g-3">
+          <div class="col-12 col-sm-6 col-md-3" v-for="stat in stats" :key="stat.key">
+            <div class="card shadow h-100 border-0">
+              <div class="card-body d-flex align-items-center">
+                <div class="me-3">
+                  <i :class="stat.icon" style="font-size: 2rem;"></i>
+                </div>
+                <div class="text-start">
+                  <h6 class="text-muted mb-1">{{ stat.label }}</h6>
+                  <h4 class="mb-0 text-dark">
+                    {{ stat.isCurrency ? '₱ ' : '' }}{{ stat.value }}
+                  </h4>
+                </div>
               </div>
             </div>
           </div>
@@ -27,7 +37,9 @@
 
         <!-- Sales Chart -->
         <div class="card mb-4 shadow">
-          <div class="card-header bg-primary text-white">📈 Sales Chart</div>
+          <div class="card-header bg-primary text-white">
+            <i class="bi bi-graph-up me-2"></i>Sales Chart
+          </div>
           <div class="card-body">
             <div style="position: relative; width: 100%; height: 400px;">
               <LineChart :chart-data="salesChart" :chart-options="chartOptions" />
@@ -37,7 +49,9 @@
 
         <!-- Top-Selling Bar Chart -->
         <div class="card mb-4 shadow">
-          <div class="card-header bg-success text-white">🔥 Top-Selling Products Chart</div>
+          <div class="card-header bg-success text-white">
+            <i class="bi bi-fire me-2"></i>Top-Selling Products Chart
+          </div>
           <div class="card-body">
             <div style="position: relative; width: 100%; height: 400px;">
               <BarChart :chart-data="topSellingChart" :chart-options="barChartOptions" />
@@ -49,7 +63,9 @@
         <div class="row mb-4">
           <div class="col-12 col-md-6 mb-3">
             <div class="card shadow h-100">
-              <div class="card-header bg-success text-white">🔥 Top-Selling Products (List)</div>
+              <div class="card-header bg-success text-white">
+                <i class="bi bi-fire me-2"></i>Top-Selling Products (List)
+              </div>
               <div class="card-body">
                 <ul class="list-group">
                   <li v-for="product in topSelling" :key="product.id" class="list-group-item d-flex justify-content-between">
@@ -63,7 +79,9 @@
 
           <div class="col-12 col-md-6 mb-3">
             <div class="card shadow h-100">
-              <div class="card-header bg-danger text-white">⚠️ Low Stock Products</div>
+              <div class="card-header bg-danger text-white">
+                <i class="bi bi-exclamation-triangle me-2"></i>Low Stock Products
+              </div>
               <div class="card-body">
                 <ul class="list-group">
                   <li v-for="product in lowStock" :key="product.id" class="list-group-item d-flex justify-content-between">
@@ -81,7 +99,9 @@
           <div class="col-12 col-md-4 mb-3">
             <div class="card shadow border-info text-center h-100">
               <div class="card-body">
-                <h6 class="text-muted">🏆 Top Customer</h6>
+                <h6 class="text-muted">
+                  <i class="bi bi-award me-1"></i>Top Customer
+                </h6>
                 <p class="mb-1 fw-semibold">{{ customerStats.first_name }} {{ customerStats.last_name }}</p>
                 <p class="text-success">₱ {{ customerStats.total_spent }}</p>
               </div>
@@ -91,8 +111,10 @@
           <div class="col-12 col-md-4 mb-3">
             <div class="card shadow border-warning text-center h-100">
               <div class="card-body">
-                <h6 class="text-muted">⭐ Ratings</h6>
-                <p class="mb-1 text-warning fs-4">{{ ratings.average }} ★</p>
+                <h6 class="text-muted">
+                  <i class="bi bi-star-fill me-1"></i>Ratings
+                </h6>
+                <p class="mb-1 text-warning fs-4">{{ ratings.average }} <i class="bi bi-star-fill"></i></p>
                 <small class="text-muted">Based on {{ ratings.count }} reviews</small>
               </div>
             </div>
@@ -101,7 +123,9 @@
           <div class="col-12 col-md-4 mb-3">
             <div class="card shadow border-secondary text-center h-100">
               <div class="card-body">
-                <h6 class="text-muted">📦 Orders This Week</h6>
+                <h6 class="text-muted">
+                  <i class="bi bi-box-seam me-1"></i>Orders This Week
+                </h6>
                 <p class="fs-4 text-secondary fw-bold">{{ weeklyOrders }}</p>
               </div>
             </div>
@@ -110,7 +134,9 @@
 
         <!-- Recent Orders Table -->
         <div class="card mb-4 shadow">
-          <div class="card-header bg-dark text-white">🧾 Recent Orders</div>
+          <div class="card-header bg-dark text-white">
+            <i class="bi bi-journal-text me-2"></i>Recent Orders
+          </div>
           <div class="card-body table-responsive">
             <table class="table table-striped text-center align-middle">
               <thead>
@@ -125,8 +151,7 @@
               <tbody>
                 <tr v-for="order in recentOrders" :key="order.id">
                   <td>#{{ order.id }}</td>
-                  <!-- <td>{{ order.customer_name }}</td> -->
-                  <td>{{ order.first_name }},   {{ order.last_name }}</td>
+                  <td>{{ order.first_name }}, {{ order.last_name }}</td>
                   <td>₱{{ order.total }}</td>
                   <td><span class="badge bg-info">{{ order.status }}</span></td>
                   <td>{{ order.date }}</td>
@@ -135,24 +160,6 @@
             </table>
           </div>
         </div>
-
-        <!-- Reports Summary -->
-        <!-- <div class="card shadow">
-          <div class="card-header bg-secondary text-white">📋 Receipt / Reports Summary</div>
-          <div class="card-body">
-            <ul class="list-group">
-              <li class="list-group-item d-flex justify-content-between">
-                Receipts Acknowledged <span class="badge bg-secondary">{{ reports.receipts }}</span>
-              </li>
-              <li class="list-group-item d-flex justify-content-between">
-                Reports Filed <span class="badge bg-warning">{{ reports.reportsFiled }}</span>
-              </li>
-              <li class="list-group-item d-flex justify-content-between">
-                Approved Reports <span class="badge bg-success">{{ reports.approved }}</span>
-              </li>
-            </ul>
-          </div>
-        </div> -->
       </div>
     </div>
   </SellerDashboardLayout>
@@ -161,7 +168,7 @@
 <script setup>
 import SellerDashboardLayout from '@/Layouts/SellerDashboardLayout.vue'
 import { ref } from 'vue'
-import { router, usePage, Link } from '@inertiajs/vue3'
+import { router, usePage } from '@inertiajs/vue3'
 import LineChart from '@/Components/Charts/LineChart.vue'
 import BarChart from '@/Components/Charts/BarChart.vue'
 
@@ -177,7 +184,7 @@ function applyFilter() {
 
 const props = defineProps({
   shop: Object,
-  stats: Object,
+  stats: Array,
   topSelling: Array,
   lowStock: Array,
   customerStats: Object,
@@ -192,37 +199,14 @@ const props = defineProps({
 const chartOptions = {
   responsive: true,
   maintainAspectRatio: false,
-  plugins: {
-    legend: {
-      display: true,
-      position: 'top',
-    },
-    title: {
-      display: false,
-    },
-  },
-  scales: {
-    y: {
-      beginAtZero: true
-    }
-  }
+  plugins: { legend: { display: true, position: 'top' }, title: { display: false } },
+  scales: { y: { beginAtZero: true } },
 }
 
 const barChartOptions = {
   responsive: true,
   maintainAspectRatio: false,
-  plugins: {
-    legend: {
-      display: false
-    },
-    title: {
-      display: false
-    },
-  },
-  scales: {
-    y: {
-      beginAtZero: true
-    }
-  }
+  plugins: { legend: { display: false }, title: { display: false } },
+  scales: { y: { beginAtZero: true } },
 }
 </script>

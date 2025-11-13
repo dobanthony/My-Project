@@ -1,17 +1,25 @@
 <template>
   <DashboardLayout>
-    <div class="container">
-      <h4 class="mb-4 text-dark">
-        <i class="bi bi-envelope me-2 text-secondary"></i>{{ shop.shop_name }}
-      </h4>
+    <div class="container py-4">
 
-      <!-- Chat Messages -->
+      <!-- 🧭 Page Header -->
+      <div class="mb-4 border-bottom pb-3">
+        <div class="d-flex align-items-center mb-2">
+          <i class="bi bi-chat-dots-fill fs-3 text-primary me-2"></i>
+          <h2 class="fw-bold mb-0">{{ shop.shop_name }}</h2>
+        </div>
+        <p class="text-muted">
+          Chat with <strong>{{ shop.shop_name }}</strong> directly. View messages, product links, and replies in real time.
+        </p>
+      </div>
+
+      <!-- 💬 Chat Messages -->
       <div
         ref="chatBox"
-        class="chat-box mb-3 p-3 border rounded bg-light"
-        style="max-height: 400px; overflow-y: auto;"
+        class="chat-box mb-3 p-3 rounded shadow-sm bg-light"
+        style="max-height: 450px; overflow-y: auto;"
       >
-        <div v-for="(msg, index) in messages" :key="msg.id" class="mb-2">
+        <div v-for="(msg, index) in messages" :key="msg.id" class="mb-4">
           <div
             class="d-flex"
             :class="msg.sender.id === shop.user_id ? 'justify-content-start' : 'justify-content-end'"
@@ -26,43 +34,52 @@
                   ? `/storage/${shop.shop_logo}`
                   : msg.sender.avatar
                     ? `/storage/${msg.sender.avatar}`
-                    : '/images/default-user.png'"
+                    : '/images/default-avatar.jpg'"
                 alt="Profile"
-                class="rounded-circle me-2"
+                class="rounded-circle shadow-sm mb-1"
                 style="width: 40px; height: 40px; object-fit: cover;"
               />
 
               <!-- Message Bubble -->
               <div
-                class="p-2 rounded"
-                :class="msg.sender.id === shop.user_id ? 'bg-white' : 'bg-primary text-white'"
-                style="max-width: 70%; min-width: 80px;"
+                class="p-3 rounded-4"
+                :class="msg.sender.id === shop.user_id
+                  ? 'bg-white border border-1'
+                  : 'bg-primary text-white'"
+                style="max-width: 75%;"
               >
-                <div class="fw-bold small mb-1">
+                <div class="fw-semibold small mb-1">
+                  <i
+                    class="bi"
+                    :class="msg.sender.id === shop.user_id ? 'bi-shop text-primary me-1' : 'bi-person-circle text-white me-1'"
+                  ></i>
                   {{ msg.sender.id === shop.user_id ? shop.shop_name : msg.sender.first_name }}
                 </div>
                 <div>{{ msg.message }}</div>
               </div>
 
-              <!-- Time + Status -->
+              <!-- Message Meta -->
               <div class="text-muted small mt-1">
-                {{ formatTime(msg.created_at) }}
+                <i class="bi bi-clock me-1"></i>{{ formatTime(msg.created_at) }}
                 <span v-if="msg.sender.id !== shop.user_id">
                   • {{ msg.is_read ? 'Delivered' : 'Sent' }}
                 </span>
               </div>
 
-              <!-- Seen Time -->
+              <!-- Seen Indicator -->
               <div
                 v-if="msg.sender.id !== shop.user_id && isLastOwnMessage(index) && msg.is_read"
                 class="text-success small mt-1"
               >
-                <i class="bi bi-check-all me-2"></i>Seen {{ formatSeenTime(msg.updated_at || msg.created_at) }}
+                <i class="bi bi-check-all me-1"></i> Seen {{ formatSeenTime(msg.updated_at || msg.created_at) }}
               </div>
 
-              <!-- Product inside message -->
-              <div v-if="msg.product" class="card mt-2 border position-relative" style="max-width: 250px;">
-                <!-- ⚠ Report Badge -->
+              <!-- 📦 Product Card -->
+              <div
+                v-if="msg.product"
+                class="card mt-2 border-0 shadow-sm"
+                style="max-width: 260px; border-radius: 12px;"
+              >
                 <span
                   v-if="msg.product.is_reported"
                   class="badge bg-danger position-absolute top-0 start-0 m-1"
@@ -71,13 +88,15 @@
                 </span>
                 <img
                   :src="msg.product.image ? `/storage/${msg.product.image}` : 'https://via.placeholder.com/100x100?text=No+Image'"
-                  class="card-img-top"
-                  style="height: 120px; object-fit: cover;"
+                  class="card-img-top rounded-top"
+                  style="height: 130px; object-fit: cover;"
                 />
                 <div class="card-body p-2">
-                  <h6 class="card-title mb-1 text-success">{{ msg.product.name }}</h6>
+                  <h6 class="card-title text-success mb-1">{{ msg.product.name }}</h6>
                   <p class="text-muted small mb-1">₱{{ parseFloat(msg.product.price).toFixed(2) }}</p>
-                  <Link :href="`/product/${msg.product.id}`" class="text-decoration-none small">🔍 View Product</Link>
+                  <Link :href="`/product/${msg.product.id}`" class="small text-decoration-none text-primary">
+                    <i class="bi bi-box-seam me-1"></i> View Product
+                  </Link>
                 </div>
               </div>
             </div>
@@ -85,11 +104,10 @@
         </div>
       </div>
 
-      <!-- Send Message -->
+      <!-- 📝 Send Message -->
       <form @submit.prevent="sendMessage">
-        <!-- Pinned Product inside input area (only before first send) -->
-        <div v-if="pinnedProduct && !hasSentProduct" class="card mb-2 border bg-light shadow-sm position-relative">
-          <!-- ⚠ Report Badge for pinned product -->
+        <!-- 📍 Pinned Product -->
+        <div v-if="pinnedProduct && !hasSentProduct" class="card mb-3 border-0 shadow-sm bg-light position-relative rounded-3">
           <span
             v-if="pinnedProduct.is_reported"
             class="badge bg-danger position-absolute top-0 start-0 m-1"
@@ -104,14 +122,15 @@
                 style="width: 80px; height: 80px; object-fit: cover;"
               />
             </div>
-            <div class="col">
+            <div class="col ps-2">
               <div class="card-body py-2">
-                <h6 class="card-title mb-1 text-success">{{ pinnedProduct.name }}</h6>
-                <p class="card-text text-muted small mb-1">₱{{ parseFloat(pinnedProduct.price).toFixed(2) }}</p>
-                <Link :href="`/product/${pinnedProduct.id}`" class="text-decoration-none small">🔍 View Product</Link>
+                <h6 class="card-title text-success mb-1">{{ pinnedProduct.name }}</h6>
+                <p class="text-muted small mb-1">₱{{ parseFloat(pinnedProduct.price).toFixed(2) }}</p>
+                <Link :href="`/product/${pinnedProduct.id}`" class="text-decoration-none small text-primary">
+                  <i class="bi bi-box-seam me-1"></i> View Product
+                </Link>
               </div>
             </div>
-            <!-- Remove Button -->
             <button
               type="button"
               class="btn-close position-absolute top-0 end-0 m-2"
@@ -121,16 +140,19 @@
           </div>
         </div>
 
-        <!-- Input box -->
-        <div class="d-flex">
+        <!-- ✉ Input Box -->
+        <div class="d-flex align-items-center bg-white rounded-4 p-2 shadow-sm border">
           <textarea
             v-model="newMessage"
-            class="form-control me-2"
+            class="form-control border-0 me-2 rounded-3"
             rows="1"
             placeholder="Type a message..."
             required
+            style="resize: none; background: transparent;"
           ></textarea>
-          <button class="btn btn-primary"><i class="bi bi-send-fill"></i></button>
+          <button class="btn btn-primary px-3 rounded-3">
+            <i class="bi bi-send-fill"></i>
+          </button>
         </div>
       </form>
     </div>
@@ -154,7 +176,6 @@ const newMessage = ref('')
 const chatBox = ref(null)
 const pinnedProduct = ref(props.pinnedProduct)
 const hasSentProduct = ref(false)
-
 let interval = null
 
 onUpdated(() => {
@@ -217,20 +238,11 @@ onBeforeUnmount(() => {
 </script>
 
 <style scoped>
-/* textarea.form-control {
-  border-color: #28a745;
-  box-shadow: none;
-}
-textarea.form-control:focus {
-  border-color: #28a745;
-  box-shadow: 0 0 0 0.25rem rgba(40, 167, 69, 0.5);
-} */
 .chat-box {
-  max-height: 500px;
-  overflow-y: auto;
-  background-color: #f7f7f7;
+  background: #f8f9fa;
+  border-radius: 12px;
 }
-textarea {
-  resize: none;
+textarea:focus {
+  box-shadow: none;
 }
 </style>

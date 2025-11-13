@@ -143,14 +143,49 @@ class AnalyticsController extends Controller
         }
 
         return Inertia::render('Seller/Analytics', [
-            'range' => $range,
-            'shop' => $shop->only(['id', 'name', 'slug', 'shop_rating', 'shop_rating_count']),
+        'range' => $range,
+        'shop' => $shop->only(['id', 'name', 'slug', 'shop_rating', 'shop_rating_count']),
             'stats' => [
-                'totalSales' => round($totalSales, 2),
-                'totalOrders' => $totalOrders,
-                'pendingOrders' => $pendingOrders,
-                'cancelledOrders' => $cancelledOrders,
-                'receivedOrders' => $receivedOrdersCount,
+                [
+                    'key' => 'totalSales',
+                    'label' => 'Total Sales',
+                    'value' => round($totalSales, 2),
+                    'icon' => 'bi bi-currency-dollar text-success',
+                    'isCurrency' => true,
+                    'bgClass' => 'border-success'
+                ],
+                [
+                    'key' => 'totalOrders',
+                    'label' => 'Total Orders',
+                    'value' => $totalOrders,
+                    'icon' => 'bi bi-card-checklist text-primary',
+                    'isCurrency' => false,
+                    'bgClass' => 'border-primary'
+                ],
+                [
+                    'key' => 'pendingOrders',
+                    'label' => 'Pending Orders',
+                    'value' => $pendingOrders,
+                    'icon' => 'bi bi-hourglass-split text-warning',
+                    'isCurrency' => false,
+                    'bgClass' => 'border-warning'
+                ],
+                [
+                    'key' => 'cancelledOrders',
+                    'label' => 'Cancelled Orders',
+                    'value' => $cancelledOrders,
+                    'icon' => 'bi bi-x-circle text-danger',
+                    'isCurrency' => false,
+                    'bgClass' => 'border-danger'
+                ],
+                [
+                    'key' => 'receivedOrders',
+                    'label' => 'Received Orders',
+                    'value' => $receivedOrdersCount,
+                    'icon' => 'bi bi-check2-circle text-secondary',
+                    'isCurrency' => false,
+                    'bgClass' => 'border-secondary'
+                ],
             ],
             'topSelling' => $topSelling,
             'lowStock' => $lowStock,

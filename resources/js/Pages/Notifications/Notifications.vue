@@ -1,84 +1,118 @@
 <template>
   <DashboardLayout>
-  <div class="container">
-    <div class="bg-primary text-white p-2 mb-1 rounded-top-2">
-      <h4><i class="bi bi-bell me-2"></i>Notifications</h4>
-    </div>
-    <div class="d-flex justify-content-between align-items-center mb-2">
-      <button
-        v-if="notifications.length > 0"
-        class="btn btn-sm btn-outline-primary"
-        @click="markAllAsRead"
-      >
-        Mark All as Read
-      </button>
-    </div>
+    <div class="container py-4">
+      <!-- 🧾 Page Header -->
+      <div class="text-center mb-4">
+        <h3 class="fw-bold text-primary">
+          <i class="bi bi-bell-fill me-2"></i> Notifications
+        </h3>
+        <p class="text-muted mb-0">
+          Stay up to date with your latest order updates, promotions, and alerts.
+        </p>
+      </div>
 
-    <div v-if="notifications.length === 0" class="alert alert-info">
-      No notifications.
-    </div>
-
-    <div v-else class="list-group">
+      <!-- 📢 Header Bar -->
       <div
-        v-for="notification in notifications"
-        :key="notification.id"
-        class="list-group-item list-group-item-action"
-        :class="{
-          'bg-white text-dark fw-bold': !notification.read_at,
-          'bg-white text-muted': notification.read_at
-        }"
-        @click="markAsRead(notification.id, notification.data.order_id)"
-        style="cursor: pointer"
+        class="d-flex justify-content-between align-items-center bg-light p-3 rounded-3 shadow-sm mb-3"
       >
-        <p class="mb-1">{{ notification.data.message }}</p>
-        <small class="text-muted">
-          Product: {{ notification.data.product_name }} |
-          Status: {{ notification.data.status }} |
-          {{ new Date(notification.created_at).toLocaleString() }}
-        </small>
+        <div class="d-flex align-items-center gap-2">
+          <i class="bi bi-inbox-fill text-primary fs-5"></i>
+          <h5 class="mb-0 fw-semibold text-dark">Recent Notifications</h5>
+        </div>
+        <button
+          v-if="notifications.length > 0"
+          class="btn btn-sm btn-outline-primary d-flex align-items-center"
+          @click="markAllAsRead"
+        >
+          <i class="bi bi-check2-all me-1"></i> Mark All as Read
+        </button>
+      </div>
+
+      <!-- 🚫 Empty State -->
+      <div
+        v-if="notifications.length === 0"
+        class="alert alert-info text-center py-5 shadow-sm rounded-3"
+      >
+        <i class="bi bi-bell-slash fs-2 d-block mb-2"></i>
+        <h5 class="fw-semibold">No notifications yet</h5>
+        <p class="text-muted mb-0">You're all caught up! Check back later for updates.</p>
+      </div>
+
+      <!-- 📨 Notifications List -->
+      <div v-else class="d-flex flex-column gap-3">
+        <div
+          v-for="notification in notifications"
+          :key="notification.id"
+          class="card border-0 shadow-sm rounded-3 p-3 position-relative notification-card"
+          :class="{
+            'bg-light border-start border-4 border-primary': !notification.read_at,
+            'bg-white text-muted': notification.read_at
+          }"
+          @click="markAsRead(notification.id, notification.data.order_id)"
+          style="cursor: pointer"
+        >
+          <div class="d-flex justify-content-between align-items-start">
+            <div class="d-flex flex-column">
+              <div class="d-flex align-items-center mb-1">
+                <i
+                  class="bi"
+                  :class="notification.read_at ? 'bi-envelope-open text-muted' : 'bi-envelope-fill text-primary'"
+                ></i>
+                <span
+                  class="ms-2 fw-semibold"
+                  :class="{ 'text-dark': !notification.read_at }"
+                >
+                  {{ notification.data.message }}
+                </span>
+              </div>
+              <small class="text-muted">
+                <i class="bi bi-box-seam me-1"></i>
+                Product: <strong>{{ notification.data.product_name }}</strong>
+                <span class="mx-2">|</span>
+                <i class="bi bi-info-circle me-1"></i>
+                Status: <strong>{{ notification.data.status }}</strong>
+                <span class="mx-2">|</span>
+                <i class="bi bi-clock me-1"></i>
+                {{ new Date(notification.created_at).toLocaleString() }}
+              </small>
+            </div>
+
+            <span
+              v-if="!notification.read_at"
+              class="badge bg-primary rounded-pill shadow-sm"
+            >
+              New
+            </span>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
   </DashboardLayout>
 </template>
 
 <script setup>
-import DashboardLayout from '@/Layouts/DashboardLayout.vue';
+import DashboardLayout from '@/Layouts/DashboardLayout.vue'
 import { router } from '@inertiajs/vue3'
-
 
 const props = defineProps({
   notifications: Array,
 })
 
 function markAllAsRead() {
-  //Locally mark all as read (instant UI change)
   props.notifications.forEach(n => {
-    if (!n.read_at) {
-      n.read_at = new Date().toISOString()
-    }
+    if (!n.read_at) n.read_at = new Date().toISOString()
   })
 
-  //Then send the backend request
   router.post('/user/notifications/mark-all-as-read', {}, {
     preserveScroll: true,
-    onSuccess: () => {
-      // Optional, reload from server to fully sync
-      router.reload({ only: ['notifications'] })
-    }
+    onSuccess: () => router.reload({ only: ['notifications'] })
   })
 }
 
-
-
 function markAsRead(notificationId, orderId) {
-  // Update read_at in local notification list (instant blue style)
   const notif = props.notifications.find(n => n.id === notificationId)
-  if (notif) {
-    notif.read_at = new Date().toISOString()
-  }
+  if (notif) notif.read_at = new Date().toISOString()
 
-  // Send request to backend to mark it read, then redirect
   router.post(`/notifications/${notificationId}/mark-as-read`, {}, {
     preserveScroll: true,
     preserveState: true,
@@ -88,3 +122,11 @@ function markAsRead(notificationId, orderId) {
   })
 }
 </script>
+
+<style scoped>
+.notification-card:hover {
+  transform: translateY(-2px);
+  transition: all 0.2s ease-in-out;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+</style>

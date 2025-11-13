@@ -9,12 +9,12 @@ const showingNavigationDropdown = ref(false);
   <div class="min-vh-100 bg-light">
     <!-- Navbar -->
     <nav
-      class="navbar navbar-expand-lg navbar-light bg-success border-bottom"
+      class="navbar navbar-expand-lg navbar-light bg-white border-bottom"
       style="box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);"
     >
       <div class="container">
         <!-- Brand / Logo -->
-        <Link :href="route('dashboard')" class="navbar-brand fw-bold text-white">
+        <Link :href="route('dashboard')" class="navbar-brand fw-bold text-primary">
           Dashboard
         </Link>
 

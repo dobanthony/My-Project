@@ -2,7 +2,15 @@
   <div>
     <!-- Sidebar -->
     <nav id="sidebar" class="p-3 text-white bg-success" :class="{ show: sidebarOpen }">
-      <h4 class="text-center fw-bold mb-3">CraftSmart</h4>
+        <div class="d-flex align-items-center mb-3 ps-2">
+          <img
+            src="/images/logo.png"
+            alt="CraftSmart Logo"
+            class="me-0"
+            style="width: 70px; height: 70px; object-fit: cover;"
+          />
+          <h4 class="fw-bold mb-0 text-white">CraftSmart</h4>
+        </div>
       <hr class="bg-secondary" />
 
       <ul class="nav flex-column mb-3">
@@ -65,7 +73,7 @@
     <nav id="topbar" class="d-flex justify-content-between align-items-center px-3 shadow-sm">
       <div class="d-flex align-items-center gap-3">
         <button id="toggleArrow" class="btn p-1" @click="openSidebar">&#9776;</button>
-        <h4 class="fw-bold text-success">CraftSmart</h4>
+        <!-- <h4 class="fw-bold text-success">CraftSmart</h4> -->
       </div>
 
       <!-- Profile Avatar Dropdown -->

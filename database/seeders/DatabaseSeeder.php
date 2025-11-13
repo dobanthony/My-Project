@@ -17,7 +17,7 @@ class DatabaseSeeder extends Seeder
             SellerUserSeeder::class,
             UserSeeder::class,
             GroupSeeder::class,
-            sellerSeeder::class,
+            PHLocationsSeeder::class,
         ]);
     }
 }

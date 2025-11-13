@@ -11,12 +11,12 @@
 
     <div class="card p-4 shadow-sm border-0 rounded-4">
       <form @submit.prevent="submit">
-        
         <!-- Personal Info -->
         <h5 class="mb-3 text-dark fw-semibold">
           <i class="bi bi-person-vcard-fill me-2 text-secondary"></i>
           Personal Information
         </h5>
+
         <div class="row">
           <div class="col-md-6 mb-3">
             <label class="form-label fw-semibold small text-dark">
@@ -67,22 +67,87 @@
           </div>
         </div>
 
-        <div class="mb-3">
-          <label class="form-label fw-semibold small text-dark">
-            <i class="bi bi-geo-alt-fill me-1 text-secondary"></i> Delivery Address
-          </label>
-          <textarea
-            v-model="form.delivery_address"
-            class="form-control"
-            rows="2"
-            :class="{ 'is-invalid': form.errors.delivery_address }"
-            required
-          ></textarea>
-          <div v-if="form.errors.delivery_address" class="invalid-feedback">
-            {{ form.errors.delivery_address }}
+        <!-- Location Info -->
+        <h5 class="mb-3 text-dark fw-semibold">
+          <i class="bi bi-geo-alt-fill me-2 text-secondary"></i>
+          Delivery Address
+        </h5>
+
+        <div class="row mb-3">
+          <!-- Province -->
+          <div class="col-md-4 mb-3">
+            <label class="form-label fw-semibold small text-dark">Province</label>
+            <select
+              v-model="form.province_id"
+              class="form-select"
+              :class="{ 'is-invalid': form.errors.province_id }"
+              required
+            >
+              <option value="">Select Province</option>
+              <option v-for="province in provinces" :key="province.id" :value="province.id">
+                {{ province.name }}
+              </option>
+            </select>
+            <div v-if="form.errors.province_id" class="invalid-feedback">
+              {{ form.errors.province_id }}
+            </div>
+          </div>
+
+          <!-- Municipality -->
+          <div class="col-md-4 mb-3">
+            <label class="form-label fw-semibold small text-dark">Municipality</label>
+            <select
+              v-model="form.municipality_id"
+              class="form-select"
+              :class="{ 'is-invalid': form.errors.municipality_id }"
+              :disabled="!form.province_id"
+              required
+            >
+              <option value="">Select Municipality</option>
+              <option
+                v-for="municipality in filteredMunicipalities"
+                :key="municipality.id"
+                :value="municipality.id"
+              >
+                {{ municipality.name }}
+              </option>
+            </select>
+            <div v-if="form.errors.municipality_id" class="invalid-feedback">
+              {{ form.errors.municipality_id }}
+            </div>
+          </div>
+
+          <!-- Barangay -->
+          <div class="col-md-4 mb-3">
+            <label class="form-label fw-semibold small text-dark">Barangay</label>
+            <select
+              v-model="form.barangay_id"
+              class="form-select"
+              :class="{ 'is-invalid': form.errors.barangay_id }"
+              :disabled="!form.municipality_id"
+              required
+            >
+              <option value="">Select Barangay</option>
+              <option
+                v-for="barangay in filteredBarangays"
+                :key="barangay.id"
+                :value="barangay.id"
+              >
+                {{ barangay.name }}
+              </option>
+            </select>
+            <div v-if="form.errors.barangay_id" class="invalid-feedback">
+              {{ form.errors.barangay_id }}
+            </div>
           </div>
         </div>
 
+        <div class="mb-3">
+          <label class="form-label fw-semibold small text-dark">Street Address (Optional)</label>
+          <input v-model="form.street_address" type="text" class="form-control" />
+        </div>
+
+        <!-- Notes -->
         <div class="mb-4">
           <label class="form-label fw-semibold small text-dark">
             <i class="bi bi-sticky-fill me-1 text-secondary"></i> Notes (Optional)
@@ -91,7 +156,7 @@
         </div>
 
         <!-- Quantity -->
-        <div class="mb-4">
+        <!-- <div class="mb-4">
           <label class="form-label fw-semibold small text-dark">
             <i class="bi bi-stack me-1 text-secondary"></i> Quantity
           </label>
@@ -107,7 +172,12 @@
           <div v-if="form.errors.quantity" class="invalid-feedback">
             {{ form.errors.quantity }}
           </div>
-        </div>
+
+          <small v-if="product.stock === 0" class="text-danger fw-bold d-block mt-1">
+            <i class="bi bi-exclamation-triangle-fill me-1"></i>
+            This product is currently out of stock.
+          </small>
+        </div> -->
 
         <!-- Buttons -->
         <div class="d-flex align-items-center">
@@ -126,25 +196,30 @@
 
 <script setup>
 import { useForm, Link } from "@inertiajs/vue3";
-import { defineProps, computed, onMounted } from "vue";
+import { ref, computed, watch, onMounted, defineProps } from "vue";
 
 const props = defineProps({
   product: Object,
   quantity: Number,
   lastDeliveryInfo: Object,
+  provinces: Array,
+  municipalities: Array,
+  barangays: Array,
   customizations: Object,
 });
 
+// --- Form data
 const form = useForm({
   product_id: props.product.id,
   full_name: props.lastDeliveryInfo?.full_name || "",
   phone_number: props.lastDeliveryInfo?.phone_number || "",
   email: props.lastDeliveryInfo?.email || "",
-  delivery_address: props.lastDeliveryInfo?.delivery_address || "",
+  province_id: props.lastDeliveryInfo?.province_id || "",
+  municipality_id: props.lastDeliveryInfo?.municipality_id || "",
+  barangay_id: props.lastDeliveryInfo?.barangay_id || "",
+  street_address: props.lastDeliveryInfo?.street_address || "",
   notes: props.lastDeliveryInfo?.notes || "",
   quantity: props.quantity || 1,
-
-  // Customization details
   color: props.customizations?.color || "",
   size: props.customizations?.size || "",
   material: props.customizations?.material || "",
@@ -154,40 +229,72 @@ const form = useForm({
   selected_image: props.customizations?.selected_image || "",
 });
 
-// ✅ detect if there’s any customization
-const hasCustomization = computed(() => {
-  return (
-    form.color ||
-    form.size ||
-    form.material ||
-    form.pattern ||
-    form.custom_name ||
-    form.custom_description
-  );
-});
+// --- Full location data
+const allProvinces = ref(props.provinces);
+const allMunicipalities = ref(props.municipalities);
+const allBarangays = ref(props.barangays);
 
+// --- Filtered dropdown lists
+const filteredMunicipalities = computed(() =>
+  allMunicipalities.value.filter((m) => m.province_id === form.province_id)
+);
+const filteredBarangays = computed(() =>
+  allBarangays.value.filter((b) => b.municipality_id === form.municipality_id)
+);
+
+// --- Watchers for dependent resets
+watch(
+  () => form.province_id,
+  (newVal, oldVal) => {
+    if (newVal !== oldVal) {
+      form.municipality_id = "";
+      form.barangay_id = "";
+    }
+  }
+);
+
+watch(
+  () => form.municipality_id,
+  (newVal, oldVal) => {
+    if (newVal !== oldVal) {
+      form.barangay_id = "";
+    }
+  }
+);
+
+// --- Prefill municipalities and barangays when revisiting
 onMounted(() => {
-  if (!form.full_name && props.lastDeliveryInfo) {
-    form.full_name = props.lastDeliveryInfo.full_name || "";
-    form.phone_number = props.lastDeliveryInfo.phone_number || "";
-    form.email = props.lastDeliveryInfo.email || "";
-    form.delivery_address = props.lastDeliveryInfo.delivery_address || "";
-    form.notes = props.lastDeliveryInfo.notes || "";
+  if (form.province_id && filteredMunicipalities.value.length === 0) {
+    // This ensures municipalities appear even if coming back to the form
+    const provinceMunicipalities = allMunicipalities.value.filter(
+      (m) => m.province_id === form.province_id
+    );
+    if (!provinceMunicipalities.find((m) => m.id === form.municipality_id)) {
+      form.municipality_id = "";
+      form.barangay_id = "";
+    }
+  }
+
+  if (form.municipality_id && filteredBarangays.value.length === 0) {
+    const municipalityBarangays = allBarangays.value.filter(
+      (b) => b.municipality_id === form.municipality_id
+    );
+    if (!municipalityBarangays.find((b) => b.id === form.barangay_id)) {
+      form.barangay_id = "";
+    }
   }
 });
 
+// --- Submit
 const submit = () => {
+  if (form.quantity <= 0) {
+    alert("Quantity must be at least 1.");
+    return;
+  }
+  if (form.quantity > props.product.stock) {
+    alert(`Only ${props.product.stock} items are available in stock.`);
+    return;
+  }
   form.post("/checkout");
 };
 </script>
-
-<!-- <style>
-input.form-control:focus,
-textarea.form-control:focus {
-  border-color: #28a745;
-  box-shadow: 0 0 0 0.25rem rgba(40, 167, 69, 0.25);
-}
-textarea.form-control {
-  border-color: #28a745;
-}
-</style> -->

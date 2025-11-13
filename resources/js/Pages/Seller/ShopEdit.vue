@@ -1,6 +1,6 @@
 <template>
   <SellerDashboardLayout>
-    <!-- Toast Notification -->
+    <!-- ✅ Toast Notification -->
     <div
       v-if="showToast"
       class="toast-container position-fixed start-50 translate-middle-x p-3"
@@ -24,27 +24,24 @@
       </div>
     </div>
 
-    <!-- ✅ Shop Edit Main Content -->
-    <div class="container">
-      <!-- Header -->
-      <div
-        class="d-flex flex-column flex-md-row justify-content-between align-items-start mb-6 gap-3"
-      >
-        <div>
-          <h2 class="mb-1">
-            <i class="bi bi-shop-window me-2 text-secondary"></i>
-            Hello, {{ user.first_name }} {{ user.last_name }}
-          </h2>
-          <p class="text-muted mb-0">
-            Manage your shop details. Buyers will see this on your storefront.
-          </p>
-        </div>
+    <!-- 🌟 Page Header -->
+    <div class="container mb-5">
+      <div class="text-center py-4 border-bottom">
+        <h1 class="fw-bold text-primary mb-2">
+          <i class="bi bi-shop me-2"></i> Manage Your Shop
+        </h1>
+        <p class="text-muted fs-6 mb-0">
+          Customize your shop’s details and branding. This information helps buyers recognize and trust your store.
+        </p>
       </div>
+    </div>
 
+    <!-- ✅ Main Content -->
+    <div class="container">
       <div class="row gy-4">
-        <!-- Top: Existing shop preview -->
+        <!-- 🏪 Shop Preview Card -->
         <div class="col-12">
-          <div class="card shadow-lg rounded-4 p-4 h-100 text-center">
+          <div class="card shadow-sm border-0 rounded-4 p-4 h-100 text-center bg-white">
             <!-- Avatar -->
             <div class="mb-4">
               <div
@@ -60,68 +57,63 @@
                   />
                 </template>
                 <template v-else>
-                  <i class="bi bi-shop fs-1 text-secondary"></i>
+                  <i class="bi bi-shop-window fs-1 text-secondary"></i>
                 </template>
               </div>
             </div>
 
             <!-- Shop Name & Description -->
-            <h4 class="mb-2 text-dark">
+            <h4 class="mb-2 text-dark fw-semibold">
               {{ shop?.shop_name ?? 'No Shop Yet' }}
             </h4>
-            <p class="text-muted fs-6">
+            <p class="text-muted">
               {{ shop?.shop_description ?? 'Describe your shop to attract buyers.' }}
             </p>
 
             <!-- Shop Info -->
-            <div v-if="shop" class="mt-4">
-              <div class="row text-start g-3 fs-6 fw-medium">
+            <div v-if="shop" class="mt-4 text-start mx-auto" style="max-width: 600px;">
+              <div class="row g-3 fs-6 fw-medium">
                 <div class="col-12 col-md-6">
-                  <i class="bi bi-telephone me-2 text-secondary"></i>
+                  <i class="bi bi-telephone me-2 text-primary"></i>
                   {{ shop.phone_number ?? '-' }}
                 </div>
                 <div class="col-12 col-md-6">
-                  <i class="bi bi-envelope me-2 text-secondary"></i>
+                  <i class="bi bi-envelope me-2 text-primary"></i>
                   {{ shop.email_address ?? '-' }}
                 </div>
                 <div class="col-12 col-md-6">
-                  <i class="bi bi-geo-alt-fill me-2 text-secondary"></i>
+                  <i class="bi bi-geo-alt-fill me-2 text-primary"></i>
                   {{ shop.address ?? '-' }}
                 </div>
                 <div class="col-12 col-md-6">
-                  <i class="bi bi-calendar-event me-2 text-secondary"></i>
+                  <i class="bi bi-calendar-event me-2 text-primary"></i>
                   {{ new Date().toLocaleDateString() }}
                 </div>
               </div>
             </div>
 
-            <div v-else class="alert alert-warning py-2 mt-3">
-              You haven't created a shop yet. Fill the form to get started.
+            <div v-else class="alert alert-warning py-2 mt-3 mb-0">
+              <i class="bi bi-info-circle me-2"></i> You haven't created a shop yet. Fill out the form below to get started.
             </div>
           </div>
         </div>
 
-        <!-- Bottom: Form -->
+        <!-- 📝 Shop Form -->
         <div class="col-12">
-          <div class="card shadow-lg rounded-4 p-4">
+          <div class="card shadow-sm border-0 rounded-4 p-4">
             <div class="d-flex justify-content-between align-items-center mb-3">
-              <h5 class="text-black mb-0">
+              <h5 class="text-dark fw-bold mb-0">
+                <i class="bi bi-pencil-square me-2 text-primary"></i>
                 {{ shop ? 'Update Your Shop' : 'Create Your Shop' }}
               </h5>
-              <span
-                v-if="shop"
-                class="badge bg-primary d-none d-md-inline"
-                >Editing</span
-              >
+              <span v-if="shop" class="badge bg-primary rounded-pill px-3 py-2">Editing</span>
             </div>
 
-            <form
-              @submit.prevent="submit"
-              enctype="multipart/form-data"
-              class="row g-3"
-            >
+            <form @submit.prevent="submit" enctype="multipart/form-data" class="row g-3">
               <div class="col-12">
-                <label class="form-label fw-semibold">Shop Name</label>
+                <label class="form-label fw-semibold">
+                  <i class="bi bi-shop me-1 text-primary"></i> Shop Name
+                </label>
                 <input
                   type="text"
                   class="form-control form-control-lg"
@@ -132,7 +124,9 @@
               </div>
 
               <div class="col-12">
-                <label class="form-label fw-semibold">Shop Description</label>
+                <label class="form-label fw-semibold">
+                  <i class="bi bi-card-text me-1 text-primary"></i> Shop Description
+                </label>
                 <textarea
                   class="form-control"
                   rows="3"
@@ -142,7 +136,9 @@
               </div>
 
               <div class="col-md-6">
-                <label class="form-label fw-semibold">Phone Number</label>
+                <label class="form-label fw-semibold">
+                  <i class="bi bi-telephone me-1 text-primary"></i> Phone Number
+                </label>
                 <input
                   type="text"
                   class="form-control"
@@ -152,7 +148,9 @@
               </div>
 
               <div class="col-md-6">
-                <label class="form-label fw-semibold">Email Address</label>
+                <label class="form-label fw-semibold">
+                  <i class="bi bi-envelope me-1 text-primary"></i> Email Address
+                </label>
                 <input
                   type="email"
                   class="form-control"
@@ -162,7 +160,9 @@
               </div>
 
               <div class="col-12">
-                <label class="form-label fw-semibold">Address</label>
+                <label class="form-label fw-semibold">
+                  <i class="bi bi-geo-alt me-1 text-primary"></i> Address
+                </label>
                 <input
                   type="text"
                   class="form-control"
@@ -172,7 +172,9 @@
               </div>
 
               <div class="col-12">
-                <label class="form-label fw-semibold">Shop Logo</label>
+                <label class="form-label fw-semibold">
+                  <i class="bi bi-image me-1 text-primary"></i> Shop Logo
+                </label>
                 <input
                   type="file"
                   class="form-control"
@@ -180,14 +182,14 @@
                   accept="image/*"
                 />
                 <div v-if="form.shop_logo" class="mt-2 small text-muted">
-                  Selected: {{ form.shop_logo.name }}
+                  <i class="bi bi-file-earmark-image me-1"></i> Selected: {{ form.shop_logo.name }}
                 </div>
               </div>
 
-              <div class="col-12">
-                  <button type="submit" class="btn btn-primary w-100 btn-shop">
-                    {{ shop ? 'Update Shop' : 'Create Shop' }}
-                  </button>
+              <div class="col-12 mt-3">
+                <button type="submit" class="btn btn-primary w-100 py-2 fw-semibold btn-shop">
+                  <i class="bi bi-save me-2"></i> {{ shop ? 'Update Shop' : 'Create Shop' }}
+                </button>
               </div>
             </form>
           </div>
@@ -204,16 +206,13 @@ import { useForm, usePage } from '@inertiajs/vue3'
 import { ref, onMounted } from 'vue'
 import { defineOptions, defineProps } from 'vue'
 
-defineOptions({
-  layout: Flash
-})
+defineOptions({ layout: Flash })
 
 const props = defineProps({
   user: Object,
   shop: Object
 })
 
-// Toast handling
 const page = usePage()
 const showToast = ref(false)
 const toastMessage = ref('')
@@ -223,13 +222,10 @@ onMounted(() => {
   if (success) {
     toastMessage.value = success
     showToast.value = true
-    setTimeout(() => {
-      showToast.value = false
-    }, 3000)
+    setTimeout(() => (showToast.value = false), 3000)
   }
 })
 
-// Form
 const form = useForm({
   shop_name: props.shop?.shop_name ?? '',
   shop_description: props.shop?.shop_description ?? '',
@@ -246,61 +242,37 @@ const submit = () => {
     onSuccess: () => {
       toastMessage.value = 'Shop updated successfully!'
       showToast.value = true
-      setTimeout(() => {
-        showToast.value = false
-      }, 3000)
-    }
+      setTimeout(() => (showToast.value = false), 3000)
+    },
   })
 }
 </script>
 
 <style scoped>
-/* Focus states */
-/* input.form-control:focus,
-textarea.form-control:focus {
-  border-color: #28a745;
-  box-shadow: 0 0 0 0.25rem rgba(40, 167, 69, 0.5);
-} */
+h1 {
+  font-size: 2.2rem;
+}
 
-/* Card styling */
 .card {
-  border: none;
   border-radius: 1rem;
-}
-
-/* Headings */
-h2 {
-  font-weight: 600;
-  font-size: 2rem;
-}
-h4 {
-  font-size: 1.4rem;
-  font-weight: 600;
-}
-h5 {
-  font-size: 1.2rem;
-  font-weight: 600;
-}
-
-/* Avatar */
-.avatar {
   transition: transform 0.2s ease-in-out;
 }
+.card:hover {
+  transform: translateY(-3px);
+}
+
 .avatar:hover {
   transform: scale(1.05);
+  transition: all 0.3s ease;
 }
 
 .btn-shop {
-  padding: 0.35rem 0.75rem;   /* smaller height */
-  font-size: 0.9rem;          /* smaller text */
-  border-radius: 0.3rem;      /* slightly rounded */
-  transition: all 0.3s ease;  /* smooth hover */
+  font-size: 1rem;
+  border-radius: 0.5rem;
+  transition: all 0.3s ease;
 }
-
-/* Optional: subtle hover glow */
 .btn-shop:hover {
-  background-color: #0b5ed7; /* darker Bootstrap primary */
-  box-shadow: 0 0 10px rgba(13, 110, 253, 0.25);
+  background-color: #0b5ed7;
+  box-shadow: 0 0 10px rgba(13, 110, 253, 0.3);
 }
-
 </style>

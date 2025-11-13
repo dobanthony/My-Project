@@ -1,25 +1,38 @@
 <template>
   <DashboardLayout>
-    <div class="container">
-      <!-- 🔔 Empty Cart -->
-      <div v-if="cartItems.length === 0" class="alert alert-info text-center">
-        Your cart is empty.
+    <div class="container py-4">
+      <!-- 🧾 Page Header -->
+      <div class="mb-4 text-center">
+        <h3 class="fw-bold text-success">
+          <i class="bi bi-cart3 me-2"></i> My Shopping Cart
+        </h3>
+        <p class="text-muted">
+          Review your selected items, update quantities, or proceed to checkout when ready.
+        </p>
       </div>
 
-      <!-- 📦 Cart Table (Desktop) -->
-      <div v-else>
+      <!-- 🔔 Empty Cart -->
+      <div v-if="cartItems.length === 0" class="alert alert-info text-center py-4 shadow-sm rounded">
+        <i class="bi bi-cart-x fs-3 d-block mb-2"></i>
+        <strong>Your cart is empty!</strong>
+        <p class="text-muted mb-0">Browse products and add items to your cart to get started.</p>
+      </div>
+
+      <!-- 📦 Cart Content -->
+      <div v-else class="bg-white shadow-sm rounded p-3">
+        <!-- 🖥️ Desktop Table -->
         <div class="d-none d-md-block table-responsive">
-          <table class="table table-bordered table-hover align-middle">
+          <table class="table align-middle table-hover text-center">
             <thead class="table-success">
               <tr>
-                <th style="width: 40px;">
+                <th>
                   <input type="checkbox" @change="toggleAllSelection" :checked="allSelected" />
                 </th>
-                <th>Product</th>
+                <th class="text-start">Product</th>
                 <th>Price</th>
-                <th style="width: 130px;">Quantity</th>
+                <th>Quantity</th>
                 <th>Total</th>
-                <th style="width: 90px;">Action</th>
+                <th>Action</th>
               </tr>
             </thead>
             <tbody>
@@ -27,20 +40,32 @@
                 <td>
                   <input type="checkbox" :value="item.id" v-model="selectedCartIds" />
                 </td>
-                <td class="text-break">{{ item.product?.name ?? 'Unknown Product' }}</td>
-                <td>₱{{ Number(item.product?.price ?? 0).toFixed(2) }}</td>
-                <td>
-                  <input
-                    v-model.number="item.quantity"
-                    type="number"
-                    min="1"
-                    class="form-control form-control-sm"
-                    @change="updateQuantity(item)"
-                  />
+                <td class="text-start">
+                  <div class="d-flex align-items-center gap-2">
+                    <i class="bi bi-box-seam text-success fs-5"></i>
+                    <span class="fw-semibold text-break">
+                      {{ item.product?.name ?? 'Unknown Product' }}
+                    </span>
+                  </div>
                 </td>
-                <td>₱{{ (item.quantity * Number(item.product?.price ?? 0)).toFixed(2) }}</td>
-                <td class="text-center">
-                  <button @click="confirmDelete(item)" class="btn btn-danger btn-sm">
+                <td class="text-secondary">₱{{ Number(item.product?.price ?? 0).toFixed(2) }}</td>
+                <td>
+                  <div class="d-flex justify-content-center align-items-center">
+                    <input
+                      v-model.number="item.quantity"
+                      type="number"
+                      min="1"
+                      class="form-control form-control-sm text-center"
+                      style="width: 70px;"
+                      @change="updateQuantity(item)"
+                    />
+                  </div>
+                </td>
+                <td class="fw-bold text-success">
+                  ₱{{ (item.quantity * Number(item.product?.price ?? 0)).toFixed(2) }}
+                </td>
+                <td>
+                  <button @click="confirmDelete(item)" class="btn btn-outline-danger btn-sm rounded-circle">
                     <i class="bi bi-trash"></i>
                   </button>
                 </td>
@@ -51,9 +76,9 @@
 
         <!-- 📱 Mobile Card View -->
         <div class="d-md-none">
-          <div v-for="item in cartItems" :key="item.id" class="card mb-3 shadow-sm">
+          <div v-for="item in cartItems" :key="item.id" class="card mb-3 border-0 shadow-sm rounded-3">
             <div class="card-body">
-              <div class="d-flex justify-content-between align-items-start mb-2">
+              <div class="d-flex justify-content-between align-items-start mb-3">
                 <div class="d-flex align-items-center">
                   <input
                     type="checkbox"
@@ -63,30 +88,30 @@
                   />
                   <strong class="text-break">{{ item.product?.name ?? 'Unknown Product' }}</strong>
                 </div>
-                <button @click="confirmDelete(item)" class="btn btn-sm btn-outline-danger">
+                <button @click="confirmDelete(item)" class="btn btn-sm btn-outline-danger rounded-circle">
                   <i class="bi bi-trash"></i>
                 </button>
               </div>
 
-              <div class="mb-2">
-                <small class="text-muted">Price:</small>
+              <div class="mb-2 text-secondary">
+                <small>Price:</small>
                 <div>₱{{ Number(item.product?.price ?? 0).toFixed(2) }}</div>
               </div>
 
               <div class="mb-2">
-                <small class="text-muted">Quantity:</small>
+                <small class="text-secondary">Quantity:</small>
                 <input
                   v-model.number="item.quantity"
                   type="number"
                   min="1"
-                  class="form-control form-control-sm"
+                  class="form-control form-control-sm text-center"
                   @change="updateQuantity(item)"
                 />
               </div>
 
               <div>
-                <small class="text-muted">Total:</small>
-                <div class="fw-bold text-success">
+                <small class="text-secondary">Total:</small>
+                <div class="fw-bold text-success fs-6">
                   ₱{{ (item.quantity * Number(item.product?.price ?? 0)).toFixed(2) }}
                 </div>
               </div>
@@ -95,13 +120,22 @@
         </div>
 
         <!-- 💳 Cart Summary -->
-        <div class="mt-4 d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3">
-          <div>
-            <strong>Selected Total:</strong>
-            <span class="fs-5 text-success">₱{{ selectedTotal.toFixed(2) }}</span>
+        <div
+          class="mt-4 border-top pt-3 d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3"
+        >
+          <div class="d-flex align-items-center gap-2">
+            <i class="bi bi-cash-stack text-success fs-4"></i>
+            <div>
+              <strong>Selected Total:</strong>
+              <span class="fs-5 text-success fw-bold">₱{{ selectedTotal.toFixed(2) }}</span>
+            </div>
           </div>
-          <button class="btn btn-success" :disabled="selectedCartIds.length === 0" @click="buyNow">
-            <i class="bi bi-bag me-2"></i>Buy Now
+          <button
+            class="btn btn-success px-4 py-2 fw-semibold"
+            :disabled="selectedCartIds.length === 0"
+            @click="buyNow"
+          >
+            <i class="bi bi-bag-check-fill me-2"></i>Proceed to Checkout
           </button>
         </div>
       </div>
@@ -109,31 +143,52 @@
 
     <!-- ✅ Toast Notification -->
     <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 2000">
-      <div class="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true" ref="successToast">
+      <div
+        class="toast align-items-center text-bg-success border-0 shadow"
+        role="alert"
+        aria-live="assertive"
+        aria-atomic="true"
+        ref="successToast"
+      >
         <div class="d-flex">
-          <div class="toast-body" ref="toastMessage">Success</div>
-          <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+          <div class="toast-body fw-semibold" ref="toastMessage">Success</div>
+          <button
+            type="button"
+            class="btn-close btn-close-white me-2 m-auto"
+            data-bs-dismiss="toast"
+            aria-label="Close"
+          ></button>
         </div>
       </div>
     </div>
 
-    <!-- Delete Confirmation Modal -->
+    <!-- 🗑️ Delete Confirmation Modal -->
     <div class="modal fade" id="deleteModal" tabindex="-1" ref="deleteModalRef">
-      <div
-        class="modal-dialog modal-lg"
-        style="position: absolute; top: 5%; left: 50%; transform: translateX(-50%)"
-      >
-        <div class="modal-content">
-          <div class="modal-header bg-success text-white">
-            <h5 class="modal-title"><i class="bi bi-trash"></i> Confirm Removal</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg rounded-3">
+          <div class="modal-header bg-danger text-white">
+            <h5 class="modal-title fw-bold">
+              <i class="bi bi-exclamation-triangle me-2"></i>Confirm Removal
+            </h5>
+            <button
+              type="button"
+              class="btn-close btn-close-white"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
           </div>
           <div class="modal-body">
-            Are you sure you want to remove <strong>{{ itemToDelete?.product?.name }}</strong> from your cart?
+            Are you sure you want to remove
+            <strong class="text-danger">{{ itemToDelete?.product?.name }}</strong>
+            from your cart?
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-outline-success" data-bs-dismiss="modal">Cancel</button>
-            <button type="button" class="btn btn-danger" @click="deleteConfirmed">Remove</button>
+            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+              <i class="bi bi-x-circle me-1"></i>Cancel
+            </button>
+            <button type="button" class="btn btn-danger" @click="deleteConfirmed">
+              <i class="bi bi-trash me-1"></i>Remove
+            </button>
           </div>
         </div>
       </div>
@@ -207,7 +262,7 @@ const buyNow = () => {
   const items = selectedItems.value
   if (items.length === 0) return
 
-  showToast('Redirecting to delivery info...')
+  showToast('Redirecting to checkout...')
   setTimeout(() => {
     router.visit(route('checkout.bulkForm'), {
       data: {

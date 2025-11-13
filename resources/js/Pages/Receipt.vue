@@ -94,18 +94,34 @@
         class="border p-4 shadow-sm rounded bg-white mx-auto"
         style="max-width: 800px"
       >
-        <!-- Delivery Info -->
-        <div class="mb-4">
-          <h5 class="text-danger display-6 fw-bold">
-            <i class="bi bi-geo-alt-fill me-2"></i> Delivery Address
-          </h5>
-          <p class="mb-1">
-            <strong>{{ order.user?.name }}</strong>
-            <span v-if="order.user?.phone"> ({{ order.user?.phone }})</span>
-          </p>
-          <p>{{ order.user?.address ?? "No address provided" }}</p>
-        </div>
+      <!-- Delivery Info -->
+      <div class="mb-4">
+        <h5 class="text-danger display-6 fw-bold">
+          <i class="bi bi-geo-alt-fill me-2"></i> Delivery Address
+        </h5>
 
+        <p v-if="order.delivery_info">
+          <strong>{{ order.delivery_info.full_name }}</strong><br>
+          <span v-if="order.delivery_info.phone_number">
+            # {{ order.delivery_info.phone_number }}
+          </span>
+        </p>
+
+        <p v-if="order.delivery_info">
+          {{ order.delivery_info.street_address ? order.delivery_info.street_address + ', ' : '' }}
+          {{ order.delivery_info.barangay?.name ? order.delivery_info.barangay.name + ', ' : '' }}
+          {{ order.delivery_info.municipality?.name ? order.delivery_info.municipality.name + ', ' : '' }}
+          {{ order.delivery_info.province?.name ?? '' }}
+        </p>
+
+        <p v-if="order.delivery_info.notes">
+          <strong>Notes:</strong> {{ order.delivery_info.notes }}
+        </p>
+
+        <p v-else class="text-muted">
+          No delivery info provided.
+        </p>
+      </div>
         <!-- Product Info -->
         <div class="mb-4">
           <h5 class="fw-bold mb-3">
@@ -147,6 +163,12 @@
                       Customized
                     </span>
                   </h6>
+
+                    <!-- ✅ Product Category -->
+                    <p class="mb-1 text-muted">
+                      <strong>Category:</strong>
+                      {{ order.product?.category?.name ?? "—" }}
+                    </p>
 
                   <!-- ✅ Product description -->
                   <p class="text-muted mb-2">
@@ -194,7 +216,7 @@
             <p>
               <i class="bi bi-person-badge me-2"></i>
               <strong>Seller:</strong>
-              {{ order.product?.shop?.user?.name ?? "Unknown Seller" }}
+              {{ order.product?.shop?.user?.first_name ?? "Unknown Seller" }}
             </p>
             <p>
               <i class="bi bi-info-circle me-2"></i>

@@ -6,7 +6,7 @@
         <div class="mb-4">
           <h5 class="text-danger display-5"><i class="bi bi-geo-alt-fill"></i> Delivery Address</h5>
           <p class="mb-1">
-            <strong>{{ order.user?.name }}</strong>
+            <strong>{{ order.user?.first_name }}</strong><br>
             <span v-if="order.user?.phone"> ({{ order.user?.phone }})</span>
           </p>
           <p>{{ order.user?.address ?? 'No address provided' }}</p>
@@ -50,7 +50,7 @@
         <!-- Additional Info -->
         <div class="row">
           <div class="col-md-6 mb-3">
-            <p><strong>Seller:</strong> {{ order.product?.shop?.user?.name ?? 'Unknown Seller' }}</p>
+            <p><strong>Seller:</strong> {{ order.product?.shop?.user?.first_name ?? 'Unknown Seller' }}</p>
             <p><strong>Status:</strong>
               <span
                 class="badge"

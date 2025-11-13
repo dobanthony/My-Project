@@ -48,6 +48,6 @@ class OrderRatingController extends Controller
             'image' => $imagePath, // e.g., 'ratings/filename.jpg'
         ]);
 
-        return back()->with('success', '✅ Thank you for rating this order!');
+        return back()->with('success', 'Thank you for rating this order!');
     }
 }

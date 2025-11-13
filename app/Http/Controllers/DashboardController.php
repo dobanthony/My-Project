@@ -31,9 +31,10 @@ class DashboardController extends Controller
         }
 
         //user
-        return Inertia::render('User/Dashboard', [
-            'user' => $user,
-            'announcements' => Announcement::latest()->take(100)->get(),
-        ]);
+        // return Inertia::render('User/Dashboard', [
+        //     'user' => $user,
+        //     'announcements' => Announcement::latest()->take(100)->get(),
+        // ]);
+        return redirect()->route('user.view');
     }
 }

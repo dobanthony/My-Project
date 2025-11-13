@@ -1,0 +1,443 @@
+<template>
+    <!-- ✅ Main Section -->
+    <div class="bg-light py-5 px-2 px-md-0">
+      <div class="container bg-white rounded shadow p-4" style="max-width: 1000px;">
+        <!-- ✅ Breadcrumb -->
+        <nav class="mb-4">
+          <ol class="breadcrumb bg-light p-2 rounded mb-0">
+            <li class="breadcrumb-item text-success">
+              🏠 Home
+            </li>
+            <li class="breadcrumb-item text-success">
+                🛍 {{ product.shop?.shop_name ?? 'Shop' }}
+            </li>
+            <li class="breadcrumb-item active text-success">📦 {{ product.name }}</li>
+          </ol>
+        </nav>
+
+        <!-- ✅ Product Info -->
+        <div class="row gy-4">
+          <!-- Product Image -->
+          <div class="col-12 col-lg-6 text-center">
+            <img
+              :src="mainImage"
+              class="img-fluid rounded shadow-sm border w-100"
+              alt="Product Image"
+              style="max-height: 450px; object-fit: contain;"
+            />
+          </div>
+
+          <!-- Product Details -->
+          <div class="col-12 col-lg-6">
+            <h2 class="text-success fw-bold mb-2 d-flex align-items-center gap-2">
+              {{ product.name }}
+              <span v-if="product.eco_friendly" class="badge bg-success d-flex align-items-center">
+                <i class="bi bi-leaf me-1"></i> Eco-Friendly
+              </span>
+            </h2>
+
+            <!-- ✅ Product Category -->
+            <div class="mb-3">
+              <span class="badge bg-white text-secondary d-flex gap-1 fs-6">
+                <i class="bi bi-tags-fill"></i>
+                {{ product.category || 'Uncategorized' }}
+              </span>
+            </div>
+
+            <!-- Ratings -->
+            <div class="d-flex flex-wrap gap-3 mb-3">
+              <div>
+                <span class="fw-bold me-1 text-dark">{{ averageRating }}</span>
+                <span class="text-warning">
+                  <i
+                    v-for="i in 5"
+                    :key="i"
+                    :class="i <= Math.round(averageRating) ? 'bi bi-star-fill' : 'bi bi-star'"
+                  ></i>
+                </span>
+              </div>
+              <div>
+                <span class="fw-bold text-dark">{{ ratingsCount }}</span>
+                <span class="text-muted"> Ratings</span>
+              </div>
+              <div>
+                <span class="fw-bold text-dark">{{ totalSold }}</span>
+                <span class="text-muted"> Sold</span>
+              </div>
+            </div>
+
+            <!-- Shop Info -->
+            <div class="d-flex align-items-center gap-2 mb-3">
+              <img
+                :src="product.shop?.shop_logo ? `/storage/${product.shop.shop_logo}` : 'https://via.placeholder.com/50?text=No+Logo'"
+                class="img-fluid rounded border"
+                alt="Shop Logo"
+                style="max-height: 50px; object-fit: contain;"
+              />
+              <div>
+                <small class="text-muted">Sold by:</small><br />
+                <strong class="text-dark">{{ product.shop?.shop_name ?? 'Unknown Shop' }}</strong>
+              </div>
+            </div>
+
+            <!-- Follow -->
+            <div class="mt-2">
+              <button
+                class="btn btn-outline-secondary btn-sm"
+                :disabled="followLoading"
+                @click="toggleFollow"
+              >
+                <span v-if="isFollowing"><i class="bi bi-bell-fill"></i> Following</span>
+                <span v-else><i class="bi bi-plus-lg"></i> Follow</span>
+              </button>
+              <div class="text-muted mt-1">Followers: {{ followerCount }}</div>
+            </div>
+
+            <!-- Description -->
+            <p class="text-secondary mt-3">{{ product.description }}</p>
+            <h3 class="text-success fw-bold mb-4">₱{{ parseFloat(product.price).toFixed(2) }}</h3>
+
+            <!-- Quantity (Hidden when customized) -->
+            <div v-if="!product.customization" class="mb-3">
+              <label class="text-dark form-label fw-semibold">Quantity</label>
+              <input
+                type="number"
+                v-model.number="quantity"
+                class="form-control w-100 w-md-50"
+                min="1"
+                :max="product.stock"
+              />
+              <small class="text-muted">Stock: {{ product.stock }}</small><br />
+            </div>
+
+
+            <!-- Buttons -->
+            <div class="d-grid gap-2 d-md-flex mt-4">
+              <button
+                v-if="product.customization"
+                @click="showCustomizeForm = !showCustomizeForm"
+                class="btn btn-warning"
+              >
+                🎨 {{ showCustomizeForm ? 'Hide Customize' : 'Customize' }}
+              </button>
+
+              <template v-else>
+                <button @click="addToCart" class="btn btn-outline-success px-4">
+                  <i class="bi bi-cart-plus me-2"></i>Add to Cart
+                </button>
+                <button @click="buyNow" class="btn btn-primary">
+                  <i class="bi bi-bag me-2"></i>Buy Now
+                </button>
+              </template>
+            </div>
+
+            <!-- ✅ Customization Form -->
+            <div v-if="showCustomizeForm && product.customization" class="mt-4 p-3 border rounded bg-light">
+              <h5>Customize Your Product</h5>
+
+              <!-- Material -->
+              <div v-if="product.customization.allow_material" class="mb-3">
+                <label class="form-label">Material</label>
+                <select v-model="customForm.material" class="form-select">
+                  <option disabled value="">Choose material</option>
+                  <option
+                    v-for="mat in product.customization.custom_options"
+                    :key="mat.material"
+                    :value="mat.material"
+                  >
+                    {{ mat.material }}
+                  </option>
+                </select>
+
+                <div v-if="customForm.material" class="mt-2 d-flex flex-wrap">
+                  <template v-for="mat in product.customization.custom_options" :key="mat.material + '-img'">
+                    <img
+                      v-if="mat.material === customForm.material && mat.image"
+                      :src="`/storage/${mat.image}`"
+                      class="img-thumbnail me-2 mb-2"
+                      style="max-width: 100px; cursor: pointer"
+                      @click="mainImage = `/storage/${mat.image}`"
+                      :class="{'border border-primary': mainImage.endsWith(mat.image)}"
+                    />
+                  </template>
+                </div>
+              </div>
+
+              <!-- Color -->
+              <div v-if="product.customization.allow_color" class="mb-3">
+                <label class="form-label">Color</label>
+                <select v-model="customForm.color" class="form-select">
+                  <option disabled value="">Choose color</option>
+                  <template v-for="mat in product.customization.custom_options" :key="mat.material + '-color'">
+                    <option
+                      v-for="color in mat.colors"
+                      v-if="mat.material === customForm.material"
+                      :key="color.name"
+                      :value="color.name"
+                    >
+                      {{ color.name }}
+                    </option>
+                  </template>
+                </select>
+
+                <div v-if="customForm.color" class="mt-2 d-flex flex-wrap">
+                  <template v-for="mat in product.customization.custom_options" :key="mat.material + '-color-img'">
+                    <template v-if="mat.material === customForm.material">
+                      <img
+                        v-for="color in mat.colors"
+                        :key="color.name + '-img'"
+                        v-show="color.name === customForm.color && color.image"
+                        :src="`/storage/${color.image}`"
+                        class="img-thumbnail me-2 mb-2"
+                        style="max-width: 100px; cursor: pointer"
+                        @click="mainImage = `/storage/${color.image}`"
+                        :class="{'border border-primary': mainImage.endsWith(color.image)}"
+                      />
+                    </template>
+                  </template>
+                </div>
+              </div>
+
+              <!-- Size -->
+              <div v-if="product.customization.allow_size" class="mb-3">
+                <label class="form-label">Size</label>
+                <select v-model="customForm.size" class="form-select">
+                  <option disabled value="">Choose size</option>
+                  <template v-for="mat in product.customization.custom_options" :key="mat.material + '-size'">
+                    <option
+                      v-for="size in mat.sizes"
+                      v-if="mat.material === customForm.material"
+                      :key="size.name"
+                      :value="size.name"
+                    >
+                      {{ size.name }}
+                    </option>
+                  </template>
+                </select>
+              </div>
+
+              <!-- Pattern -->
+              <div v-if="product.customization.allow_pattern" class="mb-3">
+                <label class="form-label">Pattern</label>
+                <select v-model="customForm.pattern" class="form-select">
+                  <option disabled value="">Choose pattern</option>
+                  <template v-for="mat in product.customization.custom_options" :key="mat.material + '-pattern'">
+                    <option
+                      v-for="pattern in mat.patterns"
+                      v-if="mat.material === customForm.material"
+                      :key="pattern.name"
+                      :value="pattern.name"
+                    >
+                      {{ pattern.name }}
+                    </option>
+                  </template>
+                </select>
+
+                <div v-if="customForm.pattern" class="mt-2 d-flex flex-wrap">
+                  <template v-for="mat in product.customization.custom_options" :key="mat.material + '-pattern-img'">
+                    <template v-if="mat.material === customForm.material">
+                      <img
+                        v-for="pattern in mat.patterns"
+                        :key="pattern.name + '-img'"
+                        v-show="pattern.name === customForm.pattern && pattern.image"
+                        :src="`/storage/${pattern.image}`"
+                        class="img-thumbnail me-2 mb-2"
+                        style="max-width: 100px; cursor: pointer"
+                        @click="mainImage = `/storage/${pattern.image}`"
+                        :class="{'border border-primary': mainImage.endsWith(pattern.image)}"
+                      />
+                    </template>
+                  </template>
+                </div>
+              </div>
+
+              <!-- Quantity -->
+              <div class="mb-3">
+                <label class="form-label text-dark fw-bold">Quantity</label>
+                <input
+                  type="number"
+                  v-model.number="customForm.quantity"
+                  class="form-control"
+                  min="1"
+                  :max="product.stock"
+                />
+                  <small class="text-muted">Stock: {{ product.stock }}</small><br />
+                  <small class="text-danger">*Stock will be deducted after seller approval.</small>
+              </div>
+
+              <div class="d-flex gap-2 mt-3 flex-wrap">
+                <button @click="buyNowCustom" class="btn btn-primary">Buy Customized Now</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ✅ Seller Info -->
+        <div class="card mt-5 p-4 border-0 shadow rounded-4">
+          <h5 class="mb-4 text-secondary fw-bold">🛍 About the Seller</h5>
+
+          <div class="row g-4 align-items-start">
+            <div class="col-md-3 d-flex flex-column align-items-center text-center">
+              <img
+                :src="product.shop?.shop_logo ? `/storage/${product.shop.shop_logo}` : 'https://via.placeholder.com/100?text=No+Logo'"
+                alt="Shop Logo"
+                class="rounded-circle border shadow-sm mb-3"
+                style="width: 120px; height: 120px; object-fit: cover;"
+              />
+              <h6 class="fw-bold text-dark mb-3">
+                {{ product.shop?.shop_name ?? 'N/A' }}
+              </h6>
+              <div class="d-flex flex-column flex-md-row gap-2 w-100 justify-content-center px-2">
+                <button class="btn btn-primary" @click="goToChat">
+                  <i class="bi bi-chat-dots-fill me-1"></i> Chat
+                </button>
+                <button class="btn btn-outline-secondary" @click="goToShop">
+                  <i class="bi bi-shop-window me-1"></i> View
+                </button>
+              </div>
+            </div>
+
+            <div class="col-md-9">
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <p class="mb-2">
+                    <i class="bi bi-info-circle me-2"></i>
+                    <strong class="text-dark">Description:</strong><br>
+                    <span class="text-muted">{{ product.shop?.shop_description ?? 'N/A' }}</span>
+                  </p>
+                  <p class="mb-2">
+                    <i class="bi bi-telephone me-2"></i>
+                    <strong class="text-dark">Phone:</strong>
+                    <span class="text-muted">{{ product.shop?.phone_number ?? 'N/A' }}</span>
+                  </p>
+                  <p class="mb-2">
+                    <i class="bi bi-envelope me-2"></i>
+                    <strong class="text-dark">Email:</strong>
+                    <span class="text-muted">{{ product.shop?.email_address ?? 'N/A' }}</span>
+                  </p>
+                </div>
+                <div class="col-md-6">
+                  <p class="mb-2">
+                    <strong class="text-dark me-2">⭐ Ratings:</strong>
+                    <span class="text-muted">{{ product.shop?.shop_rating ?? 0 }} ({{ product.shop?.shop_rating_count ?? 0 }} reviews)</span>
+                  </p>
+                  <p class="mb-2">
+                    <i class="bi bi-plus-circle me-2"></i>
+                    <strong class="text-dark me-2">Followers:</strong>
+                    <span class="text-muted">{{ followerCount }}</span>
+                  </p>
+                  <p class="mb-2">
+                    <i class="bi bi-shop me-2"></i>
+                    <strong class="text-dark me-2">Shop Open Since:</strong>
+                    <span class="text-muted">
+                      {{ product.shop?.created_at ? new Date(product.shop.created_at).toLocaleDateString() : 'N/A' }}
+                    </span>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ✅ Ratings -->
+        <div v-if="ratings.length" class="mt-5">
+          <h4 class="text-dark mb-3">⭐ Customer Ratings & Reviews</h4>
+          <div v-for="rating in ratings" :key="rating.id" class="card my-3 p-3 border">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <div class="d-flex align-items-center gap-2">
+                <img
+                  :src="rating.user?.avatar
+                    ? `/storage/${rating.user.avatar}`
+                    : `https://ui-avatars.com/api/?name=${encodeURIComponent(rating.user?.name ?? 'User')}`"
+                  alt="User Avatar"
+                  class="rounded-circle border"
+                  style="width: 40px; height: 40px; object-fit: cover;"
+                />
+                <strong class="text-dark">
+                  {{ (rating.user?.first_name ?? 'Anonymous') + (rating.user?.last_name ? ' ' + rating.user.last_name : '') }}
+                </strong>
+              </div>
+              <small class="text-muted">{{ new Date(rating.created_at).toLocaleString() }}</small>
+            </div>
+
+            <div class="mb-2">
+              <strong class="text-dark">Product:</strong>
+              <span v-for="i in 5" :key="'p-star-' + i" class="text-warning">
+                <i :class="i <= rating.product_rating ? 'bi bi-star-fill' : 'bi bi-star'"></i>
+              </span>
+              <br />
+              <strong class="text-dark">Shop:</strong>
+              <span v-for="i in 5" :key="'s-star-' + i" class="text-info">
+                <i :class="i <= rating.shop_rating ? 'bi bi-star-fill' : 'bi bi-star'"></i>
+              </span>
+            </div>
+
+            <p class="mb-2">{{ rating.comment }}</p>
+            <div v-if="rating.image" class="mt-2">
+              <img :src="`/storage/${rating.image}`" class="img-thumbnail" style="max-width: 200px;" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+</template>
+
+<script setup>
+import { ref, defineProps, watch } from 'vue'
+import { router, useForm, Link } from '@inertiajs/vue3'
+
+const props = defineProps({
+  product: Object,
+  ratings: Array,
+  averageRating: Number,
+  ratingsCount: Number,
+  totalSold: Number,
+  isFollowing: Boolean,
+  followerCount: Number,
+})
+
+const quantity = ref(1)
+const isFollowing = ref(props.isFollowing)
+const followerCount = ref(props.followerCount)
+const averageRating = ref(props.averageRating ?? 0)
+const ratingsCount = ref(props.ratingsCount ?? 0)
+const totalSold = ref(props.totalSold ?? 0)
+const followLoading = ref(false)
+const showCustomizeForm = ref(false)
+
+// ✅ Guest: any action → go to login
+// const goLogin = () => router.visit('/login')
+const goLogin = () => router.visit('/login', { preserveScroll: true })
+
+// Product image
+const mainImage = ref(
+  props.product.image
+    ? `/storage/${props.product.image}`
+    : 'https://via.placeholder.com/500x400?text=No+Image'
+)
+
+watch(mainImage, (newImg) => {
+  customForm.selected_image = newImg
+})
+
+// Customization form (still shown, but no submit)
+const customForm = useForm({
+  product_id: props.product.id,
+  color: '',
+  size: '',
+  material: '',
+  pattern: '',
+  custom_name: '',
+  custom_description: '',
+  quantity: 1,
+  selected_image: mainImage.value,
+})
+
+/* ✅ Override all actions to login */
+const addToCart = goLogin
+const buyNow = goLogin
+const buyNowCustom = goLogin
+const toggleFollow = goLogin
+const goToChat = goLogin
+const goToShop = goLogin
+</script>

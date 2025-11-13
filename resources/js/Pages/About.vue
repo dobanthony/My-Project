@@ -19,7 +19,7 @@
           <p class="card-text text-muted fs-5">
             <strong class="text-success">CraftSmart</strong> is a people-first eCommerce platform designed to make shopping simple, secure,
             and accessible. Whether you're buying essentials or discovering local artisan crafts, our platform connects
-            customers with trusted sellers and high-quality products across the country.
+            customers with trusted sellers and high-quality products across the Province.
           </p>
         </div>
       </div>
@@ -32,7 +32,7 @@
           </h4>
           <p class="card-text text-muted fs-5">
             To empower every Filipino — from buyers to small business owners — through a reliable and inclusive digital marketplace.
-            We aim to simplify shopping by offering fast delivery, excellent support, and secure transactions nationwide.
+            We aim to simplify shopping by offering fast delivery, excellent support, and secure transactions within the Province.
           </p>
         </div>
       </div>
@@ -44,9 +44,9 @@
             <i class="bi bi-book-half me-2 text-warning"></i>Our Story
           </h4>
           <p class="card-text text-muted fs-5">
-            ShopSmart was born in 2022 in Sorsogon, Philippines, starting as a small family-run retail shop.
+            ShopSmart was born in 2025 in Sorsogon, Philippines, starting as a small LGU retail shop.
             Seeing the shift in consumer habits, we transitioned online to help local businesses thrive and reach a broader market.
-            Today, we serve thousands of Filipinos across the country.
+            Today, we serve thousands of Filipinos across the Province.
           </p>
         </div>
       </div>
@@ -83,13 +83,16 @@
             <i class="bi bi-envelope-at-fill me-2 text-info"></i>Get in Touch
           </h4>
           <p class="text-muted fs-5 mb-1">
-            📍 <strong>Head Office:</strong> 123 Market Street, Sorsogon City, Philippines
+            <i class="bi bi-geo-alt-fill me-2 text-success"></i>
+            <strong>Head Office:</strong> DTI Bulusan, Sorsogon, Philippines
           </p>
           <p class="text-muted fs-5 mb-1">
-            📞 <strong>Phone:</strong> +63 912 345 6789
+            <i class="bi bi-telephone-fill me-2 text-primary"></i>
+            <strong>Phone:</strong> +63 912 345 6789
           </p>
           <p class="text-muted fs-5">
-            📧 <strong>Email:</strong> support@shopsmart.com
+            <i class="bi bi-envelope-fill me-2 text-danger"></i>
+            <strong>Email:</strong> support@shopsmart.com
           </p>
         </div>
       </div>

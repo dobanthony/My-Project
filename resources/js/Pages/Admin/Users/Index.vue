@@ -1,74 +1,20 @@
-<script setup>
-import { ref, onMounted } from 'vue'
-import { Link, router, usePage } from '@inertiajs/vue3'
-import AdminDashboardLayout from '@/Layouts/AdminDashboardLayout.vue'
-import * as bootstrap from 'bootstrap'
-
-const props = defineProps({
-  users: Array,
-})
-
-// ✅ Toast logic
-const toastRef = ref(null)
-const successMessage = usePage().props.flash?.success || ''
-onMounted(() => {
-  if (successMessage && toastRef.value) {
-    const toast = new bootstrap.Toast(toastRef.value, { delay: 2500 })
-    toast.show()
-  }
-})
-
-// ✅ Delete modal logic
-const selectedUser = ref({})
-const deleteModal = ref(null)
-
-function formatDate(date) {
-  const d = new Date(date)
-  return d.toLocaleString('en-PH', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-    hour12: true,
-  })
-}
-
-function roleBadgeClass(role) {
-  switch (role) {
-    case 'admin': return 'bg-success'
-    case 'seller': return 'bg-danger'
-    case 'user': return 'bg-primary'
-    default: return 'bg-secondary'
-  }
-}
-
-function openDeleteModal(user) {
-  selectedUser.value = user
-  const modal = new bootstrap.Modal(deleteModal.value)
-  modal.show()
-}
-
-function confirmDelete() {
-  if (selectedUser.value && selectedUser.value.id) {
-    router.delete(`/admin/users/${selectedUser.value.id}`, {
-      onFinish: () => {
-        const modal = bootstrap.Modal.getInstance(deleteModal.value)
-        modal.hide()
-      },
-    })
-  }
-}
-</script>
-
 <template>
   <AdminDashboardLayout>
     <div class="container py-4">
       <!-- Page Title -->
-      <h2 class="mb-4 fw-bold d-flex align-items-center">
-        <i class="bi bi-people-fill me-2 text-success"></i>
-        User Management
-      </h2>
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold d-flex align-items-center mb-0">
+          <i class="bi bi-people-fill me-2 text-success"></i>
+          User Management
+        </h2>
+        <Link
+          href="/admin/users/archived"
+          class="btn btn-outline-secondary btn-sm"
+        >
+          <i class="bi bi-archive-fill me-1"></i>
+          View Archived Users
+        </Link>
+      </div>
 
       <!-- No users -->
       <div v-if="users.length === 0" class="alert alert-info shadow-sm">
@@ -113,11 +59,12 @@ function confirmDelete() {
                 >
                   <i class="bi bi-pencil-square"></i>
                 </Link>
+                <!-- ✅ Archive Button -->
                 <button
-                  @click="openDeleteModal(user)"
-                  class="btn btn-sm btn-outline-danger"
+                  @click="openArchiveModal(user)"
+                  class="btn btn-sm btn-outline-warning"
                 >
-                  <i class="bi bi-trash3"></i>
+                  <i class="bi bi-archive"></i>
                 </button>
               </td>
             </tr>
@@ -149,30 +96,30 @@ function confirmDelete() {
       </div>
     </div>
 
-    <!-- ✅ Delete Confirmation Modal -->
+    <!-- ✅ Archive Confirmation Modal -->
     <div
       class="modal fade"
-      id="deleteUserModal"
+      id="archiveUserModal"
       tabindex="-1"
-      aria-labelledby="deleteUserModalLabel"
+      aria-labelledby="archiveUserModalLabel"
       aria-hidden="true"
-      ref="deleteModal"
+      ref="archiveModal"
     >
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content shadow-lg">
-          <div class="modal-header bg-danger text-white">
-            <h5 class="modal-title" id="deleteUserModalLabel">
-              <i class="bi bi-exclamation-triangle me-2"></i> Confirm Delete
+          <div class="modal-header bg-warning text-dark">
+            <h5 class="modal-title" id="archiveUserModalLabel">
+              <i class="bi bi-archive me-2"></i> Confirm Archive
             </h5>
             <button
               type="button"
-              class="btn-close btn-close-white"
+              class="btn-close"
               data-bs-dismiss="modal"
               aria-label="Close"
             ></button>
           </div>
           <div class="modal-body">
-            Are you sure you want to delete
+            Are you sure you want to archive
             <strong>{{ selectedUser?.first_name }} {{ selectedUser?.last_name }}</strong>
             (<small>{{ selectedUser?.email }}</small>)?
           </div>
@@ -186,10 +133,10 @@ function confirmDelete() {
             </button>
             <button
               type="button"
-              class="btn btn-danger"
-              @click="confirmDelete"
+              class="btn btn-warning text-dark"
+              @click="confirmArchive"
             >
-              <i class="bi bi-trash me-1"></i> Yes, Delete
+              <i class="bi bi-archive me-1"></i> Yes, Archive
             </button>
           </div>
         </div>
@@ -197,3 +144,77 @@ function confirmDelete() {
     </div>
   </AdminDashboardLayout>
 </template>
+
+<script setup>
+import { ref, onMounted } from 'vue'
+import { Link, router, usePage } from '@inertiajs/vue3'
+import AdminDashboardLayout from '@/Layouts/AdminDashboardLayout.vue'
+import * as bootstrap from 'bootstrap'
+
+const props = defineProps({
+  users: Array,
+})
+
+// ✅ Toast logic
+const toastRef = ref(null)
+const successMessage = ref(usePage().props.flash?.success || '') // 🟩 make reactive
+onMounted(() => {
+  if (successMessage.value && toastRef.value) {
+    const toast = new bootstrap.Toast(toastRef.value, { delay: 2500 })
+    toast.show()
+  }
+})
+
+// ✅ Archive modal logic
+const selectedUser = ref({})
+const archiveModal = ref(null)
+
+function formatDate(date) {
+  const d = new Date(date)
+  return d.toLocaleString('en-PH', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: true,
+  })
+}
+
+function roleBadgeClass(role) {
+  switch (role) {
+    case 'admin': return 'bg-success'
+    case 'seller': return 'bg-danger'
+    case 'user': return 'bg-primary'
+    default: return 'bg-secondary'
+  }
+}
+
+function openArchiveModal(user) {
+  selectedUser.value = user
+  const modal = new bootstrap.Modal(archiveModal.value)
+  modal.show()
+}
+
+function confirmArchive() {
+  if (selectedUser.value && selectedUser.value.id) {
+    router.delete(`/admin/users/${selectedUser.value.id}`, {
+      onSuccess: () => {
+        // 🟩 Hide modal
+        const modal = bootstrap.Modal.getInstance(archiveModal.value)
+        modal.hide()
+
+        // 🟩 Show success toast
+        successMessage.value = 'User successfully archived!'
+        setTimeout(() => {
+          const toast = new bootstrap.Toast(toastRef.value, { delay: 2500 })
+          toast.show()
+        }, 200)
+      },
+      onFinish: () => {
+        selectedUser.value = {}
+      },
+    })
+  }
+}
+</script>

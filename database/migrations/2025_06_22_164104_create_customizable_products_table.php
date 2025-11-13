@@ -21,16 +21,6 @@ return new class extends Migration
             $table->boolean('allow_pattern')->default(false);
 
             $table->json('custom_options')->nullable();
-            // Example JSON structure:
-            // [
-            //   { 
-            //     "material": "Bamboo",
-            //     "image": "bamboo.jpg",
-            //     "colors": [{"name": "Blue", "image": "blue.jpg"}],
-            //     "patterns": [{"name": "Polka Dots", "image": "dots.jpg"}],
-            //     "sizes": [{"name": "Large", "image": "large.jpg"}]
-            //   }
-            // ]
 
             $table->timestamps();
         });

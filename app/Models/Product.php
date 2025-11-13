@@ -19,11 +19,14 @@ class Product extends Model
         'stock',
         'image',
         'eco_friendly',
+        'category_id', 
     ];
 
     protected $casts = [
         'eco_friendly' => 'boolean',
     ];
+
+    protected $dates = ['deleted_at'];
 
     public function shop()
     {
@@ -38,6 +41,10 @@ class Product extends Model
     {
         return $this->hasOne(CustomizableProduct::class);
     }
+    public function customizableProduct()
+{
+    return $this->hasOne(CustomizableProduct::class);
+}
 
     public function user()
     {
@@ -46,6 +53,10 @@ class Product extends Model
     public function productRatings()
     {
         return $this->hasMany(\App\Models\ShopRating::class, 'product_id');
+    }
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
     }
 
 }

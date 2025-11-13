@@ -59,6 +59,11 @@ Route::middleware(['auth'])->prefix('seller')->name('seller.')->group(function (
     Route::put('/products/{product}', [ProductController::class, 'update'])->name('products.update');
     Route::delete('/products/{product}', [ProductController::class, 'destroy'])->name('products.destroy');
 
+    // Archive routes
+    Route::get('/products/archived', [ProductController::class, 'archived'])->name('seller.products.archived');
+    Route::post('/products/{id}/restore', [ProductController::class, 'restore'])->name('seller.products.restore');
+    Route::delete('/products/{id}/force-delete', [ProductController::class, 'forceDelete'])->name('seller.products.forceDelete');
+
     // Orders
     Route::get('/orders', [OrderController::class, 'sellerOrders']);
     Route::post('/orders/{order}/approve', [OrderController::class, 'approve']);
@@ -199,41 +204,82 @@ Route::middleware(['auth', 'verified'])->prefix('seller')->name('seller.')->grou
 
 use App\Http\Controllers\AnnouncementController;
 
-Route::middleware('auth')->group(function () {
-    Route::get('/admin/announcements', [AnnouncementController::class, 'adminIndex'])->name('admin.announcements');
-    Route::post('/admin/announcements', [AnnouncementController::class, 'store']);
-    Route::put('/admin/announcements/{id}', [AnnouncementController::class, 'update']);
-    Route::delete('/admin/announcements/{id}', [AnnouncementController::class, 'destroy']);
+Route::prefix('admin')->group(function () {
+    Route::get('/announcements', [AnnouncementController::class, 'adminIndex'])->name('admin.announcements');
+    Route::get('/announcements/archived', [AnnouncementController::class, 'archived'])->name('admin.announcements.archived');
+    Route::post('/announcements', [AnnouncementController::class, 'store']);
+    Route::put('/announcements/{id}', [AnnouncementController::class, 'update']);
+    Route::delete('/announcements/{id}', [AnnouncementController::class, 'destroy']);
+    Route::put('/announcements/{id}/restore', [AnnouncementController::class, 'restore']);
+    Route::delete('/announcements/{id}/force', [AnnouncementController::class, 'forceDelete']);
+});
 
+Route::middleware(['auth'])->group(function () {
     Route::get('/user/dashboard', [AnnouncementController::class, 'index'])->name('user.dashboard');
 });
 
 
 use App\Http\Controllers\Admin\UserController;
 
-Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
+Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/users', [UserController::class, 'index'])->name('users.index');
+    Route::get('/users/archived', [UserController::class, 'archived'])->name('users.archived');
     Route::get('/users/{user}', [UserController::class, 'show'])->name('users.show');
     Route::get('/users/{user}/edit', [UserController::class, 'edit'])->name('users.edit');
     Route::put('/users/{user}', [UserController::class, 'update'])->name('users.update');
-    Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
+
+    // Archive instead of delete
+    Route::delete('/users/{user}', [UserController::class, 'archive'])->name('users.archive');
+
+    // Restore + Permanent delete
+    Route::post('/users/{id}/restore', [UserController::class, 'restore'])->name('users.restore');
+    Route::delete('/users/{id}/force-delete', [UserController::class, 'forceDelete'])->name('users.force-delete');
 });
+
 
 use App\Http\Controllers\SellerApplicationController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 
-Route::get('/apply-seller', [SellerApplicationController::class, 'showForm']);
-Route::post('/apply-seller', [SellerApplicationController::class, 'apply']);
+// Route::get('/apply-seller', [SellerApplicationController::class, 'showForm']);
+// Route::post('/apply-seller', [SellerApplicationController::class, 'apply']);
 Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 
+Route::middleware(['auth'])->group(function () {
+    Route::get('/apply-seller', [SellerApplicationController::class, 'showForm'])->name('seller.apply.form');
+    Route::post('/apply-seller', [SellerApplicationController::class, 'apply'])->name('seller.apply.submit');
+    Route::get('/apply-seller/status', [SellerApplicationController::class, 'status'])->name('seller.apply.status');
+});
+
+
+// use App\Http\Controllers\Admin\SellerApprovalController;
+
+
+// Route::prefix('admin')->group(function () {
+//     Route::get('/seller-applications', [SellerApprovalController::class, 'index']);
+//     // Route::get('/seller-applications/{user}', [SellerApprovalController::class, 'show']);
+//     Route::get('/admin/seller-applications/{user}', [SellerApprovalController::class, 'show'])
+//     ->name('admin.seller-applications.show');
+//     Route::post('/seller-applications/{user}/approve', [SellerApprovalController::class, 'approve']);
+//     Route::post('/seller-applications/{user}/decline', [SellerApprovalController::class, 'decline']);
+// });
 use App\Http\Controllers\Admin\SellerApprovalController;
 
+Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () {
+    // ✅ Index (list of applications)
+    Route::get('/seller-applications', [SellerApprovalController::class, 'index'])
+        ->name('seller-applications.index');
 
-Route::prefix('admin')->group(function () {
-    Route::get('/seller-applications', [SellerApprovalController::class, 'index']);
-    Route::post('/seller-applications/{user}/approve', [SellerApprovalController::class, 'approve']);
-    Route::post('/seller-applications/{user}/decline', [SellerApprovalController::class, 'decline']);
+    // ✅ Show single application
+    Route::get('/seller-applications/{user}', [SellerApprovalController::class, 'show'])
+        ->name('seller-applications.show');
+
+    // ✅ Approve and Decline
+    Route::post('/seller-applications/{user}/approve', [SellerApprovalController::class, 'approve'])
+        ->name('seller-applications.approve');
+    Route::post('/seller-applications/{user}/decline', [SellerApprovalController::class, 'decline'])
+        ->name('seller-applications.decline');
 });
+
 
 Route::prefix('admin')->middleware('auth')->name('admin.')->group(function () {
     Route::get('/marketplace', [\App\Http\Controllers\Admin\AdminMarketplaceController::class, 'index'])->name('marketplace.index');
@@ -249,12 +295,20 @@ Route::get('/admin/dashboard', [AdminDashboardController::class, 'index'])->name
 
 use App\Http\Controllers\Admin\AdminMarketplaceController;
 
+// Marketplace
 Route::prefix('admin/marketplace')->name('admin.marketplace.')->group(function () {
     Route::get('/', [AdminMarketplaceController::class, 'index'])->name('index');
-    Route::get('/{product}', [AdminMarketplaceController::class, 'show'])->name('show');
-    Route::delete('/{product}', [AdminMarketplaceController::class, 'destroy'])->name('destroy');
-});
 
+    // ✅ Put this above the dynamic one
+    Route::get('/archived', [AdminMarketplaceController::class, 'archived'])->name('archived');
+
+    Route::post('/{product}/archive', [AdminMarketplaceController::class, 'archive'])->name('archive');
+    Route::post('/{id}/restore', [AdminMarketplaceController::class, 'restore'])->name('restore');
+    Route::delete('/{id}/force-delete', [AdminMarketplaceController::class, 'forceDelete'])->name('force-delete');
+
+    // ✅ Keep this at the bottom
+    Route::get('/{product}', [AdminMarketplaceController::class, 'show'])->name('show');
+});
 
 use App\Http\Controllers\Seller\OrderCancelNotificationController;
 
@@ -280,5 +334,16 @@ Route::get('/chat', function () {
 
 // BotMan handle route (handles user messages)
 Route::post('/botman', [ChatBotController::class, 'handle'])->name('botman.handle');
+
+// use App\Http\Controllers\Seller\ProductController;
+
+Route::get('/', [ProductController::class, 'showWelcomeProducts'])->name('welcome');
+
+use App\Http\Controllers\Seller\ProductController as SellerProductController;
+
+Route::get('/user/view', [SellerProductController::class, 'showPublic'])->name('user.view');
+
+Route::get('/products/{id}/guest', [ProductController::class, 'showGuest'])->name('products.guest.show');
+
 
 require __DIR__.'/auth.php';

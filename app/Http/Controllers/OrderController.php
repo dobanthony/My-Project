@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use App\Models\Order;
+use App\Models\Category;
 use App\Models\ReceivedOrder;
 use App\Models\Review;
 use App\Notifications\OrderIssueReported;
@@ -12,38 +13,11 @@ use App\Notifications\OrderStatusNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Notification;
 use App\Notifications\OrderCanceledNotification;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
 class OrderController extends Controller
 {
-    // public function store(Request $request)
-    // {
-    //     $validated = $request->validate([
-    //         'product_id' => 'required|exists:products,id',
-    //         'quantity' => 'required|integer|min:1'
-    //     ]);
-
-    //     $product = Product::findOrFail($validated['product_id']);
-
-    //     // Stock check
-    //     if ($product->stock < $validated['quantity']) {
-    //         return back()->withErrors(['quantity' => 'Not enough stock available.']);
-    //     }
-
-    //     // Place order
-    //     Order::create([
-    //         'user_id' => auth()->id(),
-    //         'product_id' => $product->id,
-    //         'quantity' => $validated['quantity'],
-    //         'status' => 'pending',
-    //     ]);
-
-    //     // Update stock and sold
-    //     $product->decrement('stock', $validated['quantity']);
-    //     $product->increment('total_sold', $validated['quantity']);
-
-    //     return back()->with('success', 'Order placed. Waiting for seller approval.');
-    // }
     public function store(Request $request)
 {
     $validated = $request->validate([
@@ -60,7 +34,7 @@ class OrderController extends Controller
 
     $product = Product::findOrFail($validated['product_id']);
 
-    // ✅ Stock check
+    // ✅ Stock check — just check, don’t deduct yet
     if ($product->stock < $validated['quantity']) {
         return back()->withErrors(['quantity' => 'Not enough stock available.']);
     }
@@ -77,7 +51,7 @@ class OrderController extends Controller
         $customization['custom_image'] = $customImagePath;
     }
 
-    // ✅ Place order
+    // ✅ Create order without affecting stock
     $order = Order::create([
         'user_id' => auth()->id(),
         'product_id' => $product->id,
@@ -86,80 +60,84 @@ class OrderController extends Controller
         'customization_details' => $customization,
     ]);
 
-    // ✅ Update stock and sold
-    $product->decrement('stock', $validated['quantity']);
-    $product->increment('total_sold', $validated['quantity']);
-
-    return back()->with('success', 'Order placed. Waiting for seller approval.');
+    return back()->with('success', 'Order placed successfully. Waiting for seller approval.');
 }
 
 
     public function sellerOrders(Request $request)
-    {
-        $search = $request->input('search');
-        $status = $request->input('status');
+{
+    $search = $request->input('search');
+    $status = $request->input('status');
+    $categoryId = $request->input('category_id'); // 🆕 add category filter
 
-        $query = Order::with(['product', 'user'])
-            ->whereHas('product.shop', fn($q) =>
-                $q->where('user_id', auth()->id())
-            );
+    $query = Order::with(['product.category', 'user'])
+        ->whereHas('product.shop', fn($q) =>
+            $q->where('user_id', auth()->id())
+        );
 
-        if ($search) {
-            $query->where(function ($q) use ($search) {
-                $q->whereHas('product', fn($sub) =>
-                    $sub->where('name', 'like', "%{$search}%")
-                )->orWhereHas('user', fn($sub) =>
-                    $sub->where('name', 'like', "%{$search}%")
-                )->orWhere('status', 'like', "%{$search}%");
-            });
-        }
-
-        if ($status) {
-            $query->where('status', $status);
-        }
-
-        return Inertia::render('Seller/Orders', [
-            'orders' => $query->latest()->paginate(10)->withQueryString(),
-            'filters' => $request->only('search', 'status'),
-        ]);
+    if ($search) {
+        $query->where(function ($q) use ($search) {
+            $q->whereHas('product', fn($sub) =>
+                $sub->where('name', 'like', "%{$search}%")
+            )->orWhereHas('user', fn($sub) =>
+                $sub->where('first_name', 'like', "%{$search}%")
+                    ->orWhere('last_name', 'like', "%{$search}%")
+            )->orWhere('status', 'like', "%{$search}%");
+        });
     }
 
-    public function approve(Request $request, Order $order)
-    {
-        if ($order->status !== 'pending') {
-            return back()->with('error', 'This order has already been processed.');
-        }
+    if ($status) {
+        $query->where('status', $status);
+    }
 
-        $request->validate([
-            'delivery_date' => 'required|date|after_or_equal:today'
-        ]);
+    // 🆕 Filter by category
+    if ($categoryId) {
+        $query->whereHas('product', fn($p) =>
+            $p->where('category_id', $categoryId)
+        );
+    }
 
+    $orders = $query->latest()->paginate(25)->withQueryString();
+
+    // 🆕 Get all categories for dropdown
+    $categories = \App\Models\Category::orderBy('name')->get(['id', 'name']);
+
+    return Inertia::render('Seller/Orders', [
+        'orders' => $orders,
+        'categories' => $categories, // 🆕 send to Vue
+        'filters' => $request->only('search', 'status', 'category_id'),
+    ]);
+}
+
+
+public function approve(Request $request, Order $order)
+{
+    DB::transaction(function () use ($order, $request) {
         $product = $order->product;
 
-        // Re-check stock (for safety)
         if ($product->stock < $order->quantity) {
-            return back()->with('error', 'Not enough stock to approve the order.');
+            throw new \Exception('Not enough stock to approve this order.');
         }
 
-        // Deduct only if not already deducted on creation
-        // Optional safety: you may track a 'deducted' field or skip this if already handled
+        // ✅ Deduct stock only upon approval
+        $product->decrement('stock', $order->quantity);
+        $product->increment('total_sold', $order->quantity);
 
         $order->update([
             'status' => 'approved',
-            'delivery_date' => $request->delivery_date
+            'delivery_date' => $request->delivery_date,
         ]);
+    });
 
-        // Notify buyer
-        $order->user->notify(new OrderStatusNotification($order, '✅ Your order has been approved!'));
+    return redirect()->back(303)->with('success', 'Order approved and stock updated.');
+}
 
-        return back()->with('success', 'Order approved with delivery date.');
-    }
 
     public function decline(Order $order)
     {
         $order->update(['status' => 'declined']);
 
-        $order->user->notify(new OrderStatusNotification($order, '❌ Your order has been declined.'));
+        $order->user->notify(new OrderStatusNotification($order, 'Your order has been declined.'));
 
         return back()->with('error', 'Order declined.');
     }
@@ -167,7 +145,8 @@ class OrderController extends Controller
     public function show(Order $order)
     {
         return Inertia::render('Receipt', [
-            'order' => $order->load('product', 'user', 'product.shop.user')
+            'order' => $order->load('product.category', 'product.shop.user', 'user', 'deliveryInfo.province',
+            'deliveryInfo.municipality','deliveryInfo.barangay'),
         ]);
     }
 
@@ -348,6 +327,7 @@ public function myOrders(Request $request)
 
         return back()->with('success', 'Order has been canceled.');
     }
+
     public function sellerView(Order $order)
     {
         if ($order->product->shop->user_id !== auth()->id()) {
@@ -356,28 +336,33 @@ public function myOrders(Request $request)
 
         $order->load([
             'user',
+            'product.category', // ✅ include category
             'product.shop.user',
+            'deliveryInfo.province',
+            'deliveryInfo.municipality',
+            'deliveryInfo.barangay'
         ]);
 
         return Inertia::render('Seller/View', [
-            'order' => $order->toArray(), // ✅ ensure customization_details gets included
+            'order' => $order->toArray(),
             'isSeller' => true,
         ]);
     }
-
-
+    
     public function receipt(Order $order)
     {
         $user = auth()->user();
 
-        $order->load('user', 'product.shop.user', 'receivedOrder');
+        $order->load('user', 'product.category', 'product.shop.user', 'receivedOrder', 'deliveryInfo.province',
+        'deliveryInfo.municipality','deliveryInfo.barangay');
+
         $isSeller = $order->product->shop->user_id === $user->id;
 
         return Inertia::render('Receipt', [
             'order' => $order,
             'userId' => $user->id,
             'isSeller' => $isSeller,
-            'hasReported' => (bool) $order->reported, // ✅ ensure boolean
+            'hasReported' => (bool) $order->reported,
         ]);
     }
 

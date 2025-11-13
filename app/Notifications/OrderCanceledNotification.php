@@ -25,7 +25,7 @@ class OrderCanceledNotification extends Notification
     {
         return [
             'order_id' => $this->order->id,
-            'message' => "❌ Order #{$this->order->id} was canceled by the buyer.",
+            'message' => "Order #{$this->order->id} was canceled by the buyer.",
         ];
     }
 }

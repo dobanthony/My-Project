@@ -21,13 +21,13 @@ class Order extends Model
         'delivery_address',
         'notes',
         'delivery_status',
-        'customization_details', // 👈 make sure this is fillable
-            'reported',
-    'report_message',
+        'customization_details', // make sure this is fillable
+        'reported',
+        'report_message',
     ];
 
     protected $casts = [
-        'customization_details' => 'array', // ✅ Cast to array
+        'customization_details' => 'array', // Cast to array
     ];
 
     public function product()

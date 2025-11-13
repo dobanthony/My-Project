@@ -28,6 +28,7 @@
         "chart.js": "^4.5.0",
         "pinia": "^3.0.3",
         "vue": "^3.5.16",
-        "vue-chartjs": "^5.3.2"
+        "vue-chartjs": "^5.3.2",
+        "ziggy-js": "^2.6.0"
     }
 }

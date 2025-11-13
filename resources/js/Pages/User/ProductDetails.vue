@@ -1,3 +1,5 @@
+in this code ok now in this code
+
 <template>
   <DashboardLayout>
     <!-- ✅ Toast Notification -->
@@ -53,10 +55,26 @@
           <div class="col-12 col-lg-6">
             <h2 class="text-success fw-bold mb-2 d-flex align-items-center gap-2">
               {{ product.name }}
-              <span v-if="product.eco_friendly" class="badge bg-success d-flex align-items-center">
-                <i class="bi bi-leaf me-1"></i> Eco-Friendly
+              <span
+                v-if="product.customizable_product && (
+                  product.customizable_product.allow_color ||
+                  product.customizable_product.allow_size ||
+                  product.customizable_product.allow_material ||
+                  product.customizable_product.allow_pattern
+                )"
+                class="badge bg-primary d-flex align-items-center"
+              >
+                <i class="bi bi-tools me-1"></i> Can Customize
               </span>
             </h2>
+            
+            <!-- ✅ Product Category -->
+            <div class="mb-3">
+              <span class="badge bg-white text-secondary d-flex gap-1 fs-6">
+                <i class="bi bi-tags-fill"></i>
+                {{ product.category || 'Uncategorized' }}
+              </span>
+            </div>
 
             <!-- Ratings -->
             <div class="d-flex flex-wrap gap-3 mb-3">
@@ -75,7 +93,7 @@
                 <span class="text-muted"> Ratings</span>
               </div>
               <div>
-                <span class="fw-bold text-dark">{{ product.total_sold }}</span>
+                <span class="fw-bold text-dark">{{ totalSold }}</span>
                 <span class="text-muted"> Sold</span>
               </div>
             </div>
@@ -111,19 +129,33 @@
             <p class="text-secondary mt-3">{{ product.description }}</p>
             <h3 class="text-success fw-bold mb-4">₱{{ parseFloat(product.price).toFixed(2) }}</h3>
 
-            <!-- Quantity -->
-            <div class="mb-3">
+            <!-- Quantity (Hidden when customized) -->
+            <div v-if="!product.customization" class="mb-3">
               <label class="text-dark form-label fw-semibold">Quantity</label>
-              <input
-                type="number"
-                v-model.number="quantity"
-                class="form-control w-100 w-md-50"
-                min="1"
-                :max="product.stock"
-              />
-              <small class="text-muted">Stock: {{ product.stock }}</small><br />
-              <small class="text-danger">*Stock will be deducted after seller approval.</small>
+<input
+  type="number"
+  v-model.number="quantity"
+  class="form-control w-100 w-md-50"
+  min="1"
+  :max="product.stock"
+  @input="validateQuantity"
+/>
+
+              <small
+                :class="{
+                  'text-danger fw-bold': product.stock === 0,
+                  'text-muted': product.stock > 0
+                }"
+              >
+                Stock:
+                <span>{{ product.stock }}</span>
+              </small><br>
+              <small v-if="product.stock === 0" class="text-danger fw-bold">
+                <i class="bi bi-exclamation-triangle-fill"></i>
+                This product is currently out of stock.
+              </small>
             </div>
+
 
             <!-- Buttons -->
             <div class="d-grid gap-2 d-md-flex mt-4">
@@ -135,14 +167,25 @@
                 🎨 {{ showCustomizeForm ? 'Hide Customize' : 'Customize' }}
               </button>
 
-              <template v-else>
-                <button @click="addToCart" class="btn btn-outline-success px-4">
-                  <i class="bi bi-cart-plus me-2"></i>Add to Cart
-                </button>
-                <button @click="buyNow" class="btn btn-primary">
-                  <i class="bi bi-bag me-2"></i>Buy Now
-                </button>
-              </template>
+<template v-else>
+<button
+  @click="addToCart"
+  class="btn btn-outline-success px-4"
+  :disabled="product.stock === 0 || quantity <= 0 || quantity > product.stock"
+>
+  <i class="bi bi-cart-plus me-2"></i>
+  {{ product.stock === 0 ? 'Out of Stock' : 'Add to Cart' }}
+</button>
+
+<button
+  @click="buyNow"
+  class="btn btn-primary"
+  :disabled="product.stock === 0 || quantity <= 0 || quantity > product.stock"
+>
+  <i class="bi bi-bag me-2"></i>
+  {{ product.stock === 0 ? 'Out of Stock' : 'Buy Now' }}
+</button>
+</template>
             </div>
 
             <!-- ✅ Customization Form -->
@@ -268,18 +311,31 @@
               <!-- Quantity -->
               <div class="mb-3">
                 <label class="form-label text-dark fw-bold">Quantity</label>
-                <input
-                  type="number"
-                  v-model.number="customForm.quantity"
-                  class="form-control"
-                  min="1"
-                  :max="product.stock"
-                />
+<input
+  type="number"
+  v-model.number="customForm.quantity"
+  class="form-control"
+  min="1"
+  :max="product.stock"
+  @input="validateCustomQuantity"
+/>
+                  <small class="text-muted">Stock: {{ product.stock }}</small><br />
+                  <small v-if="product.stock === 0" class="text-danger fw-bold">
+                    <i class="bi bi-exclamation-triangle-fill"></i>
+                    This product is currently out of stock.
+                  </small>
               </div>
+<div class="d-flex gap-2 mt-3 flex-wrap">
+<button
+  @click="buyNowCustom"
+  class="btn btn-primary"
+  :disabled="product.stock === 0 || customForm.quantity <= 0 || customForm.quantity > product.stock"
+>
+  <i class="bi bi-bag me-2"></i>
+  {{ product.stock === 0 ? 'Out of Stock' : 'Buy Customized Now' }}
+</button>
 
-              <div class="d-flex gap-2 mt-3 flex-wrap">
-                <button @click="buyNowCustom" class="btn btn-primary">Buy Customized Now</button>
-              </div>
+</div>
             </div>
           </div>
         </div>
@@ -454,26 +510,33 @@ const customForm = useForm({
   selected_image: mainImage.value,
 })
 
-// Add normal product to cart
+const validateQuantity = () => {
+  if (quantity.value < 1) quantity.value = 0;
+  if (quantity.value > props.product.stock) quantity.value = props.product.stock;
+};
+
+const validateCustomQuantity = () => {
+  if (customForm.quantity < 1) customForm.quantity = 0;
+  if (customForm.quantity > props.product.stock) customForm.quantity = props.product.stock;
+};
+
+
 const addToCart = () => {
-  router.post('/cart/add', {
-    product_id: props.product.id,
-    quantity: quantity.value,
-  }, {
+  if (props.product.stock === 0) return
+  router.post('/cart/add', { product_id: props.product.id, quantity: quantity.value }, {
     onSuccess: () => {
-      showToast('✅ Product added to cart!')
-      setTimeout(() => (message.value = ''), 3000)
+      showToast('Product added to cart!')
     },
   })
 }
 
-// Buy normal product
 const buyNow = () => {
+  if (props.product.stock === 0) return
   router.visit(`/checkout/${props.product.id}?quantity=${quantity.value}`)
 }
 
-// Buy customized product
 const buyNowCustom = () => {
+  if (props.product.stock === 0) return
   const query = new URLSearchParams({
     quantity: customForm.quantity,
     color: customForm.color,

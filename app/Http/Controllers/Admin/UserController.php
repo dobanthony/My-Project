@@ -36,20 +36,45 @@ class UserController extends Controller
             'phone' => 'nullable|string|max:20',
             'address' => 'nullable|string|max:255',
             'dob' => 'nullable|date',
-            'social_links.facebook' => 'nullable|url',
-            'social_links.twitter' => 'nullable|url',
             'role' => 'required|in:user,seller,admin',
         ]);
 
         $user->update($data);
 
-        return redirect()->route('admin.users.index')->with('success', 'User updated Successfully.');
+        return redirect()->route('admin.users.index')->with('success', 'User updated successfully.');
     }
 
-    public function destroy(User $user)
+    // ✅ Archive (Soft Delete)
+    public function archive(User $user)
     {
         $user->delete();
 
-        return redirect()->route('admin.users.index')->with('success', 'User deleted.');
+        return redirect()->route('admin.users.index')->with('success', 'User archived successfully.');
+    }
+
+    // ✅ View Archived Users
+    public function archived()
+    {
+        return Inertia::render('Admin/Users/Archived', [
+            'users' => User::onlyTrashed()->latest()->get(['id', 'first_name', 'last_name', 'email', 'role', 'deleted_at']),
+        ]);
+    }
+
+    // ✅ Restore Archived User
+    public function restore($id)
+    {
+        $user = User::withTrashed()->findOrFail($id);
+        $user->restore();
+
+        return redirect()->route('admin.users.archived')->with('success', 'User restored successfully.');
+    }
+
+    // ✅ Permanently Delete User
+    public function forceDelete($id)
+    {
+        $user = User::withTrashed()->findOrFail($id);
+        $user->forceDelete();
+
+        return redirect()->route('admin.users.archived')->with('success', 'User permanently deleted.');
     }
 }
