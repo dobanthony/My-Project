@@ -1,4 +1,5 @@
 <template>
+  <Head title="Products " />
   <DashboardLayout>
     <div class="container py-1">
       <!-- 🏷️ Page Header -->
@@ -199,6 +200,7 @@
 import DashboardLayout from '@/Layouts/DashboardLayout.vue'
 import { ref, defineProps, watch } from 'vue'
 import { router, Link } from '@inertiajs/vue3'
+import { Head } from '@inertiajs/vue3';
 
 const props = defineProps({
   products: Object,

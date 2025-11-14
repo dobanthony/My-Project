@@ -1,4 +1,5 @@
 <template>
+  <Head title="Shop " />
   <SellerDashboardLayout>
     <!-- ✅ Toast Notification -->
     <div
@@ -202,7 +203,7 @@
 <script setup>
 import SellerDashboardLayout from '@/Layouts/SellerDashboardLayout.vue'
 import Flash from '@/Layouts/Flash.vue'
-import { useForm, usePage } from '@inertiajs/vue3'
+import { useForm, usePage, Head } from '@inertiajs/vue3'
 import { ref, onMounted } from 'vue'
 import { defineOptions, defineProps } from 'vue'
 

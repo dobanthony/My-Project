@@ -1,4 +1,5 @@
 <template>
+  <Head title="Marketplace " />
   <AdminDashboardLayout>
     <div class="container py-3">
       <!-- Header -->
@@ -149,7 +150,7 @@
 </template>
 
 <script setup>
-import { router, usePage, Link } from '@inertiajs/vue3'
+import { router, usePage, Link, Head } from '@inertiajs/vue3'
 import { ref, onMounted } from 'vue'
 import AdminDashboardLayout from '@/Layouts/AdminDashboardLayout.vue'
 import * as bootstrap from 'bootstrap'

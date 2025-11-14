@@ -1,4 +1,5 @@
 <template>
+  <Head title="Dashboard " />
   <AdminDashboardLayout>
     <div class="container">
       <h2 class="mb-4 text-dark">
@@ -100,7 +101,7 @@
 <script setup>
 import AdminDashboardLayout from '@/Layouts/AdminDashboardLayout.vue'
 import { defineProps, computed, ref } from 'vue'
-import { router } from '@inertiajs/vue3'
+import { router, Head } from '@inertiajs/vue3'
 import {
   Chart as ChartJS,
   Title,

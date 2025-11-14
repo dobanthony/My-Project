@@ -1,4 +1,5 @@
 <template>
+  <Head title="Message " />
   <SellerDashboardLayout>
     <div class="container py-1">
 
@@ -162,7 +163,7 @@
 <script setup>
 import SellerDashboardLayout from '@/Layouts/SellerDashboardLayout.vue'
 import { reactive, ref, onMounted, onBeforeUnmount } from 'vue'
-import { router, usePage, Link } from '@inertiajs/vue3'
+import { router, usePage, Link, Head } from '@inertiajs/vue3'
 import { defineProps } from 'vue'
 
 const { shop, messages } = defineProps({

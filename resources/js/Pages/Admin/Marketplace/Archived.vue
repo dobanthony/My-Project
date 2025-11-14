@@ -1,4 +1,5 @@
 <template>
+  <Head title="Archived " />
   <AdminDashboardLayout>
     <div class="container py-3">
       <div class="d-flex justify-content-between align-items-center mb-3">
@@ -138,7 +139,7 @@
 
 <script setup>
 import { ref } from 'vue'
-import { router } from '@inertiajs/vue3'
+import { router, Head } from '@inertiajs/vue3'
 import * as bootstrap from 'bootstrap'
 import AdminDashboardLayout from '@/Layouts/AdminDashboardLayout.vue'
 

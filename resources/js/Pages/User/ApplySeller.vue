@@ -1,4 +1,5 @@
 <template>
+  <Head title="Apply " />
   <DashboardLayout>
     <div class="container py-3">
       <!-- Header -->
@@ -330,7 +331,7 @@
 
 <script setup>
 import DashboardLayout from "@/Layouts/DashboardLayout.vue";
-import { useForm, usePage, router } from "@inertiajs/vue3";
+import { useForm, usePage, router, Head } from "@inertiajs/vue3";
 import { ref, watch, onMounted } from "vue";
 
 const user = usePage().props.user;

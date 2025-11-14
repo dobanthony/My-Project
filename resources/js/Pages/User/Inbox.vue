@@ -1,4 +1,5 @@
 <template>
+  <Head title="Inbox " />
   <DashboardLayout>
     <div class="container py-4">
 
@@ -164,6 +165,7 @@ import DashboardLayout from '@/Layouts/DashboardLayout.vue'
 import { ref, onMounted, onBeforeUnmount, onUpdated } from 'vue'
 import { router, usePage, Link } from '@inertiajs/vue3'
 import { defineProps } from 'vue'
+import { Head } from '@inertiajs/vue3'
 
 const props = defineProps({
   shop: Object,

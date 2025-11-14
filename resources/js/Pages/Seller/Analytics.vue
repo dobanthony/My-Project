@@ -1,4 +1,5 @@
 <template>
+  <Head title="Dashboard" />
   <SellerDashboardLayout>
     <div class="container">
       <!-- IF SELLER HAS A SHOP -->
@@ -168,7 +169,7 @@
 <script setup>
 import SellerDashboardLayout from '@/Layouts/SellerDashboardLayout.vue'
 import { ref } from 'vue'
-import { router, usePage } from '@inertiajs/vue3'
+import { router, usePage, Head } from '@inertiajs/vue3'
 import LineChart from '@/Components/Charts/LineChart.vue'
 import BarChart from '@/Components/Charts/BarChart.vue'
 

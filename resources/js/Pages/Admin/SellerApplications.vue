@@ -1,4 +1,5 @@
 <template>
+  <Head title="Applications " />
   <AdminDashboardLayout>
     <div class="container py-4">
       <h4 class="mb-4">
@@ -77,7 +78,7 @@
 
 <script setup>
 import AdminDashboardLayout from '@/Layouts/AdminDashboardLayout.vue'
-import { Link } from '@inertiajs/vue3'
+import { Link, Head } from '@inertiajs/vue3'
 
 // CSRF token from meta tag
 const csrf = document.querySelector('meta[name="csrf-token"]').getAttribute('content')

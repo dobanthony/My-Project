@@ -1,4 +1,5 @@
 <template>
+  <Head title="Notifications " />
   <DashboardLayout>
     <div class="container py-4">
       <!-- Page Header -->
@@ -93,6 +94,7 @@
 <script setup>
 import DashboardLayout from '@/Layouts/DashboardLayout.vue'
 import { router } from '@inertiajs/vue3'
+import { Head } from '@inertiajs/vue3';
 
 const props = defineProps({
   notifications: Array,

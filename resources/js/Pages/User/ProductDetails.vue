@@ -1,6 +1,5 @@
-in this code ok now in this code
-
 <template>
+  <Head title="Products " />
   <DashboardLayout>
     <!-- ✅ Toast Notification -->
     <div class="toast-container position-fixed top-0 start-50 translate-middle-x p-3" style="z-index: 2000;">
@@ -455,6 +454,7 @@ in this code ok now in this code
 import DashboardLayout from '@/Layouts/DashboardLayout.vue'
 import { ref, defineProps, watch } from 'vue'
 import { router, useForm, Link } from '@inertiajs/vue3'
+import { Head } from '@inertiajs/vue3';
 
 const props = defineProps({
   product: Object,

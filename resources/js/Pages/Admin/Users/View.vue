@@ -1,4 +1,5 @@
 <template>
+  <Head title="View " />
   <AdminDashboardLayout>
     <div class="container py-4">
       <!-- Page Title -->
@@ -120,7 +121,7 @@
 </template>
 
 <script setup>
-import { Link } from '@inertiajs/vue3'
+import { Link, Head } from '@inertiajs/vue3'
 import { defineProps } from 'vue'
 import AdminDashboardLayout from '@/Layouts/AdminDashboardLayout.vue'
 

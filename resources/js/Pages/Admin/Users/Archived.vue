@@ -1,4 +1,5 @@
 <template>
+  <Head title="Archived " />
   <AdminDashboardLayout>
     <div class="container py-4">
       <!-- Header -->
@@ -136,7 +137,7 @@
 </template>
 
 <script setup>
-import { router, usePage } from '@inertiajs/vue3'
+import { router, usePage, Head } from '@inertiajs/vue3'
 import { ref, onMounted } from 'vue'
 import * as bootstrap from 'bootstrap'
 import AdminDashboardLayout from '@/Layouts/AdminDashboardLayout.vue'

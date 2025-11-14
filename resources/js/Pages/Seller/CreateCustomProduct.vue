@@ -1,4 +1,5 @@
 <template>
+  <Head title="Create Custom " />
   <SellerDashboardLayout>
     <div class="container py-4">
 
@@ -165,7 +166,7 @@
 </template>
 
 <script setup>
-import { useForm } from '@inertiajs/vue3'
+import { useForm, Head } from '@inertiajs/vue3'
 import SellerDashboardLayout from '@/Layouts/SellerDashboardLayout.vue'
 
 const checkboxOptions = [

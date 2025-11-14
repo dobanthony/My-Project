@@ -1,4 +1,5 @@
 <template>
+  <Head title="Receipt " />
   <SellerDashboardLayout>
     <div class="container">
       <div class="border p-4 shadow-sm rounded bg-white mx-auto" style="max-width: 800px">
@@ -102,7 +103,7 @@
 <script setup>
 import SellerDashboardLayout from '@/Layouts/SellerDashboardLayout.vue'
 import { computed } from 'vue'
-import { router } from '@inertiajs/vue3'
+import { router, Head } from '@inertiajs/vue3'
 
 const props = defineProps({
   order: Object,

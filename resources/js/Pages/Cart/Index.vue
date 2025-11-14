@@ -1,9 +1,11 @@
 <template>
+  <Head title="Cart " />
+
   <DashboardLayout>
     <div class="container py-4">
       <!-- 🧾 Page Header -->
       <div class="mb-4 text-center">
-        <h3 class="fw-bold text-success">
+        <h3 class="fw-bold text-primary">
           <i class="bi bi-cart3 me-2"></i> My Shopping Cart
         </h3>
         <p class="text-muted">
@@ -200,6 +202,7 @@
 import DashboardLayout from '@/Layouts/DashboardLayout.vue'
 import { router } from '@inertiajs/vue3'
 import { ref, computed } from 'vue'
+import { Head } from '@inertiajs/vue3';
 
 const props = defineProps({ cartItems: Array })
 

@@ -1,4 +1,5 @@
 <template>
+  <Head title="View " />
   <AdminDashboardLayout>
     <div class="container py-3">
       <!-- Header -->
@@ -93,7 +94,7 @@
 <script setup>
 import AdminDashboardLayout from '@/Layouts/AdminDashboardLayout.vue'
 import { defineProps } from 'vue'
-import { Link } from '@inertiajs/vue3'
+import { Link, Head } from '@inertiajs/vue3'
 
 const props = defineProps({
   product: Object,

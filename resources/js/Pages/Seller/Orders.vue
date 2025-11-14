@@ -1,4 +1,5 @@
 <template>
+  <Head title="Orders " />
   <SellerDashboardLayout>
     <div class="container py-1">
 
@@ -264,7 +265,7 @@
 
 <script setup>
 import { ref, watch, onMounted, onBeforeUnmount } from 'vue'
-import { router, Link } from '@inertiajs/vue3'
+import { router, Link, Head } from '@inertiajs/vue3'
 import SellerDashboardLayout from '@/Layouts/SellerDashboardLayout.vue'
 
 const props = defineProps({

@@ -1,4 +1,5 @@
 <template>
+  <Head title="Inbox List " />
   <SellerDashboardLayout>
     <div class="container py-4">
 
@@ -82,7 +83,7 @@
 <script setup>
 import SellerDashboardLayout from '@/Layouts/SellerDashboardLayout.vue'
 import { defineProps } from 'vue'
-import { Link } from '@inertiajs/vue3'
+import { Link, Head } from '@inertiajs/vue3'
 
 const props = defineProps({
   users: Array

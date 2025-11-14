@@ -1,4 +1,5 @@
 <template>
+  <Head title="View " />
   <AdminDashboardLayout>
     <div class="container py-4 animate-fade-in">
       <!-- Header -->
@@ -142,7 +143,7 @@
 
 <script setup>
 import { ref, onMounted, onBeforeUnmount, computed } from 'vue'
-import { Link } from '@inertiajs/vue3'
+import { Link, Head } from '@inertiajs/vue3'
 import * as bootstrap from 'bootstrap'
 import AdminDashboardLayout from '@/Layouts/AdminDashboardLayout.vue'
 

@@ -1,4 +1,5 @@
 <template>
+  <Head title="Archived" />
   <SellerDashboardLayout>
     <div class="container py-3 position-relative">
       <!-- 🔔 Toast Notification -->
@@ -188,7 +189,7 @@
 
 <script setup>
 import { ref } from 'vue'
-import { router, Link } from '@inertiajs/vue3'
+import { router, Link, Head } from '@inertiajs/vue3'
 import SellerDashboardLayout from '@/Layouts/SellerDashboardLayout.vue'
 
 const props = defineProps({

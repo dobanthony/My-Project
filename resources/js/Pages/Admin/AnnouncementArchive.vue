@@ -1,4 +1,5 @@
 <template>
+  <Head title="Archive " />
   <AdminDashboardLayout>
     <div class="container">
       <!-- Header -->
@@ -134,7 +135,7 @@
 <script setup>
 import AdminDashboardLayout from '@/Layouts/AdminDashboardLayout.vue'
 import { ref } from 'vue'
-import { router } from '@inertiajs/vue3'
+import { router, Head } from '@inertiajs/vue3'
 import * as bootstrap from 'bootstrap'
 
 const props = defineProps({

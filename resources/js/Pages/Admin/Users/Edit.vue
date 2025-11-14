@@ -1,4 +1,5 @@
 <template>
+  <Head title="Edit " />
   <AdminDashboardLayout>
     <div class="container py-4">
       <!-- Page Title -->
@@ -174,7 +175,7 @@
 </template>
 
 <script setup>
-import { useForm, Link, router } from '@inertiajs/vue3'
+import { useForm, Link, router, Head } from '@inertiajs/vue3'
 import AdminDashboardLayout from '@/Layouts/AdminDashboardLayout.vue'
 
 const props = defineProps({

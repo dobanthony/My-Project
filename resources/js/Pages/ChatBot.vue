@@ -1,4 +1,5 @@
 <template>
+  <Head title="ChatBot " />
   <DashboardLayout>
     <div class="container py-1">
       <!-- 🧭 Page Header -->
@@ -74,6 +75,7 @@
 import { ref, watch, nextTick } from 'vue'
 import axios from 'axios'
 import DashboardLayout from '@/Layouts/DashboardLayout.vue'
+import { Head } from '@inertiajs/vue3'
 
 const messages = ref([
   { from: 'bot', text: '🤖 Hi there! I’m CraftSmartBot. Type something to chat with me!' }

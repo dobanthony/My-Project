@@ -1,4 +1,5 @@
 <template>
+  <Head title="Notifications " />
   <SellerDashboardLayout>
     <div class="container py-1">
 
@@ -138,7 +139,7 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
-import { router } from '@inertiajs/vue3'
+import { router, Head } from '@inertiajs/vue3'
 import { useNotificationStore } from '@/stores/notification'
 import SellerDashboardLayout from '@/Layouts/SellerDashboardLayout.vue'
 import * as bootstrap from 'bootstrap'

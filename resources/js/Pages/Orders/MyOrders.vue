@@ -1,4 +1,5 @@
 <template>
+  <Head title="Orders " />
   <DashboardLayout>
     <div class="container py-4">
 
@@ -221,6 +222,7 @@
 import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
 import { usePage, router, Link } from '@inertiajs/vue3'
 import DashboardLayout from '@/Layouts/DashboardLayout.vue'
+import { Head } from '@inertiajs/vue3'
 
 // Props
 const props = defineProps({

@@ -1,4 +1,5 @@
 <template>
+  <Head title="Create " />
   <SellerDashboardLayout>
     <div class="container py-1">
       <!-- 🌟 Page Header -->
@@ -293,7 +294,7 @@
 
 <script setup>
 import { ref, watch } from 'vue'
-import { router, useForm, Link, usePage } from '@inertiajs/vue3'
+import { router, useForm, Link, usePage, Head } from '@inertiajs/vue3'
 import SellerDashboardLayout from '@/Layouts/SellerDashboardLayout.vue'
 
 const props = defineProps({
