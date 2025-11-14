@@ -4,20 +4,11 @@
   <DashboardLayout>
     <div class="container py-3">
 
-      <!-- 👋 User Greeting -->
-      <!-- <div class="mb-5 text-start">
-        <h4 class="fw-bold text-success">
-          👋 Hello, {{ user ? user.first_name : '' }}!
-        </h4>
-        <p class="text-muted small mb-0">
-          Welcome back to CraftSmart Artisan. Here's what's new today.
-        </p>
-      </div> -->
-
       <!-- 🌟 Introduction Section -->
       <div class="text-center mb-5 px-3">
         <h2 class="fw-bold text-secondary mb-3">
-          <i class="bi bi-shop text-success me-2"></i> Welcome <span class="text-primary">{{ user ? user.first_name : '' }}</span> to CraftSmart Artisan
+          <i class="bi bi-shop text-success me-2"></i> Welcome
+          <span class="text-primary">{{ user ? user.first_name : '' }}</span> to CraftSmart Artisan
         </h2>
         <p class="text-muted fs-6 mx-auto" style="max-width: 750px;">
           CraftSmart Artisan is your trusted online marketplace connecting creative artisans and passionate shoppers.
@@ -25,39 +16,50 @@
         </p>
       </div>
 
-      <!-- 🌀 E-commerce Journey Carousel -->
+      <!-- 🌀 CAROUSEL -->
       <div
         id="craftsmartCarousel"
-        class="carousel slide mb-5 carousel-hover rounded-4 shadow-sm"
+        class="carousel slide carousel-fade carousel-3d mb-5 position-relative"
         data-bs-ride="carousel"
-        data-bs-interval="2500"
-        data-bs-pause="hover"
+        data-bs-interval="3000"
       >
-        <div class="carousel-inner">
 
+        <!-- Navigation Dots -->
+        <div class="carousel-indicators">
+          <button
+            v-for="(item, index) in carouselItems"
+            :key="'indicator-' + index"
+            type="button"
+            data-bs-target="#craftsmartCarousel"
+            :data-bs-slide-to="index"
+            :class="{ active: index === 0 }"
+          ></button>
+        </div>
+
+        <!-- Slides -->
+        <div class="carousel-inner fixed-carousel-height">
           <div
             v-for="(item, index) in carouselItems"
-            :key="index"
+            :key="'slide-' + index"
             :class="['carousel-item', { active: index === 0 }]"
           >
-            <div class="d-flex flex-column align-items-center justify-content-center p-4 bg-light rounded-4">
-              <img :src="item.img" class="d-block mb-3" :alt="item.title" width="150">
+            <div class="carousel-content-box">
+              <img :src="item.img" class="bigger-img mb-3" :alt="item.title">
               <h5 class="fw-bold text-primary">{{ item.title }}</h5>
               <p class="text-muted small text-center mb-0">{{ item.desc }}</p>
             </div>
           </div>
-
         </div>
 
-        <!-- Carousel Controls -->
-        <button class="carousel-control-prev" type="button" data-bs-target="#craftsmartCarousel" data-bs-slide="prev">
-          <span class="carousel-control-prev-icon bg-dark rounded-circle p-2" aria-hidden="true"></span>
-          <span class="visually-hidden">Previous</span>
+        <!-- Arrows INSIDE -->
+        <button class="carousel-control-prev inside-arrow" type="button" data-bs-target="#craftsmartCarousel" data-bs-slide="prev">
+          <span class="carousel-control-prev-icon"></span>
         </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#craftsmartCarousel" data-bs-slide="next">
-          <span class="carousel-control-next-icon bg-dark rounded-circle p-2" aria-hidden="true"></span>
-          <span class="visually-hidden">Next</span>
+
+        <button class="carousel-control-next inside-arrow" type="button" data-bs-target="#craftsmartCarousel" data-bs-slide="next">
+          <span class="carousel-control-next-icon"></span>
         </button>
+
       </div>
 
       <!-- 📢 Announcements -->
@@ -89,73 +91,19 @@
         </div>
       </div>
 
-      <!-- 🕒 Recent Orders -->
-      <div class="bg-white shadow-sm rounded-4 p-4 mb-5">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-          <h5 class="fw-bold text-success mb-0">
-            <i class="bi bi-bag-check me-2"></i> Recent Orders
-          </h5>
-          <Link href="/my-orders" class="btn btn-outline-primary btn-sm">
-            <i class="bi bi-eye me-1"></i> View All
-          </Link>
-        </div>
-
-        <div v-if="recentOrders.length === 0" class="text-center text-muted py-3">
-          No recent orders found.
-        </div>
-
-        <div v-else class="table-responsive">
-          <table class="table table-hover align-middle mb-0">
-            <thead class="table-light">
-              <tr>
-                <th>#</th>
-                <th>Product</th>
-                <th>Status</th>
-                <th>Date</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="(order, index) in recentOrders" :key="order.id">
-                <td>{{ index + 1 }}</td>
-                <td>{{ order.product }}</td>
-                <td>
-                  <span
-                    class="badge"
-                    :class="{
-                      'bg-success': order.status === 'Delivered',
-                      'bg-warning text-dark': order.status === 'Pending',
-                      'bg-danger': order.status === 'Cancelled'
-                    }"
-                  >
-                    {{ order.status }}
-                  </span>
-                </td>
-                <td>{{ formatDate(order.date) }}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-
     </div>
   </DashboardLayout>
 </template>
 
 <script setup>
 import DashboardLayout from '@/Layouts/DashboardLayout.vue'
-import { Head, Link, usePage } from '@inertiajs/vue3'
-import { ref } from 'vue'
+import { Head, usePage } from '@inertiajs/vue3'
 
 const { props } = usePage()
 const user = props.user || null
 const announcements = props.announcements || []
 
-const recentOrders = ref([
-  { id: 1, product: 'Handcrafted Wooden Bowl', status: 'Delivered', date: '2025-10-15T14:30:00' },
-  { id: 2, product: 'Custom Clay Mug', status: 'Pending', date: '2025-10-17T09:00:00' },
-  { id: 3, product: 'Woven Basket', status: 'Cancelled', date: '2025-10-10T16:45:00' },
-])
-
+/* Carousel content */
 const carouselItems = [
   { img: '/images/shopping.svg', title: 'Browse Unique Crafts', desc: 'Explore our collection of handmade and artisan-crafted goods.' },
   { img: '/images/support.svg', title: 'Show Support', desc: 'Support local artisans by purchasing and promoting their crafts.' },
@@ -178,39 +126,95 @@ function formatDate(date) {
 }
 
 function truncateContent(content, maxLength = 120) {
-  if (content.length <= maxLength) return content
-  return content.slice(0, maxLength) + '...'
+  return content.length <= maxLength ? content : content.slice(0, maxLength) + '...'
 }
 </script>
 
 <style scoped>
-/* Carousel */
-.carousel-item img {
-  max-height: 180px;
+/* Fix height */
+.fixed-carousel-height {
+  height: 320px;
+}
+
+/* Center slide content */
+.carousel-content-box {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 25px;
+  background: #f8f9fa;
+  border-radius: 20px;
+}
+
+/* Images */
+.bigger-img {
+  width: 220px;
+  max-height: 220px;
   object-fit: contain;
 }
 
-/* Hide carousel controls until hover */
-.carousel-hover .carousel-control-prev,
-.carousel-hover .carousel-control-next {
+/* ARROWS INSIDE THE CAROUSEL */
+.inside-arrow {
+  width: 50px;
+  height: 50px;
+  background: rgba(0, 0, 0, 0.45);
+  border-radius: 50%;
+  top: 50%;
+  transform: translateY(-50%);
   opacity: 0;
-  transition: opacity 0.3s ease;
+  transition: 0.3s ease;
+  pointer-events: none;
 }
-.carousel-hover:hover .carousel-control-prev,
-.carousel-hover:hover .carousel-control-next {
+
+#craftsmartCarousel:hover .inside-arrow {
   opacity: 1;
+  pointer-events: auto;
 }
+
+.inside-arrow.carousel-control-prev {
+  left: 15px;
+}
+
+.inside-arrow.carousel-control-next {
+  right: 15px;
+}
+
+/* White icons */
 .carousel-control-prev-icon,
 .carousel-control-next-icon {
-  filter: invert(1);
+  filter: invert(100%);
 }
-/* Announcement header */
+
+/* Navigation dots */
+.carousel-indicators button {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: #aaa;
+}
+.carousel-indicators .active {
+  background-color: #0d6efd;
+}
+
+/* Smooth 3D fade */
+.carousel-3d .carousel-item {
+  transition: opacity 0.8s ease, transform 0.8s ease;
+  transform: scale(0.96);
+  opacity: 0;
+}
+.carousel-3d .carousel-item.active {
+  transform: scale(1);
+  opacity: 1;
+}
+
+/* Announcement styling */
 .announcement-header {
-  background: linear-gradient(90deg, #4db6ac, #80cbc4); /* Smooth teal gradient example */
+  background: linear-gradient(90deg, #4db6ac, #80cbc4);
   color: #fff;
   box-shadow: 0 0.25rem 0.5rem rgba(0,0,0,0.1);
 }
-/* Announcement cards */
 .announcement-card {
   transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
@@ -219,16 +223,25 @@ function truncateContent(content, maxLength = 120) {
   box-shadow: 0 1rem 2rem rgba(0,0,0,0.08);
 }
 
-/* Responsive adjustments */
+/* Responsive */
 @media (max-width: 768px) {
-  .carousel-item img { max-height: 140px; }
-  .text-center h2 { font-size: 1.5rem; }
-  .card-text { font-size: 0.9rem; }
+  .fixed-carousel-height {
+    height: 260px;
+  }
+  .bigger-img {
+    max-height: 160px;
+  }
 }
-
 @media (max-width: 576px) {
-  .carousel-item img { max-height: 120px; }
-  .text-center h2 { font-size: 1.25rem; }
-  .card-text { font-size: 0.85rem; }
+  .inside-arrow {
+    width: 40px;
+    height: 40px;
+  }
+  .fixed-carousel-height {
+    height: 240px;
+  }
+  .bigger-img {
+    max-height: 130px;
+  }
 }
 </style>

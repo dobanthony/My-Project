@@ -40,22 +40,19 @@
             <h4 class="fw-bold text-dark mb-0">
               <i class="bi bi-bag-heart-fill text-success me-2"></i>Products
             </h4>
-            <div class="mb-4">
-              <div class="input-group">
-                <input
-                  v-model="searchQuery"
-                  type="text"
-                  class="form-control"
-                  placeholder="Search products..."
-                  @keyup.enter="searchProducts"
-                />
-                <button
-                  class="btn btn-primary"
-                  type="button"
-                  @click="searchProducts"
-                >
-                  <i class="bi bi-search"></i> Search
-                </button>
+            <div class="row mb-4 g-2 align-items-center">
+              <div class="col-md-13">
+                <div class="input-group shadow-sm">
+                  <input
+                    v-model="searchQuery"
+                    @keyup.enter="searchProducts"
+                    class="form-control border-start-0"
+                    placeholder="Search products..."
+                  />
+                  <span class="input-group-text bg-white border-end-0">
+                    <i class="bi bi-search text-primary"></i>
+                  </span>
+                </div>
               </div>
             </div>
           </div>
@@ -81,12 +78,6 @@
                     alt="Product Image"
                     loading="lazy"
                   />
-                  <span
-                    v-if="product.eco_friendly"
-                    class="badge eco-badge position-absolute"
-                  >
-                    <i class="bi bi-leaf-fill me-1"></i> Eco-friendly
-                  </span>
                 </div>
 
                 <div class="card-body d-flex flex-column px-2 py-2">
@@ -205,24 +196,24 @@ const scrollToFeatured = () => {
 </script>
 
 <style scoped>
+/* -----------------------------
+  HERO SECTION
+------------------------------ */
 .hero-section .overlay {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  /* Slightly transparent by default */
   background: rgba(0, 0, 0, 0.15);
   transition: background 0.4s ease-in-out;
   z-index: 1;
 }
 
-/* Darker overlay on hover */
 .hero-section:hover .overlay {
   background: rgba(0, 0, 0, 0.4);
 }
 
-/* Hero content above overlay */
 .hero-section .hero-content {
   position: relative;
   z-index: 2;
@@ -230,12 +221,11 @@ const scrollToFeatured = () => {
   transition: transform 0.3s ease;
 }
 
-/* Optional slight zoom on hover */
 .hero-section:hover .hero-content {
   transform: scale(1.02);
 }
 
-/* Responsive text sizes */
+/* Responsive font sizes */
 .hero-section h1 {
   font-size: clamp(2rem, 5vw, 3.5rem);
 }
@@ -243,11 +233,24 @@ const scrollToFeatured = () => {
   font-size: clamp(1rem, 2.2vw, 1.3rem);
   margin-bottom: 1.5rem;
 }
-.hero-section button {
-  font-size: 1.1rem;
+
+/* Mobile hero height fix */
+@media (max-width: 576px) {
+  .hero-section {
+    height: 55vh !important;
+    padding: 1.5rem !important;
+  }
+}
+@media (min-width: 577px) and (max-width: 992px) {
+  .hero-section {
+    height: 60vh !important;
+  }
 }
 
-/* 🛍️ Product Cards */
+
+/* -----------------------------
+  PRODUCT CARDS
+------------------------------ */
 .product-card {
   border-radius: 10px;
   overflow: hidden;
@@ -257,29 +260,19 @@ const scrollToFeatured = () => {
   background: #fff;
   cursor: pointer;
 }
+
 .product-card:hover {
   transform: translateY(-5px);
   box-shadow: 0 10px 18px rgba(13, 110, 253, 0.25);
 }
-.eco-badge {
-  top: 10px;
-  left: 10px;
-  background-color: #198754;
-  color: white;
-  font-size: 0.7rem;
-  border-radius: 12px;
-  padding: 0.4em 0.6em;
-  display: flex;
-  align-items: center;
-  gap: 0.25rem;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-}
+
 .image-wrapper {
   width: 100%;
   padding-top: 75%;
   position: relative;
   overflow: hidden;
 }
+
 .image-wrapper img {
   position: absolute;
   top: 0;
@@ -289,49 +282,131 @@ const scrollToFeatured = () => {
   object-fit: cover;
   transition: transform 0.3s ease-in-out;
 }
+
 .product-card:hover .image-wrapper img {
   transform: scale(1.05);
 }
-.ellipsis-two {
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
+
+/* Multi-line clamp */
+.ellipsis-two,
 .ellipsis-three {
   display: -webkit-box;
-  -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
 
-/* ❌ No Product Message */
-.text-center i {
-  opacity: 0.8;
+.ellipsis-two {
+  -webkit-line-clamp: 2;
+}
+.ellipsis-three {
+  -webkit-line-clamp: 3;
 }
 
-/* 💎 Features */
+
+/* -----------------------------
+  PRODUCT GRID RESPONSIVE (UPDATED)
+------------------------------ */
+
+/* 📱 Mobile: FORCE 2 columns */
+@media (max-width: 576px) {
+  .col-6 {
+    flex: 0 0 50% !important;
+    max-width: 50% !important;
+  }
+
+  .product-card {
+    border-radius: 8px;
+    padding: 0.4rem;
+  }
+}
+
+/* 📟 Small Tablets: still 2 columns */
+@media (min-width: 577px) and (max-width: 768px) {
+  .col-sm-6 {
+    flex: 0 0 50%;
+    max-width: 50%;
+  }
+}
+
+/* 📟 Medium Tablets: 3 columns */
+@media (min-width: 769px) and (max-width: 992px) {
+  .col-md-4 {
+    flex: 0 0 33.33%;
+    max-width: 33.33%;
+  }
+}
+
+/* 🖥 Desktop: keep Bootstrap defaults (4 per row) */
+
+
+
+/* -----------------------------
+  SEARCH BAR RESPONSIVE
+------------------------------ */
+@media (max-width: 576px) {
+  .input-group {
+    width: 100% !important;
+  }
+  #featured .d-flex {
+    flex-direction: column !important;
+    gap: 10px;
+  }
+}
+
+
+/* -----------------------------
+  FEATURE CARDS (WHY SHOP)
+------------------------------ */
 .feature-card {
   transition: all 0.3s ease;
   padding: 24px;
   border-radius: 12px;
 }
+
 .feature-card:hover {
   background-color: #f8f9fa;
   transform: translateY(-6px);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
 }
 
-/* 📱 Mobile Optimizations */
-@media (max-width: 768px) {
-  .product-card {
-    border-radius: 8px;
-  }
+/* Tablet adjustments */
+@media (max-width: 992px) {
   .feature-card {
     padding: 16px;
   }
-  .hero-section {
-    padding: 3rem 1rem;
+}
+
+/* Mobile adjustments */
+@media (max-width: 576px) {
+  .feature-card i {
+    font-size: 2.8rem !important;
+  }
+  .feature-card h5 {
+    font-size: 1.1rem !important;
+  }
+  .feature-card p {
+    font-size: 0.9rem !important;
   }
 }
+
+
+/* -----------------------------
+  GENERAL MOBILE FIXES
+------------------------------ */
+@media (max-width: 576px) {
+  section {
+    padding-left: 0.75rem !important;
+    padding-right: 0.75rem !important;
+  }
+
+  .card-body {
+    padding: 0.75rem !important;
+  }
+
+  .hero-section button {
+    font-size: 1rem !important;
+    padding: 0.5rem 1.2rem !important;
+  }
+}
+
 </style>
