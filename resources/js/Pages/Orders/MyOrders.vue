@@ -28,11 +28,6 @@
             </span>
           </div>
         </div>
-        <!-- <div class="col-md-2 d-grid">
-          <button class="btn btn-primary shadow-sm" @click="handleSearch">
-            <i class="bi bi-search me-1"></i> Search
-          </button>
-        </div> -->
       </div>
 
       <!-- ✅ Desktop View -->
@@ -145,7 +140,7 @@
                 </span>
                 <span v-if="order.reported" class="badge bg-danger rounded-pill ms-1">Reported</span>
               </p>
-              <p><strong>Seller:</strong> {{ order.product?.shop?.user?.name ?? 'Unknown' }}</p>
+              <p><strong>Seller:</strong> {{ order.product?.shop?.user?.first_name ?? 'Unknown' }}</p>
               <p><strong>Date:</strong> {{ formatDate(order.created_at) }}</p>
               <p><strong>Delivery:</strong> {{ order.delivery_date ?? 'N/A' }}</p>
 

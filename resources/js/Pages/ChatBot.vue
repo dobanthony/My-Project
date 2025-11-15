@@ -1,9 +1,9 @@
 <template>
   <Head title="ChatBot " />
   <DashboardLayout>
-    <div class="container py-1">
+    <div class="container-fluid py-1">
       <!-- 🧭 Page Header -->
-      <div class="mb-4 text-center">
+      <div class="mb-4 text-center px-2">
         <h3 class="fw-bold text-primary mb-2">
           <i class="bi bi-chat-dots me-2"></i> CraftSmartBot Chat Assistant
         </h3>
@@ -13,7 +13,7 @@
       </div>
 
       <!-- 💬 Chat Card -->
-      <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
+      <div class="card chat-card shadow-lg border-0 rounded-4 overflow-hidden">
         <div class="card-header bg-primary text-white d-flex align-items-center">
           <i class="bi bi-robot me-2 fs-5"></i>
           <strong>CraftSmartBot</strong>
@@ -85,9 +85,6 @@ const quickMessages = ref([
   'Hi',
   'Help',
   'Cheapest product',
-  'Most expensive product',
-  'My latest order',
-  'Delivery info'
 ])
 
 const messageInput = ref('')
@@ -131,11 +128,28 @@ watch(messages, async () => {
 </script>
 
 <style scoped>
+/* Chat body default height */
 .chat-body {
   height: 420px;
   overflow-y: auto;
   padding: 1.25rem;
   background: #f8f9fa;
+}
+
+/* Chat full width on mobile */
+@media (max-width: 768px) {
+  .chat-card {
+    border-radius: 0 !important;
+  }
+
+  .container-fluid {
+    padding: 0 !important;
+  }
+
+  /* ⬇ shorter height so it doesn't look too long */
+  .chat-body {
+    height: calc(100vh - 420px) !important;
+  }
 }
 
 /* Layout for messages */

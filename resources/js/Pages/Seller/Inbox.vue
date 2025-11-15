@@ -1,9 +1,9 @@
 <template>
-  <Head title="Message " />
+  <Head title="Message" />
   <SellerDashboardLayout>
-    <div class="container py-1">
+    <div class="inbox-fluid py-1">
 
-      <!-- 🧭 Page Header -->
+      <!-- Page Header -->
       <div class="text-center mb-5">
         <h2 class="fw-bold text-primary mb-2">
           <i class="bi bi-chat-dots-fill me-2"></i> Customer Conversations
@@ -13,12 +13,12 @@
         </p>
       </div>
 
-      <!-- 💬 Conversation List -->
+      <!-- Conversation List -->
       <div v-if="Object.keys(groupedMessages).length">
         <div
           v-for="(conversation, userId) in groupedMessages"
           :key="userId"
-          class="conversation-card border rounded-4 mb-5 p-4 shadow-sm bg-white"
+          class="conversation-card-fluid mb-5 p-4 shadow-sm bg-white"
         >
           <div class="d-flex align-items-center justify-content-between mb-3">
             <h5 class="fw-bold text-secondary mb-0">
@@ -27,8 +27,8 @@
             </h5>
           </div>
 
-          <!-- 📌 Pinned Reported Product -->
-          <div v-if="pinnedReportedProduct" class="card mb-4 border-0 shadow-sm bg-light">
+          <!-- Pinned Reported Product -->
+          <div v-if="pinnedReportedProduct" class="card mb-4 border-0 shadow-sm bg-light w-100">
             <div class="row g-0 align-items-center p-2">
               <div class="col-auto">
                 <img
@@ -40,12 +40,7 @@
               <div class="col ps-3">
                 <h6 class="fw-semibold mb-1" :class="pinnedReportedProduct.is_reported ? 'text-danger' : 'text-success'">
                   <i class="bi bi-box-seam me-1"></i>{{ pinnedReportedProduct.name }}
-                  <span
-                    v-if="pinnedReportedProduct.is_reported"
-                    class="badge bg-danger ms-2"
-                  >
-                    ⚠ Reported
-                  </span>
+                  <span v-if="pinnedReportedProduct.is_reported" class="badge bg-danger ms-2">⚠ Reported</span>
                 </h6>
                 <p class="text-muted small mb-1">
                   ₱{{ parseFloat(pinnedReportedProduct.price).toFixed(2) }}
@@ -60,8 +55,8 @@
             </div>
           </div>
 
-          <!-- 🗨️ Chat Messages -->
-          <div class="chat-box p-3 rounded-3 bg-light shadow-sm mb-3">
+          <!-- Chat Messages -->
+          <div class="chat-box-fluid p-3 rounded-3 bg-light shadow-sm mb-3 w-100">
             <div
               v-for="(message, index) in conversation.messages"
               :key="message.id"
@@ -72,7 +67,6 @@
                 class="d-flex flex-column"
                 :class="message.sender.id === shop.user_id ? 'align-items-end' : 'align-items-start'"
               >
-                <!-- 👤 Avatar -->
                 <img
                   :src="message.sender.id === shop.user_id
                     ? `/storage/${shop.shop_logo}`
@@ -81,9 +75,8 @@
                   style="width: 36px; height: 36px; object-fit: cover;"
                 />
 
-                <!-- 💬 Message Bubble -->
                 <div
-                  class="message-bubble shadow-sm"
+                  class="message-bubble-fluid shadow-sm"
                   :class="message.sender.id === shop.user_id ? 'bg-primary text-white' : 'bg-white border text-dark'"
                 >
                   <div class="fw-semibold small mb-1">
@@ -92,8 +85,7 @@
                   <div class="small">{{ message.message }}</div>
                 </div>
 
-                <!-- 🛒 Product Shared -->
-                <div v-if="message.product" class="card mt-2 border-0 shadow-sm" style="max-width: 250px;">
+                <div v-if="message.product" class="card mt-2 border-0 shadow-sm w-100">
                   <img
                     :src="message.product.image ? `/storage/${message.product.image}` : 'https://via.placeholder.com/100x100?text=No+Image'"
                     class="card-img-top rounded-top"
@@ -114,7 +106,6 @@
                   </div>
                 </div>
 
-                <!-- ⏰ Timestamp -->
                 <div class="text-muted xsmall mt-1">
                   <i class="bi bi-clock me-1"></i>{{ formatTime(message.created_at) }}
                   <span v-if="message.sender.id === shop.user_id">
@@ -123,7 +114,6 @@
                   </span>
                 </div>
 
-                <!-- ✅ Seen Indicator -->
                 <div
                   v-if="message.sender.id === shop.user_id && isLastOwnMessage(conversation.messages, index) && message.is_read"
                   class="text-success xsmall mt-0"
@@ -134,8 +124,8 @@
             </div>
           </div>
 
-          <!-- ✉️ Reply Form -->
-          <form @submit.prevent="sendReply(conversation)" class="mt-3">
+          <!-- Reply Form -->
+          <form @submit.prevent="sendReply(conversation)" class="mt-3 w-100">
             <div class="input-group">
               <input
                 v-model="conversation.reply"
@@ -151,7 +141,6 @@
         </div>
       </div>
 
-      <!-- 🕳️ Empty State -->
       <div v-else class="text-center py-5">
         <i class="bi bi-chat-left-text display-4 text-muted mb-3"></i>
         <p class="text-muted fs-5">No messages from customers yet.</p>
@@ -176,7 +165,6 @@ let interval = null
 const pinnedReportedProduct = ref(null)
 const page = usePage()
 
-// 🧩 Group messages
 function groupAllMessages() {
   const prevReplies = {}
   for (const userId in groupedMessages) {
@@ -202,12 +190,10 @@ function groupAllMessages() {
 }
 groupAllMessages()
 
-// 📨 Send reply
 function sendReply(conversation) {
   const messageText = conversation.reply.trim()
   if (!messageText) return
 
-  // Clear immediately for smooth UX
   const temp = messageText
   conversation.reply = ''
 
@@ -230,7 +216,6 @@ function sendReply(conversation) {
   })
 }
 
-// 🕒 Format time
 function formatTime(datetime) {
   const date = new Date(datetime)
   return date.toLocaleString('en-PH', {
@@ -252,7 +237,6 @@ function isLastOwnMessage(messages, index) {
   return ownMessages.length && messages[index].id === ownMessages.at(-1).id
 }
 
-// 🔁 Auto-refresh
 onMounted(() => {
   interval = setInterval(() => {
     router.reload({
@@ -280,32 +264,41 @@ onBeforeUnmount(() => {
 </script>
 
 <style scoped>
-.chat-box {
-  max-height: 420px;
+.inbox-fluid {
+  width: 100%;
+  padding: 0 0.5rem;
+  max-width: 100%;
+}
+
+.conversation-card-fluid {
+  width: 100%;
+  border-radius: 0.5rem;
+  transition: 0.25s;
+  border-left: 5px solid transparent;
+}
+
+.conversation-card-fluid:hover {
+  border-left-color: var(--bs-primary);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+}
+
+.chat-box-fluid {
+  width: 100%;
+  max-height: 500px;
   overflow-y: auto;
   background-color: #f8f9fa;
 }
 
-.message-bubble {
+.message-bubble-fluid {
   padding: 0.6rem 0.9rem;
   border-radius: 1rem;
-  max-width: 85%;
+  max-width: 100%; /* allow full width inside chat box */
   word-break: break-word;
 }
 
 .xsmall {
   font-size: 0.75rem;
   line-height: 1.2;
-}
-
-.conversation-card {
-  transition: 0.25s;
-  border-left: 5px solid transparent;
-}
-
-.conversation-card:hover {
-  border-left-color: var(--bs-primary);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
 }
 </style>

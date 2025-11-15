@@ -95,34 +95,41 @@
           </div>
         </div>
 
-        <!-- 🔍 Filters -->
-        <div class="card shadow-sm border-0 mb-4">
-          <div class="card-body">
-            <div class="row g-2 align-items-center">
-              <div class="col-12 col-md-7">
-                <input
-                  v-model="search"
-                  @keyup.enter="handleSearch"
-                  class="form-control"
-                  placeholder="Search by name or description"
-                />
-              </div>
-              <div class="col-6 col-md-3">
-                <select v-model="selectedCategory" class="form-select" @change="handleSearch">
-                  <option value="">All Categories</option>
-                  <option v-for="cat in categories" :key="cat.id" :value="cat.id">
-                    {{ cat.name }}
-                  </option>
-                </select>
-              </div>
-              <div class="col-6 col-md-2">
-                <button class="btn btn-outline-success w-100" @click="handleSearch">
-                  <i class="bi bi-search me-1"></i> Search
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
+        <!-- 🔍 Modern Search + Category Filter -->
+<form @submit.prevent="handleSearch"
+      class="row g-2 mb-4 sticky-search rounded-4 shadow-sm px-3 py-2 bg-white backdrop-blur">
+
+  <!-- Search Input -->
+  <div class="col-12 col-md-10">
+    <div class="input-group rounded-pill overflow-hidden border border-primary-subtle">
+      <input
+        type="text"
+        v-model="search"
+        class="form-control border-0 shadow-none"
+        placeholder="Search by name or description"
+        aria-label="Search products"
+      />
+      <span class="input-group-text bg-transparent border-0">
+        <i class="bi bi-search text-primary"></i>
+      </span>
+    </div>
+  </div>
+
+  <!-- Category Filter -->
+  <div class="col-12 col-md-2">
+    <select
+      v-model="selectedCategory"
+      class="form-select rounded-pill border-primary-subtle"
+      @change="handleSearch"
+    >
+      <option value="">All Categories</option>
+      <option v-for="cat in categories" :key="cat.id" :value="cat.id">
+        {{ cat.name }}
+      </option>
+    </select>
+  </div>
+</form>
+
 
         <!-- 💻 Products Table -->
         <div class="table-responsive d-none d-md-block">

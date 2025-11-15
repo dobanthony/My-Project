@@ -1,9 +1,9 @@
 <template>
   <Head title="Inbox " />
   <DashboardLayout>
-    <div class="container py-4">
+    <div class="inbox-fluid py-4">
 
-      <!-- 🧭 Page Header -->
+      <!-- Page Header -->
       <div class="mb-4 border-bottom pb-3">
         <div class="d-flex align-items-center mb-2">
           <i class="bi bi-chat-dots-fill fs-3 text-primary me-2"></i>
@@ -14,11 +14,10 @@
         </p>
       </div>
 
-      <!-- 💬 Chat Messages -->
+      <!-- Chat Messages -->
       <div
         ref="chatBox"
-        class="chat-box mb-3 p-3 rounded shadow-sm bg-light"
-        style="max-height: 450px; overflow-y: auto;"
+        class="chat-box-fluid mb-3 p-3 rounded shadow-sm bg-light"
       >
         <div v-for="(msg, index) in messages" :key="msg.id" class="mb-4">
           <div
@@ -28,6 +27,7 @@
             <div
               class="d-flex flex-column"
               :class="msg.sender.id === shop.user_id ? 'align-items-start' : 'align-items-end'"
+              style="max-width: 100%;"
             >
               <!-- Avatar -->
               <img
@@ -43,11 +43,10 @@
 
               <!-- Message Bubble -->
               <div
-                class="p-3 rounded-4"
+                class="message-bubble-fluid p-3 mb-1"
                 :class="msg.sender.id === shop.user_id
-                  ? 'bg-white border border-1'
+                  ? 'bg-white border border-1 text-dark'
                   : 'bg-primary text-white'"
-                style="max-width: 75%;"
               >
                 <div class="fw-semibold small mb-1">
                   <i
@@ -75,11 +74,11 @@
                 <i class="bi bi-check-all me-1"></i> Seen {{ formatSeenTime(msg.updated_at || msg.created_at) }}
               </div>
 
-              <!-- 📦 Product Card -->
+              <!-- Product Card -->
               <div
                 v-if="msg.product"
-                class="card mt-2 border-0 shadow-sm"
-                style="max-width: 260px; border-radius: 12px;"
+                class="card mt-2 border-0 shadow-sm w-100"
+                style="border-radius: 12px;"
               >
                 <span
                   v-if="msg.product.is_reported"
@@ -105,10 +104,10 @@
         </div>
       </div>
 
-      <!-- 📝 Send Message -->
+      <!-- Send Message Form -->
       <form @submit.prevent="sendMessage">
-        <!-- 📍 Pinned Product -->
-        <div v-if="pinnedProduct && !hasSentProduct" class="card mb-3 border-0 shadow-sm bg-light position-relative rounded-3">
+        <!-- Pinned Product -->
+        <div v-if="pinnedProduct && !hasSentProduct" class="card mb-3 border-0 shadow-sm bg-light position-relative rounded-3 w-100">
           <span
             v-if="pinnedProduct.is_reported"
             class="badge bg-danger position-absolute top-0 start-0 m-1"
@@ -141,8 +140,8 @@
           </div>
         </div>
 
-        <!-- ✉ Input Box -->
-        <div class="d-flex align-items-center bg-white rounded-4 p-2 shadow-sm border">
+        <!-- Input Box -->
+        <div class="d-flex align-items-center bg-white rounded-4 p-2 shadow-sm border w-100">
           <textarea
             v-model="newMessage"
             class="form-control border-0 me-2 rounded-3"
@@ -240,10 +239,27 @@ onBeforeUnmount(() => {
 </script>
 
 <style scoped>
-.chat-box {
-  background: #f8f9fa;
+.inbox-fluid {
+  width: 100%;
+  padding: 0 0.5rem;
+  max-width: 100%;
+}
+
+.chat-box-fluid {
+  width: 100%;
+  max-height: 500px;
+  overflow-y: auto;
+  background-color: #f8f9fa;
   border-radius: 12px;
 }
+
+.message-bubble-fluid {
+  padding: 0.6rem 0.9rem;
+  border-radius: 1rem;
+  max-width: 100%;
+  word-break: break-word;
+}
+
 textarea:focus {
   box-shadow: none;
 }

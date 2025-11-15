@@ -64,7 +64,7 @@
               v-if="products && products.length > 0"
               v-for="product in products"
               :key="product.id"
-              class="col-6 col-sm-6 col-md-4 col-lg-3"
+              class="col-12 col-sm-6 col-md-4 col-lg-3"
             >
               <div
                 class="card h-100 border-0 shadow-sm product-card"

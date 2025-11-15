@@ -16,7 +16,7 @@
       <!-- 🔍 Search & Filter Bar -->
       <form @submit.prevent="searchProducts" class="row g-2 mb-4 sticky-search rounded-4 shadow-sm px-3 py-2 bg-white backdrop-blur">
         <!-- Search -->
-        <div class="col-9 col-md-10">
+        <div class="col-12 col-md-10">
           <div class="input-group rounded-pill overflow-hidden border border-primary-subtle">
             <input
               type="text"
@@ -31,15 +31,8 @@
           </div>
         </div>
 
-        <!-- Search Button -->
-        <!-- <div class="col-12 col-md-3">
-          <button type="submit" class="btn btn-primary w-100 rounded-pill fw-semibold shadow-sm">
-            <i class="bi bi-search me-1"></i> Search
-          </button>
-        </div> -->
-
         <!-- Category Dropdown -->
-        <div class="col-3 col-md-2">
+        <div class="col-12 col-md-2">
           <select v-model="selectedCategory" class="form-select rounded-pill border-primary-subtle">
             <option value="">All Categories</option>
             <option v-for="cat in categories" :key="cat.id" :value="cat.id">
@@ -52,7 +45,7 @@
       <!-- ✨ Product Cards -->
       <div class="row g-3">
         <div
-          class="col-6 col-sm-6 col-md-4 col-lg-3 mb-3"
+          class="col-12 col-sm-6 col-md-4 col-lg-3 mb-3"
           v-for="product in products.data"
           :key="product.id"
         >

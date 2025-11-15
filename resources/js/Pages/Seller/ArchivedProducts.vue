@@ -37,20 +37,14 @@
       <form @submit.prevent="handleSearch" class="row g-2 mb-3 align-items-center sticky-search">
         <div class="col-12 col-md-7">
           <div class="input-group">
-            <span class="input-group-text"><i class="bi bi-search"></i></span>
             <input
               type="text"
               class="form-control"
               placeholder="Search products..."
               v-model="search"
             />
+            <span class="input-group-text"><i class="bi bi-search text-primary"></i></span>
           </div>
-        </div>
-
-        <div class="col-12 col-md-3">
-          <button type="submit" class="btn btn-primary w-100">
-            <i class="bi bi-arrow-right-circle me-1"></i> Filter
-          </button>
         </div>
 
         <div class="col-12 col-md-2">

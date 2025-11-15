@@ -39,7 +39,7 @@
               <div class="input-group">
                 <span class="input-group-text bg-light"><i class="bi bi-funnel text-primary"></i></span>
                 <select v-model="statusFilter" class="form-select" @change="handleSearch">
-                  <option value="">All Statuses</option>
+                  <option value="">Statuses</option>
                   <option value="pending">⏳ Pending</option>
                   <option value="approved">✅ Approved</option>
                   <option value="declined">❌ Declined</option>
@@ -53,7 +53,7 @@
               <div class="input-group">
                 <span class="input-group-text bg-light"><i class="bi bi-tags text-primary"></i></span>
                 <select v-model="categoryFilter" class="form-select" @change="handleSearch">
-                  <option value="">All Categories</option>
+                  <option value="">Categories</option>
                   <option
                     v-for="category in categories"
                     :key="category.id"
