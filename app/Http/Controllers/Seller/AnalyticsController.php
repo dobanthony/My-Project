@@ -10,6 +10,7 @@ use Inertia\Inertia;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\ReceivedOrder;
+use Rap2hpoutre\FastExcel\FastExcel;
 
 class AnalyticsController extends Controller
 {
@@ -228,4 +229,93 @@ class AnalyticsController extends Controller
             ]
         ]);
     }
+
+    public function export(Request $request)
+{
+    $seller = Auth::user();
+    $shop = $seller->shop;
+
+    if (!$shop) {
+        return redirect()->route('dashboard')->with('error', 'You do not have a shop yet.');
+    }
+
+    $range = $request->input('range', 'week'); // get range from query param
+    $startDate = match ($range) {
+        'month' => now()->subDays(30),
+        'year' => now()->startOfYear(),
+        default => now()->subDays(7),
+    };
+
+    $productIds = $shop->products->pluck('id');
+
+    // Delivered Orders
+    $deliveredOrders = ReceivedOrder::whereHas('order', fn ($query) =>
+        $query->whereIn('product_id', $productIds)
+    )->where('created_at', '>=', $startDate)
+     ->with('order.product')
+     ->get();
+
+    $totalSales = $deliveredOrders->sum(fn ($r) => $r->order->quantity * $r->order->product->price);
+
+    $totalOrders = Order::whereIn('product_id', $productIds)
+        ->where('created_at', '>=', $startDate)
+        ->count();
+
+    $pendingOrders = Order::whereIn('product_id', $productIds)
+        ->where('status', 'pending')
+        ->where('created_at', '>=', $startDate)
+        ->count();
+
+    $cancelledOrders = Order::whereIn('product_id', $productIds)
+        ->where('status', 'canceled')
+        ->where('created_at', '>=', $startDate)
+        ->count();
+
+    $receivedOrdersCount = $deliveredOrders->count();
+
+    // Top-selling products
+    $topSelling = Product::whereIn('id', $productIds)
+        ->withCount(['orders as total_sold' => fn ($q) =>
+            $q->where('created_at', '>=', $startDate)->select(DB::raw("SUM(quantity)"))
+        ])
+        ->orderByDesc('total_sold')
+        ->take(5)
+        ->get(['id', 'name']);
+
+    // Recent Orders
+    $recentOrders = Order::whereIn('product_id', $productIds)
+        ->latest()
+        ->take(5)
+        ->with(['user', 'product'])
+        ->get()
+        ->map(fn ($order) => [
+            'Order #' => $order->id,
+            'Customer' => ($order->user->first_name ?? '') . ' ' . ($order->user->last_name ?? ''),
+            'Total (₱)' => $order->quantity * $order->product->price,
+            'Status' => $order->status,
+            'Date' => $order->created_at->format('M d, Y'),
+        ]);
+
+    // --- Prepare Excel Collection ---
+    $sheetData = collect([
+        ['Analytics Summary'],
+        ['Total Sales', $totalSales],
+        ['Total Orders', $totalOrders],
+        ['Pending Orders', $pendingOrders],
+        ['Cancelled Orders', $cancelledOrders],
+        ['Received Orders', $receivedOrdersCount],
+        [],
+        ['--- Top-Selling Products ---'],
+    ]);
+
+    foreach ($topSelling as $p) {
+        $sheetData->push([$p->name, $p->total_sold]);
+    }
+
+    $sheetData->push([], ['--- Recent Orders ---']);
+    $sheetData = $sheetData->merge($recentOrders);
+
+    return (new FastExcel($sheetData))->download("seller-analytics-{$range}.xlsx");
+}
+
 }

@@ -2,9 +2,16 @@
   <Head title="Dashboard " />
   <AdminDashboardLayout>
     <div class="container">
-      <h2 class="mb-4 text-dark">
-        <i class="bi bi-speedometer2 me-1 text-success"></i> Admin Dashboard
-      </h2>
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="text-dark mb-0">
+          <i class="bi bi-speedometer2 me-1 text-success"></i>
+          Admin Dashboard
+        </h2>
+
+        <button @click="exportExcel" class="btn btn-outline-success">
+          <i class="bi bi-printer"></i> Print
+        </button>
+      </div>
 
       <!-- Top Metric Cards -->
       <div class="row g-4 mb-4">
@@ -152,6 +159,12 @@ const selectedFilter = ref(props.filter)
 
 function applyFilter() {
   router.get(route('admin.dashboard'), { filter: selectedFilter.value }, { preserveScroll: true })
+}
+
+function exportExcel() {
+  window.location.href = route('admin.dashboard.export', {
+    filter: selectedFilter.value
+  })
 }
 
 // Top Metric Cards with customizable icon size

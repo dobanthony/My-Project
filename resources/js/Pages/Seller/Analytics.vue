@@ -5,10 +5,19 @@
       <!-- IF SELLER HAS A SHOP -->
       <div v-if="shop && shop.id">
         <!-- Header -->
-        <h2 class="fw-bold mb-2 text-dark">
-          <i class="bi bi-bar-chart-line me-2"></i>Analytics
-        </h2>
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-3 gap-2">
+          <!-- Left: Analytics Header -->
+          <h2 class="fw-bold mb-2 mb-md-0 text-dark">
+            <i class="bi bi-bar-chart-line me-2"></i>Analytics
+          </h2>
 
+          <!-- Download Excel Button -->
+          <div class="text-start text-md-end">
+            <button class="btn btn-outline-success" @click="downloadExcel">
+              <i class="bi bi-printer"></i> Print
+            </button>
+          </div>
+        </div>
         <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-3 gap-2">
           <select class="form-select w-100 w-md-auto" v-model="selectedRange" @change="applyFilter">
             <option value="week">This Week</option>
@@ -181,6 +190,11 @@ function applyFilter() {
     preserveScroll: true,
     preserveState: true,
   })
+}
+
+function downloadExcel() {
+  const url = route('seller.analytics.export', { range: selectedRange.value });
+  window.open(url, '_blank'); // triggers browser download
 }
 
 const props = defineProps({

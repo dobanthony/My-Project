@@ -345,5 +345,9 @@ Route::get('/user/view', [SellerProductController::class, 'showPublic'])->name('
 
 Route::get('/products/{id}/guest', [ProductController::class, 'showGuest'])->name('products.guest.show');
 
+Route::get('/seller/analytics/export', [AnalyticsController::class, 'export'])->name('seller.analytics.export');
+
+Route::get('/admin/dashboard/export', [AdminDashboardController::class, 'export'])
+    ->name('admin.dashboard.export');
 
 require __DIR__.'/auth.php';
