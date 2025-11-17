@@ -43,7 +43,7 @@
               <td>{{ user.email }}</td>
               <td>
                 <span :class="['badge px-3 py-2 text-capitalize', roleBadgeClass(user.role)]">
-                  {{ user.role }}
+                  {{ displayRole(user.role) }}
                 </span>
               </td>
               <td>{{ formatDate(user.created_at) }}</td>
@@ -182,11 +182,16 @@ function formatDate(date) {
   })
 }
 
+function displayRole(role) {
+  return role === 'user' ? 'buyer' : role
+}
+
 function roleBadgeClass(role) {
   switch (role) {
     case 'admin': return 'bg-success'
     case 'seller': return 'bg-danger'
-    case 'user': return 'bg-primary'
+    case 'user':
+    case 'buyer': return 'bg-primary'
     default: return 'bg-secondary'
   }
 }

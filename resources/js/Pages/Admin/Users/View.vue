@@ -26,11 +26,6 @@
               <template v-if="user.middle_name"> {{ user.middle_name }} </template>
               {{ user.last_name }}
             </h4>
-
-            <!-- Role -->
-            <span class="badge bg-gradient text-success px-3 py-2">
-              <i class="bi bi-person-badge me-1"></i> {{ user.role }}
-            </span>
           </div>
 
           <!-- Right Section: Details -->
